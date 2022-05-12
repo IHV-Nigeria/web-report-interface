@@ -1,0 +1,21 @@
+import mock from './mock'
+
+import './jwt'
+import './pages/faq'
+import './apps/chat'
+import './apps/todo'
+import './apps/email'
+import './apps/invoice'
+import './apps/calendar'
+import './apps/userList'
+import './apps/eCommerce'
+import './tables/datatables'
+import './navbar/navbarSearch'
+import './pages/knowledge-base'
+import './apps/permissionsList'
+import './cards/card-analytics'
+import './cards/card-statistics'
+import './pages/account-settings'
+import './autoComplete/autoComplete'
+
+mock.onAny().passThrough()
