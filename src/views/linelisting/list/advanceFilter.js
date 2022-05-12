@@ -11,7 +11,7 @@ import { Modal, Input, Label, Button, ModalHeader, ModalBody, InputGroup, InputG
 // ** Styles
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 
-const AddNewModal = ({ open, handleModal }) => {
+const AdvanceFilter = ({ open, handleModal }) => {
   // ** State
   const [Picker, setPicker] = useState(new Date())
 
@@ -96,4 +96,4 @@ const AddNewModal = ({ open, handleModal }) => {
   )
 }
 
-export default AddNewModal
+export default AdvanceFilter

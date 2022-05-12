@@ -13,7 +13,7 @@ import { selectThemeColors } from '@utils'
 // ** Styles
 import '@styles/react/libs/noui-slider/noui-slider.scss'
 
-const Sidebar = props => {
+const IndicatorFilter = props => {
   // ** Props
   const { sidebarOpen } = props
 
@@ -120,4 +120,4 @@ const Sidebar = props => {
   )
 }
 
-export default Sidebar
+export default IndicatorFilter

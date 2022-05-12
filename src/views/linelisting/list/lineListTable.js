@@ -5,7 +5,7 @@ import { Fragment, useState, forwardRef } from 'react'
 import { data, columns } from './data'
 
 // ** Add New Modal Component
-import AddNewModal from './AddNewModal'
+import AdvanceFilter from './advanceFilter'
 
 // ** Third Party Components
 import ReactPaginate from 'react-paginate'
@@ -35,7 +35,7 @@ const BootstrapCheckbox = forwardRef((props, ref) => (
   </div>
 ))
 
-const DataTableWithButtons = () => {
+const LineListTable = () => {
   // ** States
   const [modal, setModal] = useState(false)
   const [currentPage, setCurrentPage] = useState(0)
@@ -234,9 +234,9 @@ const DataTableWithButtons = () => {
           />
         </div>
       </Card>
-      <AddNewModal open={modal} handleModal={handleModal} />
+      <AdvanceFilter open={modal} handleModal={handleModal} />
     </Fragment>
   )
 }
 
-export default DataTableWithButtons
+export default LineListTable

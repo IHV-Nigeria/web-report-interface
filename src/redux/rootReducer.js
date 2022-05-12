@@ -2,7 +2,7 @@
 import navbar from './navbar'
 import layout from './layout'
 import auth from './authentication'
-import users from '@src/views/user/store'
+import users from '@src/views/linelisting/store'
 
 const rootReducer = {
     auth,

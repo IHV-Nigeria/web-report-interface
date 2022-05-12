@@ -14,7 +14,7 @@ const Routes = [
   },
   {
     path: '/artlinelist',
-    component: lazy(() => import('../../views/user/list'))
+    component: lazy(() => import('../../views/linelisting/list'))
   }, 
   {
     path: '/second-page',

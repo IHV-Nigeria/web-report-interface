@@ -5,13 +5,13 @@ import { Row, Col } from 'reactstrap'
 
 // ** Custom Components
 import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
-import Sidebar from './Sidebar'
+import IndicatorFilter from './indicatorFilter'
 
 
 // ** Icons Imports
 import { User, UserPlus, UserCheck, UserX } from 'react-feather'
 
-import TableWithButtons from './TableWithButtons'
+import LineListTable from './lineListTable'
 
 // ** Styles
 import '@styles/react/apps/app-users.scss'
@@ -21,7 +21,7 @@ const UsersList = () => {
 
   return (
     <div className='app-user-list'>
-      <Sidebar sidebarOpen={sidebarOpen} />
+      <IndicatorFilter sidebarOpen={sidebarOpen} />
       <Row lg='7'>
         <Col lg='3' sm='6'>
           <StatsHorizontal
@@ -56,7 +56,7 @@ const UsersList = () => {
           />
         </Col>
         <Col lg='12' sm='6'>
-        <TableWithButtons/>
+        <LineListTable/>
         </Col>
       </Row>
     </div>
