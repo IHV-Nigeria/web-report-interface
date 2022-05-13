@@ -17,6 +17,23 @@ const Routes = [
     component: lazy(() => import('../../views/linelisting/list'))
   }, 
   {
+    path: '/data-quality',
+    component: lazy(() => import('../../views/data-quality/list'))
+  }, 
+  {
+    path: '/analytics',
+    component: lazy(() => import('../../views/analytics/list'))
+  }, 
+  {
+    path: '/upload-file',
+    component: lazy(() => import('../../views/file-upload/Import'))
+
+  }, 
+  {
+    path: '/upload-tracker',
+    component: lazy(() => import('../../views/file-upload/list'))
+  }, 
+  {
     path: '/second-page',
     component: lazy(() => import('../../views/SecondPage'))
   },

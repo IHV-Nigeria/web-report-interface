@@ -23,19 +23,32 @@ export default [
     id: 'dataQuality',
     title: 'Data Quality',
     icon: <Mail size={20} />,
-    navLink: '/artlinelist'
+    navLink: '/data-quality'
   },
   {
     id: 'analytics',
-    title: 'analytics',
+    title: 'Analytics',
     icon: <Mail size={20} />,
-    navLink: '/artlinelist'
+    navLink: '/analytics'
   },
   {
-    id: 'ndrGeneration',
-    title: 'Ndr Generation',
+    id: 'uploads',
+    title: 'Uploads',
     icon: <Mail size={20} />,
-    navLink: '/artlinelist'
+    children: [
+      {
+        id: 'newUpload',
+        title: 'New Upload',
+        icon: <Mail />,
+        navLink: '/upload-file'
+      },
+      {
+        id: 'viewPartnerUploads',
+        title: 'View Partner Uploads',
+        icon: <Mail />,
+        navLink: '/upload-tracker'
+      }
+    ]
   },
   {
     id: 'deduplication',

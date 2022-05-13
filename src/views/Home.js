@@ -1,17 +1,17 @@
-import { Fragment, useContext } from 'react'
-import { Card, CardHeader, CardBody, CardTitle, CardText, CardLink, Col, Row } from 'reactstrap'
-import NotificationCard from '@src/views/ui-elements/cards/statistics/NotificationCard'
-import StatsCard from '@src/views/ui-elements/cards/statistics/StatsCard'
-import TXCURRByAgeReport from '@src/views/ui-elements/cards/analytics/TXCURRByAgeReport'
-
-import Revenue from '@src/views/ui-elements/cards/analytics/Revenue'
+import { useContext } from 'react'
+import {Col, Row } from 'reactstrap'
+import Breadcrumbs from '@components/breadcrumbs'
 import { ThemeColors } from '@src/utility/context/ThemeColors'
-
+import Revenue from '@src/views/ui-elements/cards/analytics/Revenue'
+import StatsCard from '@src/views/ui-elements/cards/statistics/StatsCard'
+import NotificationCard from '@src/views/ui-elements/cards/statistics/NotificationCard'
+import TXCURRByAgeReport from '@src/views/ui-elements/cards/analytics/TXCURRByAgeReport'
 
 const Home = () => {
   const context = useContext(ThemeColors)
   return (
     <div>
+      <Breadcrumbs breadCrumbTitle='Summary Report' breadCrumbParent='IHVNCR' breadCrumbActive='Summary Report' />
        <Col xl='12' md='12' xs='12'>
           <NotificationCard cols={{ xl: '4', sm: '6' }}  />
         </Col>

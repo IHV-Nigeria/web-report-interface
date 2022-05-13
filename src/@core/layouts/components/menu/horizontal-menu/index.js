@@ -34,7 +34,7 @@ const HorizontalMenu =  ({ menuData, currentActiveItem, routerProps }) => {
 
   return (
     <div className='navbar-container main-menu-content row'  style={{ 
-      background: `#08466B`
+      background: `linear-gradient(90deg, rgba(16,81,115,1) 0%, rgba(109,121,9,1) 100%, rgba(0,255,12,1) 100%)`
     }}>
       <div className='bookmark-wrapper d-flex align-items-left col-md-2' style={{
         paddingLeft:0
