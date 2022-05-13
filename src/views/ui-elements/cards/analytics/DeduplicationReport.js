@@ -31,7 +31,7 @@ const DeduplicationReport = props => {
   const revenueOptions = {
       chart: {
         stacked: true,
-        type: 'bar',
+        type: 'pie',
         toolbar: { show: false }
       },
       grid: {
@@ -83,8 +83,8 @@ const DeduplicationReport = props => {
     },
     revenueSeries = [
       {
-        name: 'FCT',
-        data: [2095, 5177, 7284, 6256]
+        name: '# Patients',
+        data: [10095, 6177, 2284, 1256]
       }
     ]
 
@@ -97,7 +97,7 @@ const DeduplicationReport = props => {
             <CardTitle className='mb-50 mb-sm-0'>Deduplication Chart</CardTitle>
            
           </div>
-          <Chart id='revenue-report-chart' type='bar' height='430' options={revenueOptions} series={revenueSeries} />
+          <Chart id='revenue-report-chart' type='pie' height='430' options={revenueOptions} series={revenueSeries} />
         </Col>
         
       </Row>

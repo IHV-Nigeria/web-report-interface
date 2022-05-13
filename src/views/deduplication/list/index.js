@@ -1,6 +1,5 @@
 // ** React Imports
-import { Fragment, useState, useContext } from 'react'
-import DeduplicationReport from '@src/views/ui-elements/cards/analytics/DeduplicationReport'
+import { useState } from 'react'
 
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -14,17 +13,62 @@ import IndicatorFilter from './indicatorFilter'
 
 
 // ** Icons Imports
-import { User, UserPlus, UserCheck, UserX, Shield } from 'react-feather'
-import { ThemeColors } from '@src/utility/context/ThemeColors'
+import { Shield } from 'react-feather'
+// import { ThemeColors } from '@src/utility/context/ThemeColors'
 
 import LineListTable from './lineListTable'
 
 // ** Styles
 import '@styles/react/apps/app-users.scss'
 
+const options = {
+  chart: {
+    stacked: true,
+    type: 'column',
+    toolbar: { show: false },
+    gridLineColor: 'ffffff'
+  },
+  title: {
+    text: 'Fingerprint Deduplication'
+  },
+  xAxis: {
+    categories: ['FCT', 'Katsina', 'Nasarawa', 'Rivers'],
+    gridLineColor: 'ffffff'
+  },
+  yAxis: {
+    title: {
+      text: 'No of Patients'
+  },
+  gridLineColor: 'ffffff'
+},
+plotOptions: {
+  
+  column: {
+    borderWidth: 0,
+    pointWidth: 70
+  }
+},
+series: [
+          {
+            type: 'column',
+            name: 'Total Fingerprints',
+            data: [30500, 20080, 10900, 39030]
+          }, {
+              type: 'column',
+              name: 'Duplicates',
+              data: [10048, 7100, 5300, 12049]
+          }, {
+              type: 'column',
+              name: 'Deduplicated',
+              data: [8048, 3890, 2020, 6809]
+          }
+
+        ]
+}
+
 const UsersList = () => {
   const [sidebarOpen] = useState(false)
-  const context = useContext(ThemeColors)
+//  const context = useContext(ThemeColors)
 
   return (
     <div className='app-user-list'>
@@ -66,7 +110,7 @@ const UsersList = () => {
         </Col>
 
         <Col lg='12' sm='12'>
-            <DeduplicationReport primary={context.colors.primary.main} />
+            <HighchartsReact highcharts={Highcharts} options={options} />
         </Col>
           
         
