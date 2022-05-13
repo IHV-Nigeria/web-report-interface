@@ -1,4 +1,6 @@
-import { Mail, Home } from 'react-feather'
+import { Mail, Home, User, List } from 'react-feather'
+import { Icons } from 'react-toastify'
+//import { List } from 'reactstrap'
 
 export default [
   {
@@ -10,7 +12,7 @@ export default [
   {
     id: 'artlinelist',
     title: 'Linelist Generation',
-    icon: <Mail size={20} />,
+    icon: <List size={20} />,
     navLink: '/artlinelist'
   },
   {
@@ -51,10 +53,10 @@ export default [
     ]
   },
   {
-    id: 'deduplication',
-    title: 'Deduplication',
-    icon: <Mail size={20} />,
-    navLink: '/artlinelist'
+    id: 'pbsTracker',
+    title: 'PBS Tracker',
+    icon: <User size={20} />,
+    navLink: '/pbstracker'
   },
   {
     id: 'setttings',
