@@ -52,18 +52,28 @@ export default [
       }
     ]
   },
+
   {
-    id: 'deduplication',
-    title: 'Deduplication',
-    icon: <File size={20} />,
-    navLink: '/deduplication'
-  },
-  {
-    id: 'pbsTracker',
-    title: 'PBS Tracker',
+    id: 'pbs',
+    title: 'PBS',
     icon: <User size={20} />,
-    navLink: '/pbstracker'
+    children: [
+      {
+        id: 'pbsTracker',
+        title: 'PBS Tracker',
+        icon: <User size={20} />,
+        navLink: '/pbstracker'
+      },
+      {
+        id: 'deduplication',
+        title: 'Deduplication',
+        icon: <File size={20} />,
+        navLink: '/deduplication'
+      }
+      
+    ]
   },
+  
   {
     id: 'Settings',
     title: 'Setttings',
