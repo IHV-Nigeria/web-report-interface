@@ -23,23 +23,23 @@ const UsersList = () => {
     <div className='app-user-list'>
       <IndicatorFilter sidebarOpen={sidebarOpen} />
       <Row lg='7'>
-        <Col lg='3' sm='6'>
+      <Col lg='2' sm='6'>
           <StatsHorizontal
             color='primary'
-            statTitle='Patient on art'
+            statTitle='Total Patients'
             icon={<User size={20} />}
             renderStats={<h3 className='fw-bolder mb-75'>21,459</h3>}
           />
         </Col>
-        <Col lg='3' sm='6'>
+        <Col lg='2' sm='6'>
           <StatsHorizontal
-            color='danger'
-            statTitle='Active '
-            icon={<UserPlus size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>4,567</h3>}
+            color='primary'
+            statTitle='Active'
+            icon={<User size={20} />}
+            renderStats={<h3 className='fw-bolder mb-75'>21,459</h3>}
           />
         </Col>
-        <Col lg='3' sm='6'>
+        <Col lg='2' sm='6'>
           <StatsHorizontal
             color='success'
             statTitle='IIT'
@@ -47,7 +47,7 @@ const UsersList = () => {
             renderStats={<h3 className='fw-bolder mb-75'>19,860</h3>}
           />
         </Col>
-        <Col lg='3' sm='6'>
+        <Col lg='2' sm='6'>
           <StatsHorizontal
             color='warning'
             statTitle='Tranferred Out'
@@ -55,12 +55,20 @@ const UsersList = () => {
             renderStats={<h3 className='fw-bolder mb-75'>237</h3>}
           />
         </Col>
-        <Col lg='3' sm='6'>
+        <Col lg='2' sm='6'>
           <StatsHorizontal
             color='warning'
             statTitle='Tranferred Out'
             icon={<UserX size={20} />}
             renderStats={<h3 className='fw-bolder mb-75'>237</h3>}
+          />
+        </Col>        
+        <Col lg='2' sm='6'>
+          <StatsHorizontal
+            color='danger'
+            statTitle='Dead '
+            icon={<UserPlus size={20} />}
+            renderStats={<h3 className='fw-bolder mb-75'>4,567</h3>}
           />
         </Col>
         <Col lg='12' sm='6'>
