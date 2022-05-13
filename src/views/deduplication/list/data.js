@@ -12,11 +12,11 @@ import { Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem
 const states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary']
 
 const status = {
-  1: { title: 'Current', color: 'light-primary' },
-  2: { title: 'Professional', color: 'light-success' },
-  3: { title: 'Rejected', color: 'light-danger' },
-  4: { title: 'Resigned', color: 'light-warning' },
-  5: { title: 'Applied', color: 'light-info' }
+  1: { title: 'Done', color: 'light-primary' },
+  2: { title: 'Not Done', color: 'light-success' },
+  3: { title: 'Qued', color: 'light-warning' },
+  4: { title: 'In Progress', color: 'light-success' },
+  5: { title: 'Error', color: 'light-danger' }
 }
 
 export let data
@@ -35,31 +35,31 @@ export const basicColumns = [
     selector: row => row.id
   },
   {
-    name: 'Name',
+    name: 'Patient Name',
     sortable: true,
     minWidth: '225px',
     selector: row => row.full_name
   },
   {
-    name: 'Email',
+    name: 'PEPFAR ID',
     sortable: true,
     minWidth: '310px',
     selector: row => row.email
   },
   {
-    name: 'Position',
+    name: 'FacilityID',
     sortable: true,
     minWidth: '250px',
     selector: row => row.post
   },
   {
-    name: 'Age',
+    name: 'Fingerprint Done',
     sortable: true,
     minWidth: '100px',
     selector: row => row.age
   },
   {
-    name: 'Salary',
+    name: 'Validity',
     sortable: true,
     minWidth: '175px',
     selector: row => row.salary
@@ -75,35 +75,35 @@ export const reOrderColumns = [
     selector: row => row.id
   },
   {
-    name: 'Name',
+    name: 'Patient Name',
     reorder: true,
     sortable: true,
     minWidth: '225px',
     selector: row => row.full_name
   },
   {
-    name: 'Email',
+    name: 'PEPFAR ID',
     reorder: true,
     sortable: true,
     minWidth: '310px',
     selector: row => row.email
   },
   {
-    name: 'Position',
+    name: 'FacilityID',
     reorder: true,
     sortable: true,
     minWidth: '250px',
     selector: row => row.post
   },
   {
-    name: 'Age',
+    name: 'Fingerprint Done',
     reorder: true,
     sortable: true,
     minWidth: '100px',
     selector: row => row.age
   },
   {
-    name: 'Salary',
+    name: 'Validity',
     reorder: true,
     sortable: true,
     minWidth: '175px',
@@ -131,7 +131,7 @@ const ExpandableTable = ({ data }) => {
 // ** Table Common Column
 export const columns = [
   {
-    name: 'Name',
+    name: 'Patient Name',
     minWidth: '250px',
     sortable: row => row.full_name,
     cell: row => (
@@ -149,32 +149,32 @@ export const columns = [
     )
   },
   {
-    name: 'Email',
+    name: 'PEPFAR ID',
     sortable: true,
     minWidth: '250px',
     selector: row => row.email
   },
   {
-    name: 'Date',
+    name: 'Facility ID',
     sortable: true,
     minWidth: '150px',
     selector: row => row.start_date
   },
 
   {
-    name: 'Salary',
+    name: 'Fingerprint Done',
     sortable: true,
     minWidth: '150px',
     selector: row => row.salary
   },
   {
-    name: 'Age',
+    name: 'Validity',
     sortable: true,
     minWidth: '100px',
     selector: row => row.age
   },
   {
-    name: 'Status',
+    name: 'Deduplicated',
     minWidth: '150px',
     sortable: row => row.status.title,
     cell: row => {
