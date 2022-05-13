@@ -1,4 +1,4 @@
-import { Mail, Home, User, List } from 'react-feather'
+import { Mail, Home, User, List, File } from 'react-feather'
 import { Icons } from 'react-toastify'
 //import { List } from 'reactstrap'
 
@@ -53,13 +53,19 @@ export default [
     ]
   },
   {
+    id: 'deduplication',
+    title: 'Deduplication',
+    icon: <File size={20} />,
+    navLink: '/deduplication'
+  },
+  {
     id: 'pbsTracker',
     title: 'PBS Tracker',
     icon: <User size={20} />,
     navLink: '/pbstracker'
   },
   {
-    id: 'setttings',
+    id: 'Settings',
     title: 'Setttings',
     icon: <Mail size={20} />,
     navLink: '/artlinelist'
