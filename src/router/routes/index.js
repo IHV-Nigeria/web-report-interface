@@ -16,6 +16,7 @@ const Routes = [
     path: '/artlinelist',
     component: lazy(() => import('../../views/linelisting/list'))
   }, 
+  
   {
     path: '/data-quality',
     component: lazy(() => import('../../views/data-quality/list'))
@@ -34,9 +35,13 @@ const Routes = [
     component: lazy(() => import('../../views/file-upload/list'))
   }, 
   {
-    path: '/second-page',
-    component: lazy(() => import('../../views/SecondPage'))
+    path: '/deduplication',
+    component: lazy(() => import('../../views/deduplication/list'))
   },
+  {
+    path: '/pbstracker',
+    component: lazy(() => import('../../views/pbs-tracker/list'))
+  }, 
   {
     path: '/login',
     component: lazy(() => import('../../views/authentication/Login')),
