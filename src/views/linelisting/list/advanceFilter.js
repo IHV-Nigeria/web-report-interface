@@ -27,45 +27,12 @@ const AdvanceFilter = ({ open, handleModal }) => {
       contentClassName='pt-0'
     >
       <ModalHeader className='mb-1' toggle={handleModal} close={CloseBtn} tag='div'>
-        <h5 className='modal-title'>New Record</h5>
+        <h5 className='modal-title'>Advance Filter</h5>
       </ModalHeader>
-      <ModalBody className='flex-grow-1'>
-        <div className='mb-1'>
-          <Label className='form-label' for='full-name'>
-            Full Name
-          </Label>
-          <InputGroup>
-            <InputGroupText>
-              <User size={15} />
-            </InputGroupText>
-            <Input id='full-name' placeholder='Bruce Wayne' />
-          </InputGroup>
-        </div>
-        <div className='mb-1'>
-          <Label className='form-label' for='post'>
-            Post
-          </Label>
-          <InputGroup>
-            <InputGroupText>
-              <Briefcase size={15} />
-            </InputGroupText>
-            <Input id='post' placeholder='Web Developer' />
-          </InputGroup>
-        </div>
-        <div className='mb-1'>
-          <Label className='form-label' for='email'>
-            Email
-          </Label>
-          <InputGroup>
-            <InputGroupText>
-              <Mail size={15} />
-            </InputGroupText>
-            <Input type='email' id='email' placeholder='brucewayne@email.com' />
-          </InputGroup>
-        </div>
+      <ModalBody className='flex-grow-1'>     
         <div className='mb-1'>
           <Label className='form-label' for='joining-date'>
-            Joining Date
+            Start Date
           </Label>
           <InputGroup>
             <InputGroupText>
@@ -75,14 +42,14 @@ const AdvanceFilter = ({ open, handleModal }) => {
           </InputGroup>
         </div>
         <div className='mb-1'>
-          <Label className='form-label' for='salary'>
-            Salary
+          <Label className='form-label' for='joining-date'>
+            End Date
           </Label>
           <InputGroup>
             <InputGroupText>
-              <DollarSign size={15} />
+              <Calendar size={15} />
             </InputGroupText>
-            <Input type='number' id='salary' />
+            <Flatpickr className='form-control' id='joining-date' value={Picker} onChange={date => setPicker(date)} />
           </InputGroup>
         </div>
         <Button className='me-1' color='primary' onClick={handleModal}>
