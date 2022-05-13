@@ -34,8 +34,8 @@ const Routes = [
     component: lazy(() => import('../../views/file-upload/list'))
   }, 
   {
-    path: '/second-page',
-    component: lazy(() => import('../../views/SecondPage'))
+    path: '/deduplication',
+    component: lazy(() => import('../../views/deduplication/list'))
   },
   {
     path: '/login',

@@ -1,4 +1,4 @@
-import { Mail, Home } from 'react-feather'
+import { Mail, Home, File } from 'react-feather'
 
 export default [
   {
@@ -53,8 +53,8 @@ export default [
   {
     id: 'deduplication',
     title: 'Deduplication',
-    icon: <Mail size={20} />,
-    navLink: '/artlinelist'
+    icon: <File size={20} />,
+    navLink: '/deduplication'
   },
   {
     id: 'setttings',
