@@ -167,7 +167,7 @@ const LineListTable = () => {
     <Fragment>
       <Card>
         <CardHeader className='flex-md-row flex-column align-md-items-center align-items-start border-bottom'>
-          <CardTitle tag='h4'>DataTable with Buttons</CardTitle>
+          <CardTitle tag='h4'>FingerPrint Deduplication Linelist</CardTitle>
           <div className='d-flex mt-md-0 mt-1'>
             <UncontrolledButtonDropdown>
               <DropdownToggle color='secondary' caret outline>
