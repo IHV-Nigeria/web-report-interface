@@ -1,8 +1,6 @@
 // ** React Imports
 import { Fragment, useState} from 'react'
 
-import RevenueReport from '@src/views/ui-elements/cards/analytics/RevenueReport'
-
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 // ** Reactstrap Imports
@@ -17,7 +15,6 @@ import IndicatorFilter from './indicatorFilter'
 import { User, UserPlus, UserCheck, UserX } from 'react-feather'
 
 import { ThemeColors } from '@src/utility/context/ThemeColors'
-import LineListTable from './lineListTable'
 
 // ** Styles
 import '@styles/react/apps/app-users.scss'
@@ -26,13 +23,21 @@ const options = {
   chart: {
     stacked: true,
     type: 'column',
-    toolbar: { show: false }
+    toolbar: { show: false },
+    gridLineColor: 'ffffff'
   },
   title: {
     text: 'PBS Achievement'
   },
   xAxis: {
-    categories: ['FCT', 'Katsina', 'Nasarawa', 'Rivers']
+    categories: ['FCT', 'Katsina', 'Nasarawa', 'Rivers'],
+    gridLineColor: 'ffffff'
+},
+yAxis: {
+  title: {
+    text: 'No of Patients'
+},
+  gridLineColor: 'ffffff'
 },
 plotOptions: {
   
