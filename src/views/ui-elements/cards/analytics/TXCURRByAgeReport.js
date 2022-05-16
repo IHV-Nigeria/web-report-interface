@@ -164,16 +164,25 @@ const RevenueReport = props => {
           })}
         >
           <div className='d-flex align-items-center'>
-            <IconTag
-              size={15}
-              className={classnames({
-                [item.iconColor]: item.iconColor
-              })}
-            />
-            <span className='fw-bold ms-75'>{item.text}</span>
+            <tr>
+                <td style={{
+                    width:"50%"
+                }}  >   
+                        <IconTag
+                    size={15}
+                    className={classnames({
+                      [item.iconColor]: item.iconColor
+                    })}
+                  />
+                  <span className='fw-bold ms-75'>{item.text}  </span>
+
+              </td>
+              <td>{item.result}</td>
+              <td>{item.percentage}</td>
+            </tr>
+         
           </div>
-          <span>{item.result}</span>
-          <span>{item.percentage}</span>
+     
         </div>
       )
     })
@@ -185,7 +194,7 @@ const RevenueReport = props => {
   return data !== null ? (
     <Card className='card-revenue-budget'>
          <CardHeader>
-        <CardTitle tag='h4'>TX CURR Performance Trend</CardTitle>
+        <CardTitle tag='h4'>TX_CURR Performance Trend</CardTitle>
         <Settings size={18} className='text-muted cursor-pointer' />
       </CardHeader>
       <CardBody>
@@ -208,7 +217,13 @@ const RevenueReport = props => {
                     <Progress className='avg-session-progress progress-bar-warning  mt-25' value='100' />
                 </div>
             </div>
-             <div className='pt-25' color={{color}}>{renderChartInfo()}</div>
+             <div className='pt-25' color={{color}}>
+             <table>
+<tbody>
+               {renderChartInfo()}
+               </tbody>\</table>
+               
+               </div>
         </Col>
       </Row>
       </CardBody>
