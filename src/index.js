@@ -1,6 +1,6 @@
 // ** React Imports
 import { Suspense, lazy } from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 
 // ** Redux Imports
 import { Provider } from 'react-redux'
@@ -42,19 +42,17 @@ import * as serviceWorker from './serviceWorker'
 
 // ** Lazy load app
 const LazyApp = lazy(() => import('./App'))
-
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById("root"))
+root.render(
   <Provider store={store}>
-    <Suspense fallback={<Spinner />}>
-      <ThemeContext>
-        <LazyApp />
-        <ToastContainer newestOnTop />
-      </ThemeContext>
-    </Suspense>
-  </Provider>,
-  document.getElementById('root')
+  <Suspense fallback={<Spinner />}>
+    <ThemeContext>
+      <LazyApp />
+      <ToastContainer newestOnTop />
+    </ThemeContext>
+  </Suspense>
+</Provider>
 )
-
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA

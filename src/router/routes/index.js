@@ -4,7 +4,7 @@ import { lazy } from 'react'
 const TemplateTitle = '%s - Vuexy React Admin Template'
 
 // ** Default Route
-const DefaultRoute = '/home'
+const DefaultRoute = '/login'
 
 // ** Merge Routes
 const Routes = [
@@ -44,7 +44,7 @@ const Routes = [
   }, 
   {
     path: '/login',
-    component: lazy(() => import('../../views/authentication/Login')),
+    component: lazy(() => import('../../views/authentication/LoginBasic')),
     layout: 'BlankLayout',
     meta: {
       authRoute: true

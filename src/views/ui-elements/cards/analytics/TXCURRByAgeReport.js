@@ -154,17 +154,8 @@ const RevenueReport = props => {
   const renderChartInfo = () => {
     return listData.map((item, index) => {
       const IconTag = Icon[item.icon]
-
-      return (
-        
-        <div
-          key={index}
-          className={classnames('d-flex justify-content-between', {
-            'mb-1': index !== listData.length - 1
-          })}
-        >
-          <div className='d-flex align-items-center'>
-            <tr>
+      return (               
+            <tr  key={index}>
                 <td style={{
                     width:"50%"
                 }}  >   
@@ -181,9 +172,6 @@ const RevenueReport = props => {
               <td>{item.percentage}</td>
             </tr>
          
-          </div>
-     
-        </div>
       )
     })
   }
@@ -219,9 +207,10 @@ const RevenueReport = props => {
             </div>
              <div className='pt-25' color={{color}}>
              <table>
-<tbody>
+              <tbody>
                {renderChartInfo()}
-               </tbody>\</table>
+               </tbody>
+              </table>
                
                </div>
         </Col>
