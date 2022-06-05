@@ -1,21 +1,28 @@
-// ** React Imports
-import { Fragment } from 'react'
-// ** Reactstrap Imports
+
 import { Row, Col } from 'reactstrap'
-
-// ** Custom Components
-import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
-import Breadcrumbs from '@components/breadcrumbs'
-
-// ** Icons Imports
-import { User, UserPlus, UserCheck, UserX } from 'react-feather'
-
-import LineListTable from './lineListTable'
-
-// ** Styles
+import { toast } from 'react-toastify'
 import '@styles/react/apps/app-users.scss'
+import LineListTable from './components/lineListTable'
+import Breadcrumbs from '@components/breadcrumbs'
+import { Fragment, useState,  useEffect  } from 'react'
+import {fetchStatsData} from '../../../api/uploadService'
+import { User, UserPlus, UserCheck, UserX } from 'react-feather'
+import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
 
 const UsersList = () => {
+
+  const [stats, setStats] = useState([])
+  const fetchStats = async() => {
+    fetchStatsData().then((response) => {
+      setStats(response.data)    
+    }).catch((err) => {
+      toast.error(err, { icon: false, hideProgressBar: true })
+    })    
+  }
+
+  useEffect(() => {
+   fetchStats(1)
+  }, [])
 
   return (
     <div className='app-user-list'>
@@ -26,7 +33,7 @@ const UsersList = () => {
             color='primary'
             statTitle='UPLOADED'
             icon={<User size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>21,459</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.filesUploaded}</h3>}
           />
         </Col>
         <Col lg='3' sm='6'>
@@ -34,7 +41,7 @@ const UsersList = () => {
             color='danger'
             statTitle='PROCESSED'
             icon={<UserPlus size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>4,567</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.filesProcessed}</h3>}
           />
         </Col>
         <Col lg='3' sm='6'>
@@ -42,7 +49,7 @@ const UsersList = () => {
             color='success'
             statTitle='PROCESSING'
             icon={<UserCheck size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>19,860</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.filesProcessing}</h3>}
           />
         </Col>
         <Col lg='3' sm='6'>
@@ -50,11 +57,11 @@ const UsersList = () => {
             color='warning'
             statTitle='QUEUED'
             icon={<UserX size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>237</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.filesQuequed}</h3>}
           />
         </Col>
         <Col lg='12' sm='6'>
-        <LineListTable/>
+         <LineListTable/>
         </Col>
       </Row>
     </div>

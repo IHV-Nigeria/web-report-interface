@@ -1,24 +1,11 @@
-// ** React Imports
 import { Fragment } from 'react'
-
-// ** Third Party Components
 import { toast } from 'react-toastify'
+import Avatar from '@components/avatar'
 import { useDropzone } from 'react-dropzone'
 import { X, DownloadCloud } from 'react-feather'
-
-// ** Custom Components
-import Avatar from '@components/avatar'
-import ExtensionsHeader from '@components/extensions-header'
-
 import {uploadFile} from '../../api/uploadService'
-
-
-// ** Reactstrap Imports
-import { Row, Col, Card, CardBody, Table, CardHeader, CardTitle, Input, Label } from 'reactstrap'
-
-// ** Styles
 import '@styles/react/libs/file-uploader/file-uploader.scss'
-
+import { Row, Col, Card, CardBody, Table, CardHeader, CardTitle, Input, Label } from 'reactstrap'
 const ErrorToast = () => (
   <Fragment>
     <div className='toastify-header'>
@@ -50,7 +37,6 @@ const Import = () => {
       }
 
      uploadFile(values).then((response) => {
-       console.log(response)
         toast.success(response, { icon: false, hideProgressBar: true })
       }).catch((err) => {
         toast.error(err, { icon: false, hideProgressBar: true })

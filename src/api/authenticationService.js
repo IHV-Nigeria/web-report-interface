@@ -1,14 +1,10 @@
-import React from 'react'
 import axios from 'axios'
+import jwtConfig from './jwtConfig'
 
-
-const getToken = () => {
-    return localStorage.getItem('USER_KEY')
-}
 export const userLoginRequest = (authRequest) => {
     return axios({
         method: 'POST',
-        url: `${process.env.hostUrl || 'http://localhost:9090'}/api/v1/login`,
+        url: `${jwtConfig.baseUrl}/auth/login`,
         data: authRequest
     })
 }
@@ -17,12 +13,13 @@ export const userLogin = (authRequest) => {
     return userLoginRequest(authRequest).then((response) => {
         const result = response.data.user
         const accessToken = response.data.jwtToken
+        const refreshToken = response.data.refreshToken
 
         const user = {
             fullName: `${result.userFirstName} ${result.userLastName}`,
             username: result.userName,
             email: result.userEmail,
-            role: result.role,
+            role: result.role[0].roleName,
             ability: [
 
                 {
@@ -36,7 +33,7 @@ export const userLogin = (authRequest) => {
         const data = {
             userData,
             accessToken,
-            accessToken
+            refreshToken
         }
         return data
 
@@ -63,10 +60,12 @@ export const userLogin = (authRequest) => {
 
 export const fetchUserData = () => {
     return axios({
-        method: 'GET',
-        url: `${process.env.hostUrl || 'http://localhost:8080'}/api/v1/auth/userinfo`,
-        headers: {
-            Authorization: `Bearer' + ${getToken()}`
-        }
+        method: 'POST',
+        url: `${jwtConfig.baseUrl}/auth/refreshtoken`
+    }).then((response) => {
+        const accessToken = response.data.jwtToken
+        const refreshToken = response.data.refreshToken
+        localStorage.setItem(config.storageTokenKeyName, accessToken)
+        localStorage.setItem(config.storageRefreshTokenKeyName, refreshToken)
     })
 }

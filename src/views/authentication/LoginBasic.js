@@ -1,6 +1,6 @@
 // ** React Imports
 import { Link, useHistory } from 'react-router-dom'
-import { Fragment, useRef, useState, useEffect  /* useContext */ } from "react"
+import { Fragment, useRef, useState, useEffect,  useContext } from "react"
 import {userLogin} from '../../api/authenticationService'
 import {Alert, Spinner} from 'react-bootstrap'
 import { authenticate, authFailure, authSuccess } from '../../redux/authActions'
@@ -8,6 +8,8 @@ import { authenticate, authFailure, authSuccess } from '../../redux/authActions'
 import { connect, useDispatch  } from 'react-redux'
 // ** Custom Components
 import InputPasswordToggle from '@components/input-password-toggle'
+
+import { getHomeRouteForLoggedInUser } from '@utils'
 
 // ** Reactstrap Imports
 import { Card, CardBody, CardTitle, CardText, Form, Label, Input, Button } from 'reactstrap'
@@ -34,7 +36,7 @@ const LoginBasic = ({}) => {
     })
 
  const dispatch = useDispatch()
- //const ability = useContext(AbilityContext)
+ const ability = useContext(AbilityContext)
 
   
   useEffect(() => {
@@ -46,12 +48,11 @@ const LoginBasic = ({}) => {
   const handleSubmit = (evt) => {
     evt.preventDefault()
     userLogin(values).then((response) => {
-      console.log(response)
      if (response.userData) {  
-        const data = { ...response.userData, accessToken: response.accessToken, refreshToken: response.accessToken }
-       dispatch(handleLogin(data))
-       //ability.update(response.userData.ability)
-        history.push('/home')
+        const data = { ...response.userData, accessToken: response.accessToken, refreshToken: response.refreshToken }
+         dispatch(handleLogin(data))
+        ability.update(response.userData.ability)
+        history.push(getHomeRouteForLoggedInUser(data.role))
       } else {
         setErrMsg('Something Wrong!Please Try Again')
         setIsError(true)

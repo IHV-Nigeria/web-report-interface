@@ -1,16 +1,7 @@
 import Select from 'react-select'
-// ** Third Party Components
 import classnames from 'classnames'
-import { Star } from 'react-feather'
-import Nouislider from 'nouislider-react'
-
-// ** Reactstrap Imports
-import { Card, CardBody, Row, Col, Input, Button, Label } from 'reactstrap'
-
-// ** Utils
 import { selectThemeColors } from '@utils'
-
-// ** Styles
+import { Card, CardBody, Row, Col, Input, Button, Label } from 'reactstrap'
 import '@styles/react/libs/noui-slider/noui-slider.scss'
 
 const IndicatorFilter = props => {
