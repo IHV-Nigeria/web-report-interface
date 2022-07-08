@@ -27,6 +27,7 @@ export default function apiRequest({
     }).then((response) => {
         return response
     }).catch((err) => {
+
         if (err && err.response) {
             //setIsError(true)
             switch (err.response.status) {
@@ -34,13 +35,13 @@ export default function apiRequest({
                     fetchUserData()
                     break
                 case 500:
-                    // setErrMsg("Authentication Failed.Bad Credentials")
                     break
+                case 400:
+                    return err.response
                 default:
-                    // setErrMsg('Something Wrong!Please Try Again')
             }
         } else {
-            // setErrMsg('Something Wrong!Please Try Again')
+            return err.response.data.messge
         }
     })
 

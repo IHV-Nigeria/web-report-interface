@@ -1,6 +1,6 @@
 // ** React Imports
 import { Link, useHistory } from 'react-router-dom'
-import { Fragment, useRef, useState, useEffect,  useContext } from "react"
+import { useRef, useState, useEffect,  useContext } from "react"
 import {userLogin} from '../../api/authenticationService'
 import {Alert, Spinner} from 'react-bootstrap'
 import { authenticate, authFailure, authSuccess } from '../../redux/authActions'
@@ -45,36 +45,36 @@ const LoginBasic = ({}) => {
 
  const history = useHistory()
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault()
-    userLogin(values).then((response) => {
-     if (response.userData) {  
-        const data = { ...response.userData, accessToken: response.accessToken, refreshToken: response.refreshToken }
-         dispatch(handleLogin(data))
-        ability.update(response.userData.ability)
-        history.push(getHomeRouteForLoggedInUser(data.role))
+const handleSubmit = (evt) => {
+  evt.preventDefault()
+  userLogin(values).then((response) => {
+    if (response.userData) {  
+      const data = { ...response.userData, accessToken: response.accessToken, refreshToken: response.refreshToken }
+        dispatch(handleLogin(data))
+      ability.update(response.userData.ability)
+      history.push(getHomeRouteForLoggedInUser(data.role))
+    } else {
+      setErrMsg('Something Wrong!Please Try Again')
+      setIsError(true)
+    } 
+  }).catch((err) => {
+    if (err && err.response) {   
+        setIsError(true)         
+        switch (err.response.status) {
+          case 401:
+            setErrMsg("Authentication Failed.Bad Credentials")
+              break
+          case 500:
+            setErrMsg("Authentication Failed.Bad Credentials")
+            break
+          default:
+            setErrMsg('Something Wrong!Please Try Again')
+        }
       } else {
         setErrMsg('Something Wrong!Please Try Again')
-        setIsError(true)
-      } 
-    }).catch((err) => {
-      if (err && err.response) {   
-         setIsError(true)         
-          switch (err.response.status) {
-            case 401:
-              setErrMsg("Authentication Failed.Bad Credentials")
-                break
-            case 500:
-              setErrMsg("Authentication Failed.Bad Credentials")
-              break
-            default:
-              setErrMsg('Something Wrong!Please Try Again')
-          }
-        } else {
-          setErrMsg('Something Wrong!Please Try Again')
-        }
-    })
-  }
+      }
+  })
+}
 
   const handleChange = (e) => {
     e.persist()
@@ -174,8 +174,8 @@ const LoginBasic = ({}) => {
                     Password
                   </Label>
                 </div>
-                <InputPasswordToggle className='input-group-merge' id='userPassword'  placeholder='Enter password' 
-                 value={values.userPassword} onChange={handleChange} name="password" required />
+                <InputPasswordToggle  id='userPassword'  placeholder='Enter password' 
+                 value={values.userPassword} onChange={handleChange} name="userPassword" required />
                   <div className="invalid-feedback">
                       Password is required
                   </div>

@@ -1,28 +1,20 @@
 
 import { Row, Col } from 'reactstrap'
-import { toast } from 'react-toastify'
 import '@styles/react/apps/app-users.scss'
-import LineListTable from './components/lineListTable'
+import UploadList from './components/uploadList'
 import Breadcrumbs from '@components/breadcrumbs'
 import { Fragment, useState,  useEffect  } from 'react'
-import {fetchStatsData} from '../../../api/uploadService'
 import { User, UserPlus, UserCheck, UserX } from 'react-feather'
 import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
 
 const UsersList = () => {
 
   const [stats, setStats] = useState([])
-  const fetchStats = async() => {
-    fetchStatsData().then((response) => {
-      setStats(response.data)    
-    }).catch((err) => {
-      toast.error(err, { icon: false, hideProgressBar: true })
-    })    
+  
+  const updateStats = (stats) => {
+    setStats(stats)
   }
-
-  useEffect(() => {
-   fetchStats(1)
-  }, [])
+  useEffect(() => { }, [])
 
   return (
     <div className='app-user-list'>
@@ -33,7 +25,7 @@ const UsersList = () => {
             color='primary'
             statTitle='UPLOADED'
             icon={<User size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>{stats.filesUploaded}</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.uploaded}</h3>}
           />
         </Col>
         <Col lg='3' sm='6'>
@@ -41,7 +33,7 @@ const UsersList = () => {
             color='danger'
             statTitle='PROCESSED'
             icon={<UserPlus size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>{stats.filesProcessed}</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.processing}</h3>}
           />
         </Col>
         <Col lg='3' sm='6'>
@@ -49,7 +41,7 @@ const UsersList = () => {
             color='success'
             statTitle='PROCESSING'
             icon={<UserCheck size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>{stats.filesProcessing}</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.queued}</h3>}
           />
         </Col>
         <Col lg='3' sm='6'>
@@ -57,11 +49,11 @@ const UsersList = () => {
             color='warning'
             statTitle='QUEUED'
             icon={<UserX size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>{stats.filesQuequed}</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.processed}</h3>}
           />
         </Col>
         <Col lg='12' sm='6'>
-         <LineListTable/>
+         <UploadList updateStats = {updateStats}/>
         </Col>
       </Row>
     </div>

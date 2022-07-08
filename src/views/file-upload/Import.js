@@ -1,10 +1,13 @@
 import { Fragment } from 'react'
-import { toast } from 'react-toastify'
+//import { toast } from 'react-toastify'
 import Avatar from '@components/avatar'
-import { useDropzone } from 'react-dropzone'
+//import { useDropzone } from 'react-dropzone'
 import { X, DownloadCloud } from 'react-feather'
-import {uploadFile} from '../../api/uploadService'
+//import {uploadFile} from '../../api/uploadService'
 import '@styles/react/libs/file-uploader/file-uploader.scss'
+import 'react-dropzone-uploader/dist/styles.css'
+import Dropzone from 'react-dropzone-uploader'
+import jwtConfig from '../../api/jwtConfig'
 import { Row, Col, Card, CardBody, Table, CardHeader, CardTitle, Input, Label } from 'reactstrap'
 const ErrorToast = () => (
   <Fragment>
@@ -24,7 +27,7 @@ const ErrorToast = () => (
 )
 
 const Import = () => {
-
+/* 
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
     onDrop: result => {
@@ -48,7 +51,30 @@ const Import = () => {
         toast.error(<ErrorToast />, { icon: false, hideProgressBar: true })
       }
     }
-  })
+  }) */
+  const getUploadParams = ({ file, meta }) => {
+    console.log(meta)
+    const token = localStorage.getItem(`${jwtConfig.storageTokenKeyName}`)
+    const body = new FormData()
+    body.append('file', file)
+    return { url: 'http://localhost:9090/api/v1/zipped-file-upload', 
+      body,  
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`
+      } 
+    }
+  }
+
+  const handleChangeStatus = ({ meta }, status) => {
+    console.log(status, meta)
+  }
+
+  const handleSubmit = (files, allFiles) => {
+    console.log(files.map(f => f.meta))
+    allFiles.forEach(f => f.remove())
+  }
 
   return (
     <Fragment>
@@ -59,20 +85,12 @@ const Import = () => {
             <CardBody>
               <Row>
                 <Col sm='12'>
-                  <div {...getRootProps({ className: 'dropzone' })}>
-                    <input {...getInputProps()} />
-                    <div className='d-flex align-items-center justify-content-center flex-column'>
-                      <DownloadCloud size={64} />
-                      <h5>Drop XML file here or click to upload</h5>
-                      <p className='text-secondary'>
-                        Drop files here or click{' '}
-                        <a href='/' onClick={e => e.preventDefault()}>
-                          browse
-                        </a>{' '}
-                        thorough your machine
-                      </p>
-                    </div>
-                  </div>
+                <Dropzone
+                    getUploadParams={getUploadParams}
+                    onChangeStatus={handleChangeStatus}
+                    onSubmit={handleSubmit}
+                    accept="*"
+                  />
                 </Col>
               </Row>
             </CardBody>

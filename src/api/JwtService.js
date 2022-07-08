@@ -9,7 +9,8 @@ export default class JwtService {
     apiRequest({
         requetType: requetType,
         requestUrl: requestUrl,
-        contentType: contentType = 'multipart/form-data'
+        contentType: contentType = 'multipart/form-data',
+        requestData: requestData
     }) {
         return axios({
             method: requetType,
@@ -21,7 +22,7 @@ export default class JwtService {
                 Accept: 'application/json',
                 Authorization: `Bearer ${getToken()}`
             },
-            data: formData
+            data: requestData
         }).then((response) => {
             return response
         }).catch((err) => {

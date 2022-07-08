@@ -10,24 +10,6 @@ export default [
     navLink: '/home'
   },
   {
-    id: 'artlinelist',
-    title: 'Linelist Generation',
-    icon: <List size={20} />,
-    navLink: '/artlinelist'
-  },
-  {
-    id: 'reportGeneration',
-    title: 'Report Generation',
-    icon: <Mail size={20} />,
-    navLink: '/artlinelist'
-  },
-  {
-    id: 'dataQuality',
-    title: 'Data Quality',
-    icon: <Mail size={20} />,
-    navLink: '/data-quality'
-  },
-  {
     id: 'analytics',
     title: 'Analytics',
     icon: <Mail size={20} />,
@@ -51,33 +33,18 @@ export default [
         navLink: '/upload-tracker'
       }
     ]
-  },
-
-  {
-    id: 'pbs',
-    title: 'PBS',
-    icon: <User size={20} />,
-    children: [
-      {
-        id: 'pbsTracker',
-        title: 'PBS Tracker',
-        icon: <User size={20} />,
-        navLink: '/pbstracker'
-      },
-      {
-        id: 'deduplication',
-        title: 'Deduplication',
-        icon: <File size={20} />,
-        navLink: '/deduplication'
-      }
-      
-    ]
-  },
-  
+  },  
   {
     id: 'Settings',
     title: 'Setttings',
     icon: <Mail size={20} />,
-    navLink: '/artlinelist'
+    children: [
+      {
+        id: 'users',
+        title: 'Users',
+        icon: <User size={20} />,
+        navLink: '/users'
+      }      
+    ]
   }
 ]

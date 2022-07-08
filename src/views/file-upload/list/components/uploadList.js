@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react"
 import DataTable from "react-data-table-component"
 import {fetchUploadsData} from '../../../../api/uploadService'
 
-const LineListTable = () => {
+const UploadList = (props) => {
 
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
@@ -10,38 +10,41 @@ const LineListTable = () => {
     const [perPage, setPerPage] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
 
-    const fetchUsers = async(page, size = perPage) => {
+    const {updateStats} = props
+
+    const fetchUploadsLineList = async(page, size = perPage) => {
         setLoading(true)
-        setData([])
         setTotalRows(size)
         setLoading(false)
-       fetchUploadsData(page, size).then((response) => {
-          setData(response.data)
-          setTotalRows(response.data.total)
+        fetchUploadsData(page, size).then((response) => {
+          setData(response.data.fileBatch)        
+          setTotalRows(response.data.totalRows)
           setLoading(false)
+          updateStats(response.data)
         }).catch((err) => {
-          toast.error(err, { icon: false, hideProgressBar: true })
+          console.log(err)
+          //toast.error(err, { icon: false, hideProgressBar: true })
         })     
     }
 
     useEffect(() => {
-        fetchUsers(1)
+      fetchUploadsLineList(0)     
     }, [])    
     
     const columns = useMemo(
         () => [
-          {
-            name: 'Uploader',
-            minWidth: '450px',
-            cell: row => (
-              <div className='d-flex align-items-center'>              
-                <div className='user-info text-truncate ms-1'>
-                  <span className='d-block fw-bold text-truncate'>{row.uploader.userFirstName} {row.uploader.userLastName}</span>
-                  <span className='d-block fw-bold text-truncate'>{row.uploader.userEmail}</span>
+            {
+              name: 'Uploader',
+              minWidth: '450px',
+              cell: row => (
+                <div className='d-flex align-items-center'>              
+                  <div className='user-info text-truncate ms-1'>
+                    <span className='d-block fw-bold text-truncate'>{row.user.userFirstName} {row.user.userLastName}</span>
+                    <span className='d-block fw-bold text-truncate'>{row.user.userEmail}</span>
+                  </div>
                 </div>
-              </div>
-            )
-          },      
+              )
+            },      
             {
                 name: "Batch Number",
                 selector: row => row.batchNumber,
@@ -62,17 +65,22 @@ const LineListTable = () => {
     )
 
     const handlePageChange = page => {
-        fetchUsers(page)
-        setCurrentPage(page)
+       fetchUploadsData(page - 1, 10).then((response) => {
+        setData(response.data.fileBatch)
+        setTotalRows(response.data.totalRows)
+        setLoading(false)
+      }).catch((err) => {
+        console.log(err)
+        //toast.error(err, { icon: false, hideProgressBar: true })
+      })      
+      setCurrentPage(page)
     }
 
     const handlePerRowsChange = async(newPerPage, page) => {
-        fetchUsers(page, newPerPage)
-        setPerPage(newPerPage)
+      fetchUploadsLineList(page, newPerPage)
+      setPerPage(newPerPage)
     }
-
     return (
-
         <
         DataTable title = ""
         columns = { columns }
@@ -82,11 +90,10 @@ const LineListTable = () => {
         paginationDefaultPage = { currentPage }
         onChangeRowsPerPage = { handlePerRowsChange }
         onChangePage = { handlePageChange }
-        selectableRows onSelectedRowsChange = {
+       selectableRows onSelectedRowsChange = {
             ({ selectedRows }) => console.log(selectedRows)
         }
         />
     )
-
 }
-export default LineListTable
+export default UploadList

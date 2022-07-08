@@ -31,9 +31,10 @@ export const fetchUploadsData = (page, size) => {
 }
 
 export const fetchStatsData = () => {
-    return apiRequest({
-        requetType: 'GET',
-        contentType: 'application/json',
-        requestUrl: `get-stats`
-    })
+    // return []
+    /*  return apiRequest({
+         requetType: 'GET',
+         contentType: 'application/json',
+         requestUrl: `get-stats`
+     }) */
 }

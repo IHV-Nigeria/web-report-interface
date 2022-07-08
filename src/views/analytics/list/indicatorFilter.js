@@ -18,11 +18,10 @@ const IndicatorFilter = props => {
   const { sidebarOpen } = props
 
   const indicatorOptions = [
-    { value: 'PatientLineList', label: 'Patient Line ', color: '#00B8D9', isFixed: true },
-    { value: 'HTSLineList', label: 'HTS Line List', color: '#0052CC', isFixed: true },
-    { value: 'DQALineList', label: 'DQA Line List', color: '#5243AA', isFixed: true },
-    { value: 'CMLineList', label: 'Commodities Line List', color: '#FF5630', isFixed: false },
-    { value: 'PBSLineList', label: 'PBS Line List', color: '#FF8B00', isFixed: false }
+    { value: 'TX_CURR', label: 'TX_CURR', color: '#00B8D9', isFixed: true },
+    { value: 'TX_NEW', label: 'TX_NEW', color: '#0052CC', isFixed: true },
+    { value: 'PVLS', label: 'PVLS', color: '#5243AA', isFixed: true },
+    { value: 'HTS', label: 'HTS', color: '#FF5630', isFixed: false }
   ]
 
   const stateOptions = [
@@ -41,11 +40,11 @@ const IndicatorFilter = props => {
   ]
 
   const facilityOptions = [
-    { value: 'PatientLineList', label: 'Patient Line ', color: '#00B8D9', isFixed: true },
-    { value: 'HTSLineList', label: 'HTS Line List', color: '#0052CC', isFixed: true },
-    { value: 'DQALineList', label: 'DQA Line List', color: '#5243AA', isFixed: true },
-    { value: 'CMLineList', label: 'Commodities Line List', color: '#FF5630', isFixed: false },
-    { value: 'PBSLineList', label: 'PBS Line List', color: '#FF8B00', isFixed: false }
+    { value: 'Kuchingoro Primary Health', label: 'Kuchingoro Primary Health', color: '#00B8D9', isFixed: true },
+    { value: 'Nyanya One Stop Shop', label: 'Nyanya One Stop Shop', color: '#0052CC', isFixed: true },
+    { value: 'Gwarinpa One Stop Shop', label: 'Gwarinpa One Stop Shop', color: '#5243AA', isFixed: true },
+    { value: 'International Center for Advocacy on Rights to Health', label: 'International Center for Advocacy on Rights to Health', color: '#FF5630', isFixed: false },
+    { value: 'MABUSHI One Stop Shop', label: 'MABUSHI One Stop Shop', color: '#FF8B00', isFixed: false }
   ]
 
 
@@ -109,6 +108,11 @@ const IndicatorFilter = props => {
                       className='react-select'
                       classNamePrefix='select'
                     />
+                  </Col>
+                  <Col className='mb-1' md='12' sm='12'>
+                  <Button className='ms-2' color='primary'  md='12' sm='12'>
+                    <span className='align-middle ms-50'>Submit</span>
+                  </Button>
                   </Col>
                 </Row>
               </div>

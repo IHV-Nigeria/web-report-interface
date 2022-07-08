@@ -35,6 +35,10 @@ const Routes = [
     component: lazy(() => import('../../views/file-upload/list'))
   }, 
   {
+    path: '/users',
+    component: lazy(() => import('../../views/users/list'))
+  },
+  {
     path: '/deduplication',
     component: lazy(() => import('../../views/deduplication/list'))
   },
