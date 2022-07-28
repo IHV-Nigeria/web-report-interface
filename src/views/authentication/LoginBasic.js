@@ -1,7 +1,7 @@
 // ** React Imports
 import { Link, useHistory } from 'react-router-dom'
 import { useRef, useState, useEffect,  useContext } from "react"
-import {userLogin} from '../../api/authenticationService'
+import {userLogin, getOrgunit} from '../../api/authenticationService'
 import {Alert, Spinner} from 'react-bootstrap'
 import { authenticate, authFailure, authSuccess } from '../../redux/authActions'
 
@@ -17,7 +17,7 @@ import { Card, CardBody, CardTitle, CardText, Form, Label, Input, Button } from 
 import { AlertCircle } from 'react-feather'
 
 // ** Actions
-import { handleLogin } from '@store/authentication'
+import { handleLogin, setOrgUnit} from '@store/authentication'
 
 // ** Context
 import { AbilityContext } from '@src/utility/context/Can'
@@ -47,11 +47,19 @@ const LoginBasic = ({}) => {
 
 const handleSubmit = (evt) => {
   evt.preventDefault()
+
+
   userLogin(values).then((response) => {
     if (response.userData) {  
-      const data = { ...response.userData, accessToken: response.accessToken, refreshToken: response.refreshToken }
-        dispatch(handleLogin(data))
+      const data = { ...response.userData, accessToken: response.accessToken, refreshToken: response.refreshToken }   
+     
+      getOrgunit(response.accessToken).then((response) => {
+        dispatch(setOrgUnit(response.data))
+      })
+      dispatch(handleLogin(data))
       ability.update(response.userData.ability)
+
+    
       history.push(getHomeRouteForLoggedInUser(data.role))
     } else {
       setErrMsg('Something Wrong!Please Try Again')

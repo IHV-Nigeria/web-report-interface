@@ -15,7 +15,8 @@ const initialUser = () => {
 export const authSlice = createSlice({
     name: 'authentication',
     initialState: {
-        userData: initialUser()
+        userData: initialUser(),
+        orgUnit: []
     },
     reducers: {
         handleLogin: (state, action) => {
@@ -34,10 +35,14 @@ export const authSlice = createSlice({
             localStorage.removeItem('userData')
             localStorage.removeItem("accessToken")
             localStorage.removeItem("accessToken")
+        },
+        setOrgUnit: (state, action) => {
+            state.orgUnit = action.payload
+            localStorage.setItem('orgUnit', JSON.stringify(action.payload))
         }
     }
 })
 
-export const { handleLogin, handleLogout } = authSlice.actions
+export const { handleLogin, handleLogout, setOrgUnit } = authSlice.actions
 
 export default authSlice.reducer

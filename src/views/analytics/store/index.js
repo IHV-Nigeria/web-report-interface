@@ -1,66 +1,108 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import apiRequest from '../../../api/useJwt'
 
-// ** Axios Imports
-import axios from 'axios'
+export const getChatData = createAsyncThunk('appAnalytic/getChatData', async({
+    states,
+    lgas,
+    facilities,
+    ageRange,
+    indicator,
+    sex
+}) => {
+    const result = await apiRequest({
+        requetType: 'GET',
+        contentType: 'application/json',
+        requestUrl: `data/indicators?states=${states}&lgas=${lgas}&facilities=${facilities}&ageRange=${ageRange}&indicator=${indicator}&sex=${sex}&searchType=NORMAL`
+    })
 
-export const getAllData = createAsyncThunk('appUsers/getAllData', async () => {
-  const response = await axios.get('/api/users/list/all-data')
-  return response.data
+
+    const txCURRData = {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            align: 'left',
+            text: 'Patients Currently Receiving ART by location'
+        },
+        subtitle: {
+            align: 'left',
+            text: 'Click the columns drill down'
+        },
+        accessibility: {
+            announceNewData: {
+                enabled: true
+            }
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: 'Number of patients'
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        colors: [
+            '#536e27 ',
+            '#536e27 '
+        ],
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y}'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+        },
+
+        series: (result.data !== undefined) ? result.data.series : {},
+        drilldown: (result.data !== undefined) ? { series: result.data.drillDown } : {}
+    }
+    return txCURRData
 })
 
-export const getData = createAsyncThunk('appUsers/getData', async params => {
-  const response = await axios.get('/api/users/list/data', params)
-  return {
-    params,
-    data: response.data.users,
-    totalPages: response.data.total
-  }
+export const getStats = createAsyncThunk('appAnalytic/getStats', async({
+    states,
+    lgas,
+    facilities,
+    ageRange,
+    indicator,
+    sex
+}) => {
+    const result = await apiRequest({
+        requetType: 'GET',
+        contentType: 'application/json',
+        requestUrl: `data/stats?stats=${states}&lgas=${lgas}&facilities=${facilities}&ageRange=${ageRange}&indicator=${indicator}&sex=${sex}&searchType=NORMAL`
+    })
+    return result.data
 })
 
-export const getUser = createAsyncThunk('appUsers/getUser', async id => {
-  const response = await axios.get('/api/users/user', { id })
-  return response.data.user
+export const appAnalyticsSlice = createSlice({
+    name: 'appAnalytics',
+    initialState: {
+        stats: {},
+        getChatData: [],
+        getStats: []
+    },
+    reducers: {},
+    extraReducers: builder => {
+        builder
+            .addCase(getChatData.fulfilled, (state, action) => {
+                state.getChatData = action.payload
+            }).addCase(getStats.fulfilled, (state, action) => {
+                state.getStats = action.payload
+            })
+    }
 })
 
-export const addUser = createAsyncThunk('appUsers/addUser', async (user, { dispatch, getState }) => {
-  await axios.post('/apps/users/add-user', user)
-  await dispatch(getData(getState().users.params))
-  await dispatch(getAllData())
-  return user
-})
-
-export const deleteUser = createAsyncThunk('appUsers/deleteUser', async (id, { dispatch, getState }) => {
-  await axios.delete('/apps/users/delete', { id })
-  await dispatch(getData(getState().users.params))
-  await dispatch(getAllData())
-  return id
-})
-
-export const appUsersSlice = createSlice({
-  name: 'appUsers',
-  initialState: {
-    data: [],
-    total: 1,
-    params: {},
-    allData: [],
-    selectedUser: null
-  },
-  reducers: {},
-  extraReducers: builder => {
-    builder
-      .addCase(getAllData.fulfilled, (state, action) => {
-        state.allData = action.payload
-      })
-      .addCase(getData.fulfilled, (state, action) => {
-        state.data = action.payload.data
-        state.params = action.payload.params
-        state.total = action.payload.totalPages
-      })
-      .addCase(getUser.fulfilled, (state, action) => {
-        state.selectedUser = action.payload
-      })
-  }
-})
-
-export default appUsersSlice.reducer
+export default appAnalyticsSlice.reducer

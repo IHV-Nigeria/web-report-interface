@@ -16,7 +16,10 @@ export const userLogin = (authRequest) => {
         const refreshToken = response.data.refreshToken
 
         const user = {
-            fullName: `${result.userFirstName} ${result.userLastName}`,
+            fullName: `
+                    $ { result.userFirstName }
+                    $ { result.userLastName }
+                    `,
             username: result.userName,
             email: result.userEmail,
             role: result.role[0].roleName,
@@ -61,11 +64,31 @@ export const userLogin = (authRequest) => {
 export const fetchUserData = () => {
     return axios({
         method: 'POST',
-        url: `${jwtConfig.baseUrl}/auth/refreshtoken`
+        url: `
+                    $ { jwtConfig.baseUrl }
+                    /auth/refreshtoken
+                    `
     }).then((response) => {
         const accessToken = response.data.jwtToken
         const refreshToken = response.data.refreshToken
         localStorage.setItem(config.storageTokenKeyName, accessToken)
         localStorage.setItem(config.storageRefreshTokenKeyName, refreshToken)
+    })
+}
+
+
+export const getOrgunit = (accessToken) => {
+    return axios({
+        method: 'GET',
+        url: `${jwtConfig.baseUrl}/org-unit/states`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            Accept: 'application/json',
+            Authorization: `Bearer ${accessToken}`
+                // data: authRequest
+        }
+    }).then((response) => {
+        return response
     })
 }

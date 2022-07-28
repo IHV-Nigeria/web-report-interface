@@ -3,50 +3,97 @@ import Select from 'react-select'
 import classnames from 'classnames'
 import { Star } from 'react-feather'
 import Nouislider from 'nouislider-react'
-
-// ** Reactstrap Imports
 import { Card, CardBody, Row, Col, Input, Button, Label } from 'reactstrap'
-
-// ** Utils
 import { selectThemeColors } from '@utils'
-
-// ** Styles
 import '@styles/react/libs/noui-slider/noui-slider.scss'
-
+import { getChatData, getStats } from '../store'
+import { useDispatch } from 'react-redux'
 const IndicatorFilter = props => {
   // ** Props
+  const dispatch = useDispatch()
   const { sidebarOpen } = props
 
   const indicatorOptions = [
     { value: 'TX_CURR', label: 'TX_CURR', color: '#00B8D9', isFixed: true },
-    { value: 'TX_NEW', label: 'TX_NEW', color: '#0052CC', isFixed: true },
-    { value: 'PVLS', label: 'PVLS', color: '#5243AA', isFixed: true },
-    { value: 'HTS', label: 'HTS', color: '#FF5630', isFixed: false }
+    { value: 'TX_NEW', label: 'TX_NEW', color: '#00B8D9', isFixed: true },
+    { value: 'PVLS', label: 'PVLS', color: '#00B8D9', isFixed: true },
+    { value: 'HTS', label: 'HTS', color: '#00B8D9', isFixed: false }
   ]
+  const orgUnit = JSON.parse(localStorage.getItem('orgUnit'))
+ 
+  const stateOptions = []
+  const lgaOptions = []
+  const lgaFacilityOptions = []
+  const facilityOptions = []
 
-  const stateOptions = [
-    { value: 'FCT', label: 'FCT ', color: '#00B8D9', isFixed: true },
-    { value: 'Katsina', label: 'Katsina', color: '#0052CC', isFixed: true },
-    { value: 'Nasarawa', label: 'Nasarawa', color: '#5243AA', isFixed: true },
-    { value: 'Rivers', label: 'Rivers', color: '#FF5630', isFixed: false }
-  ]
+  const selectedStatesObj = []
+  const selectedlgasObj = []
 
-  const lgaOptions = [
-    { value: 'PatientLineList', label: 'Patient Line ', color: '#00B8D9', isFixed: true },
-    { value: 'HTSLineList', label: 'HTS Line List', color: '#0052CC', isFixed: true },
-    { value: 'DQALineList', label: 'DQA Line List', color: '#5243AA', isFixed: true },
-    { value: 'CMLineList', label: 'Commodities Line List', color: '#FF5630', isFixed: false },
-    { value: 'PBSLineList', label: 'PBS Line List', color: '#FF8B00', isFixed: false }
-  ]
+  orgUnit.map((item) => {
+    const stateObj = { value: item.stateName, label: item.stateName, color: '#00B8D9', isFixed: true }
+    stateOptions.push(stateObj)
+  })
 
-  const facilityOptions = [
-    { value: 'Kuchingoro Primary Health', label: 'Kuchingoro Primary Health', color: '#00B8D9', isFixed: true },
-    { value: 'Nyanya One Stop Shop', label: 'Nyanya One Stop Shop', color: '#0052CC', isFixed: true },
-    { value: 'Gwarinpa One Stop Shop', label: 'Gwarinpa One Stop Shop', color: '#5243AA', isFixed: true },
-    { value: 'International Center for Advocacy on Rights to Health', label: 'International Center for Advocacy on Rights to Health', color: '#FF5630', isFixed: false },
-    { value: 'MABUSHI One Stop Shop', label: 'MABUSHI One Stop Shop', color: '#FF8B00', isFixed: false }
-  ]
+  const handleChangeState = selectedOption => {
+    lgaOptions.length = 0
+    lgaFacilityOptions.length = 0
+    const selectedState = []
+    selectedOption.map((item) => {
+      selectedState.push(item.value)
+      selectedStatesObj.push(item.value)
+    })
 
+    orgUnit.filter(item => {
+      return  selectedState.includes(item.stateName) 
+    }).map((item) => {
+      item.lgas.map((item) => {
+        const lgaObj = { value: item.lga, label: item.lga, color: '#00B8D9', isFixed: true }
+        lgaOptions.push(lgaObj)       
+          lgaFacilityOptions.push(item)        
+      })
+    })
+  }
+
+  const handleChangeLga = selectedOption => {
+    facilityOptions.length = 0
+    const selectedLga = []
+    selectedOption.map((item) => {
+      selectedLga.push(item.value)
+      selectedlgasObj.push(item.value)
+    })
+    lgaFacilityOptions.filter(item => {
+      return  selectedLga.includes(item.lga) 
+    }).map((item) => {     
+      item.facilities.map((item) => {
+        const facilityObj = { value: item.facilityName, label: item.facilityName, color: '#00B8D9', isFixed: true }
+        facilityOptions.push(facilityObj)
+      })
+    })
+
+  }
+
+  const handleSubmit = () => { 
+   // const search = selectedStatesObj.find(element => element.name === value)
+   //const states = selectedStatesObj.map(function (el) { return el.value })
+  console.log(selectedStatesObj)
+    dispatch(getChatData({ 
+      states:(selectedStatesObj.length > 0) ? selectedStatesObj.join(',') : "",
+      lgas:(selectedStatesObj.length > 0) ? selectedlgasObj.join(',') : "",
+      facilities:"",
+      ageRange:"",
+      indicator:"TX_CURR",
+      sex:""
+    })) 
+
+    dispatch(getStats({ 
+      states:(selectedStatesObj.length > 0) ? selectedStatesObj.join(',') : "",
+      lgas:(selectedStatesObj.length > 0) ? selectedlgasObj.join(',') : "",
+      facilities:"",
+      ageRange:"",
+      indicator:"TX_CURR",
+      sex:""
+    })) 
+  }
 
   return (
     <div className='sidebar-detached sidebar-left'>
@@ -80,6 +127,7 @@ const IndicatorFilter = props => {
                       theme={selectThemeColors}
                       isMulti
                       name='colors'
+                      onChange={handleChangeState}
                       options={stateOptions}
                       className='react-select'
                       classNamePrefix='select'
@@ -91,6 +139,7 @@ const IndicatorFilter = props => {
                       isClearable={false}
                       theme={selectThemeColors}
                       isMulti
+                      onChange={handleChangeLga}
                       name='colors'
                       options={lgaOptions}
                       className='react-select'
@@ -110,7 +159,7 @@ const IndicatorFilter = props => {
                     />
                   </Col>
                   <Col className='mb-1' md='12' sm='12'>
-                  <Button className='ms-2' color='primary'  md='12' sm='12'>
+                  <Button className='ms-2' color='primary'  md='12' sm='12' onClick={handleSubmit}>
                     <span className='align-middle ms-50'>Submit</span>
                   </Button>
                   </Col>
