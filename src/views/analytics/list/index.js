@@ -47,7 +47,6 @@ const UsersList = () => {
 
  const chartData = useSelector(state => state.analytics)
 
-
 // Age categories
 const categoriess =  [
   {
@@ -191,8 +190,8 @@ const age = {
           />
         </Col> 
         <Col lg='12' sm='12'>     
-        <HighchartsReact  highcharts={Highcharts}  options={chartData.getChatData} />    
-        </Col> 
+         <HighchartsReact  highcharts={Highcharts}  options={chartData.getChatData} />    
+      </Col> 
         <Col lg='12' sm='12'>
 
         <HighchartsReact  highcharts={Highcharts}  options={age} />

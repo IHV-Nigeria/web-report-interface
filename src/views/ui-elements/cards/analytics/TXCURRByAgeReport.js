@@ -182,15 +182,15 @@ const RevenueReport = props => {
   return data !== null ? (
     <Card className='card-revenue-budget'>
          <CardHeader>
-        <CardTitle tag='h4'>TX_CURR Performance Trend</CardTitle>
+        <CardTitle tag='h4'>TX_CURR by sex</CardTitle>
         <Settings size={18} className='text-muted cursor-pointer' />
       </CardHeader>
       <CardBody>
       <Row className='mx-0'>
-        <Col className='revenue-report-wrapper' md='6' xs='12'>          
+        <Col className='revenue-report-wrapper' md='12' xs='12'>          
             <Chart options={options} series={series} type='donut' height={350} />
         </Col>
-        <Col className='budget-wrapper' md='6' xs='12'>
+        <Col className='budget-wrapper' md='6' xs='12' style={{display:"none"}}>
             <p className='mb-50 item-align-left' style={{
                 textAlign:'left'
             }}>Audience Age</p>

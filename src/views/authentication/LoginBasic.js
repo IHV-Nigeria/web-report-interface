@@ -25,6 +25,7 @@ import { AbilityContext } from '@src/utility/context/Can'
 // ** Styles
 import '@styles/react/pages/page-authentication.scss'
 
+
 const LoginBasic = ({}) => {
   const [errMsg, setErrMsg] = useState('')
   const [isError, setIsError] = useState(false)
@@ -55,8 +56,10 @@ const handleSubmit = (evt) => {
      
       getOrgunit(response.accessToken).then((response) => {
         dispatch(setOrgUnit(response.data))
-      })
-      dispatch(handleLogin(data))
+      })   
+
+     
+       dispatch(handleLogin(data))
       ability.update(response.userData.ability)
 
     

@@ -1,18 +1,19 @@
 import Select from 'react-select'
 // ** Third Party Components
-import classnames from 'classnames'
+import { useState } from 'react'
 import { Star } from 'react-feather'
-import Nouislider from 'nouislider-react'
-import { Card, CardBody, Row, Col, Input, Button, Label } from 'reactstrap'
+import classnames from 'classnames'
 import { selectThemeColors } from '@utils'
+import Nouislider from 'nouislider-react'
+import {useDispatch} from 'react-redux'
+import { getChatData, getStats} from '../store'
 import '@styles/react/libs/noui-slider/noui-slider.scss'
-import { getChatData, getStats } from '../store'
-import { useDispatch } from 'react-redux'
-const IndicatorFilter = props => {
-  // ** Props
-  const dispatch = useDispatch()
-  const { sidebarOpen } = props
+import { Card, CardBody, Row, Col, Input, Button, Label } from 'reactstrap'
 
+const IndicatorFilter = props => {
+
+  const { sidebarOpen } = props
+  const dispatch = useDispatch()
   const indicatorOptions = [
     { value: 'TX_CURR', label: 'TX_CURR', color: '#00B8D9', isFixed: true },
     { value: 'TX_NEW', label: 'TX_NEW', color: '#00B8D9', isFixed: true },
@@ -20,14 +21,20 @@ const IndicatorFilter = props => {
     { value: 'HTS', label: 'HTS', color: '#00B8D9', isFixed: false }
   ]
   const orgUnit = JSON.parse(localStorage.getItem('orgUnit'))
- 
-  const stateOptions = []
-  const lgaOptions = []
-  const lgaFacilityOptions = []
-  const facilityOptions = []
 
-  const selectedStatesObj = []
-  const selectedlgasObj = []
+  //options
+  const facilities = []
+  const stateOptions = []
+  const lgas = []
+
+  //selectors
+  //const selectedStatesObj = []
+  const [selectedStatesObj, setSelectedStatesObj] = useState([])
+  const [filteredLgas, setFilteredLgas] = useState([])
+  const [filteredFacilities, setFilteredFacilities] = useState([])
+  const [selectedLgas, setSelectedLgas] = useState([])
+  const [selectedFacilities, setSelectedFacilities] = useState([])
+ // const selectedFacilitiesObj = []
 
   orgUnit.map((item) => {
     const stateObj = { value: item.stateName, label: item.stateName, color: '#00B8D9', isFixed: true }
@@ -35,64 +42,92 @@ const IndicatorFilter = props => {
   })
 
   const handleChangeState = selectedOption => {
-    lgaOptions.length = 0
-    lgaFacilityOptions.length = 0
+    lgas.length = 0
     const selectedState = []
+
+    // get state list
     selectedOption.map((item) => {
       selectedState.push(item.value)
-      selectedStatesObj.push(item.value)
     })
-
-    orgUnit.filter(item => {
-      return  selectedState.includes(item.stateName) 
-    }).map((item) => {
-      item.lgas.map((item) => {
-        const lgaObj = { value: item.lga, label: item.lga, color: '#00B8D9', isFixed: true }
-        lgaOptions.push(lgaObj)       
-          lgaFacilityOptions.push(item)        
+    setSelectedStatesObj(selectedState)
+    
+    // filter out lga by state
+    orgUnit.forEach((item) => {
+      const state = item
+      item.lgas.forEach((item) => {
+        const lga = {
+          stateId:state.id, 
+          stateName:state.stateName,
+          lgaId:item.id, 
+          value: item.lga, 
+          label:item.lga, 
+          facilities:item.facilities,
+          color: '#00B8D9', 
+          isFixed: true 
+        }
+        lgas.push(lga)
       })
     })
+    setFilteredLgas(lgas.filter(item => { return  selectedState.includes(item.stateName) }))
   }
 
   const handleChangeLga = selectedOption => {
-    facilityOptions.length = 0
-    const selectedLga = []
+    facilities.length = 0  
+    const options = [] 
     selectedOption.map((item) => {
-      selectedLga.push(item.value)
-      selectedlgasObj.push(item.value)
-    })
-    lgaFacilityOptions.filter(item => {
-      return  selectedLga.includes(item.lga) 
-    }).map((item) => {     
-      item.facilities.map((item) => {
-        const facilityObj = { value: item.facilityName, label: item.facilityName, color: '#00B8D9', isFixed: true }
-        facilityOptions.push(facilityObj)
-      })
+      options.push(item.value)
     })
 
+    filteredLgas.forEach((item) => {
+      const lga = item
+
+      item.facilities.forEach((item) => {
+        const facility = {
+          stateId:lga.stateId, 
+          stateName:lga.stateName,
+          lgaId:lga.lgaId, 
+          lga:lga.value, 
+          facilityId:item.id, 
+          value: item.facilityName, 
+          label:item.facilityName, 
+          color: '#00B8D9', 
+          isFixed: true 
+        }
+        facilities.push(facility)
+      })
+      })
+    setSelectedLgas(options)
+    setFilteredFacilities(facilities)
   }
 
+  const handleChangeFacility = selectedOption => {
+    facilities.length = 0  
+    const options = [] 
+    selectedOption.map((item) => {
+      options.push(item.value)
+    })
+    setSelectedFacilities(options)
+  }
+
+
   const handleSubmit = () => { 
-   // const search = selectedStatesObj.find(element => element.name === value)
-   //const states = selectedStatesObj.map(function (el) { return el.value })
-  console.log(selectedStatesObj)
     dispatch(getChatData({ 
-      states:(selectedStatesObj.length > 0) ? selectedStatesObj.join(',') : "",
-      lgas:(selectedStatesObj.length > 0) ? selectedlgasObj.join(',') : "",
-      facilities:"",
+      states:  (selectedStatesObj.length > 0) ? selectedStatesObj.join(',') : "",
+      lgas:(selectedLgas.length  > 0) ? selectedLgas.join(',') : "",
+      facilities:(selectedFacilities.length > 0) ? selectedFacilities.join(",") : "",
       ageRange:"",
       indicator:"TX_CURR",
       sex:""
-    })) 
+    }))  
 
     dispatch(getStats({ 
       states:(selectedStatesObj.length > 0) ? selectedStatesObj.join(',') : "",
-      lgas:(selectedStatesObj.length > 0) ? selectedlgasObj.join(',') : "",
+      lgas:(selectedLgas.length > 0) ? selectedLgas.join(',') : "",
       facilities:"",
       ageRange:"",
       indicator:"TX_CURR",
       sex:""
-    })) 
+    }))
   }
 
   return (
@@ -141,7 +176,7 @@ const IndicatorFilter = props => {
                       isMulti
                       onChange={handleChangeLga}
                       name='colors'
-                      options={lgaOptions}
+                      options={filteredLgas}
                       className='react-select'
                       classNamePrefix='select'
                     />
@@ -153,7 +188,8 @@ const IndicatorFilter = props => {
                       theme={selectThemeColors}
                       isMulti
                       name='colors'
-                      options={facilityOptions}
+                      onChange={handleChangeFacility}
+                      options={filteredFacilities}
                       className='react-select'
                       classNamePrefix='select'
                     />

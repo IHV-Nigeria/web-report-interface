@@ -1,21 +1,44 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
+
 
 // ** Third Party Components
-import axios from 'axios'
 import Chart from 'react-apexcharts'
 import { Settings } from 'react-feather'
+import {fetchDashboardStats} from '../../../../api/dashboardService'
+import {useState, useEffect } from "react"
 
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle, CardBody, CardText } from 'reactstrap'
 
 const Revenue = props => {
+
+  const [stats, setStats] = useState([])
   // ** State
-  const [data, setData] = useState(null)
+  const dashboardStats = () => {
+  fetchDashboardStats().then((response) => {
+    setStats(response.data?.txCurrStateCount)
+   }).catch((err) => {
+     console.log(err)
+   }) 
+  }
 
   useEffect(() => {
-    axios.get('/card/card-analytics/revenue').then(res => setData(res.data))
+    dashboardStats()
   }, [])
+
+  const renderStats = () => {  
+    return  stats?.map((item, index) => {
+        return (               
+          <div className='me-2' key={index}>
+          <CardText className='mb-50'>{item.key}</CardText>
+          <h3 className='fw-bolder'>
+            <span className='text-primary'>{item.value}</span>
+          </h3>
+        </div>           
+        )
+      })
+  }
+
 
   const options = {
       chart: {
@@ -102,38 +125,17 @@ const Revenue = props => {
         data: [46000, 48000, 45500, 46600, 44500, 46500, 45000, 47000]
       }
     ]
-  return data !== null ? (
+
+  return stats !== null ? (
+    
     <Card>
       <CardHeader>
         <CardTitle tag='h4'>TX CURR Performance Trend</CardTitle>
         <Settings size={18} className='text-muted cursor-pointer' />
       </CardHeader>
       <CardBody>
-        <div className='d-flex justify-content-start mb-3'>
-          <div className='me-2'>
-            <CardText className='mb-50'>Rivers</CardText>
-            <h3 className='fw-bolder'>
-              <span className='text-primary'>86,589</span>
-            </h3>
-          </div>
-          <div className='me-2'>
-            <CardText className='mb-50'>Nasarawa</CardText>
-            <h3 className='fw-bolder'>
-              <span>73,683</span>
-            </h3>
-          </div>
-          <div className='me-2'>
-            <CardText className='mb-50'>FCT</CardText>
-            <h3 className='fw-bolder'>
-              <span>73,683</span>
-            </h3>
-          </div>
-          <div className='me-2'>
-            <CardText className='mb-50'>Katstina</CardText>
-            <h3 className='fw-bolder'>
-              <span>73,683</span>
-            </h3>
-          </div>
+        <div className='d-flex justify-content-start mb-3'>            
+         {renderStats()}     
         </div>
         <Chart options={options} series={series} type='line' height={240} />
       </CardBody>

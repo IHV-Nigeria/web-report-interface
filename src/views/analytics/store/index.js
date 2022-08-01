@@ -15,9 +15,7 @@ export const getChatData = createAsyncThunk('appAnalytic/getChatData', async({
         contentType: 'application/json',
         requestUrl: `data/indicators?states=${states}&lgas=${lgas}&facilities=${facilities}&ageRange=${ageRange}&indicator=${indicator}&sex=${sex}&searchType=NORMAL`
     })
-
-
-    const txCURRData = {
+    const txCURRData  = {
         chart: {
             type: 'column'
         },
@@ -91,14 +89,14 @@ export const appAnalyticsSlice = createSlice({
     name: 'appAnalytics',
     initialState: {
         stats: {},
-        getChatData: [],
+        getChatData: {},
         getStats: []
     },
     reducers: {},
     extraReducers: builder => {
         builder
             .addCase(getChatData.fulfilled, (state, action) => {
-                state.getChatData = action.payload
+                state.getChatData =  action.payload
             }).addCase(getStats.fulfilled, (state, action) => {
                 state.getStats = action.payload
             })

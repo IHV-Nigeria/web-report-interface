@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import {Col, Row } from 'reactstrap'
 import Breadcrumbs from '@components/breadcrumbs'
 import { ThemeColors } from '@src/utility/context/ThemeColors'
@@ -9,6 +9,12 @@ import TXCURRByAgeReport from '@src/views/ui-elements/cards/analytics/TXCURRByAg
 
 const Home = () => {
   const context = useContext(ThemeColors)
+
+
+useEffect(() => {
+
+
+}, [])  
   return (
     <div>
       <Breadcrumbs breadCrumbTitle='Summary Report' breadCrumbParent='IHVNCR' breadCrumbActive='Summary Report' />
@@ -20,10 +26,10 @@ const Home = () => {
           <StatsCard cols={{ xl: '3', sm: '6' }}  />
         </Col>
         <Row className='match-height'>
-          <Col lg='6' sm='12'>
+          <Col lg='9' sm='12'>
             <Revenue primary={context.colors.primary.main} />
           </Col>
-          <Col lg='6' sm='12'>
+          <Col lg='3' sm='12'>
             <TXCURRByAgeReport primary={context.colors.primary.main} info={context.colors.info.main} />
           </Col>
       </Row>
