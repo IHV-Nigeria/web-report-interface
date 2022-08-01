@@ -4,30 +4,14 @@
 // ** Third Party Components
 import Chart from 'react-apexcharts'
 import { Settings } from 'react-feather'
-import {fetchDashboardStats} from '../../../../api/dashboardService'
-import {useState, useEffect } from "react"
 
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle, CardBody, CardText } from 'reactstrap'
 
 const Revenue = props => {
 
-  const [stats, setStats] = useState([])
-  // ** State
-  const dashboardStats = () => {
-  fetchDashboardStats().then((response) => {
-    setStats(response.data?.txCurrStateCount)
-   }).catch((err) => {
-     console.log(err)
-   }) 
-  }
-
-  useEffect(() => {
-    dashboardStats()
-  }, [])
-
   const renderStats = () => {  
-    return  stats?.map((item, index) => {
+    return  props?.stats?.map((item, index) => {
         return (               
           <div className='me-2' key={index}>
           <CardText className='mb-50'>{item.key}</CardText>
@@ -38,8 +22,6 @@ const Revenue = props => {
         )
       })
   }
-
-
   const options = {
       chart: {
         toolbar: { show: false },
@@ -126,7 +108,7 @@ const Revenue = props => {
       }
     ]
 
-  return stats !== null ? (
+  return props?.stats !== null ? (
     
     <Card>
       <CardHeader>

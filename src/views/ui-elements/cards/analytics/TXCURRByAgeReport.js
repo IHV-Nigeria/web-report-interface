@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Chart from 'react-apexcharts'
 import * as Icon from 'react-feather'
-import classnames from 'classnames'
+//import classnames from 'classnames'
 import { Settings } from 'react-feather'
 
 // ** Reactstrap Imports
@@ -120,7 +120,7 @@ const RevenueReport = props => {
     ]
   }
 
-  const listData = [
+ /*  const listData = [
     {
       icon: 'Circle',
       iconColor: 'text-primary',
@@ -149,27 +149,27 @@ const RevenueReport = props => {
       result: 149,
       percentage: '70%'
     }
-  ]
+  ] */
 
   const renderChartInfo = () => {
-    return listData.map((item, index) => {
-      const IconTag = Icon[item.icon]
+    return props?.stats?.map((item, index) => {
+     // const IconTag = Icon[item.icon]
       return (               
             <tr  key={index}>
                 <td style={{
                     width:"50%"
                 }}  >   
-                        <IconTag
+                    {/*     <IconTag
                     size={15}
                     className={classnames({
                       [item.iconColor]: item.iconColor
                     })}
-                  />
-                  <span className='fw-bold ms-75'>{item.text}  </span>
+                  /> */}
+                  <span className='fw-bold ms-75'>{item.key}  </span>
 
               </td>
-              <td>{item.result}</td>
-              <td>{item.percentage}</td>
+              <td>{item.val}</td>
+              <td>{item.val}</td>
             </tr>
          
       )
