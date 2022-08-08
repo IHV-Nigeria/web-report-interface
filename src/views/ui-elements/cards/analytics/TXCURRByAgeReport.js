@@ -1,8 +1,6 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
 
 // ** Third Party Components
-import axios from 'axios'
 import Chart from 'react-apexcharts'
 import * as Icon from 'react-feather'
 //import classnames from 'classnames'
@@ -24,13 +22,7 @@ import {
 
 const RevenueReport = props => {
   // ** State
-  const [data, setData] = useState(null)
-
-  useEffect(() => {
-    axios.get('/card/card-analytics/revenue-report').then(res => setData(res.data))
-    return () => setData(null)
-  }, [])
-
+  //console.log(props?.genderStats)
   const donutColors = {
     series1: '#017EFA',
     series2: '#30D988'
@@ -92,7 +84,7 @@ const RevenueReport = props => {
         }
       },
       {
-        breakpoint: 576,
+        breakpoint: 600,
         options: {
           chart: {
             height: 320
@@ -119,39 +111,15 @@ const RevenueReport = props => {
       }
     ]
   }
-
- /*  const listData = [
-    {
-      icon: 'Circle',
-      iconColor: 'text-primary',
-      text: '< 15 years old',
-      result: 690,
-      percentage: '20%'
-    },
-    {
-      icon: 'Circle',
-      iconColor: 'text-warning',
-      text: '15 - 19 years old',
-      result: 258,
-      percentage: '30%'
-    },
-    {
-      icon: 'Circle',
-      iconColor: 'text-danger',
-      text: '20 - 49 Years old',
-      result: 149,
-      percentage: '50%'
-    },
-    {
-      icon: 'Circle',
-      iconColor: 'text-danger',
-      text: '> 50 years old',
-      result: 149,
-      percentage: '70%'
-    }
-  ] */
+  const getGenderStats = () => {
+    const gender =  props?.genderStats?.map((item) => {
+      return item.value
+    }) 
+    return gender
+  }
 
   const renderChartInfo = () => {
+    
     return props?.stats?.map((item, index) => {
      // const IconTag = Icon[item.icon]
       return (               
@@ -177,9 +145,9 @@ const RevenueReport = props => {
   }
 
   // ** Chart Series
-  const series = [85, 50]
+//console.log(series)
   const color = props.primary
-  return data !== null ? (
+  return props?.genderStats !== null ? (
     <Card className='card-revenue-budget'>
          <CardHeader>
         <CardTitle tag='h4'>TX_CURR by sex</CardTitle>
@@ -187,8 +155,10 @@ const RevenueReport = props => {
       </CardHeader>
       <CardBody>
       <Row className='mx-0'>
-        <Col className='revenue-report-wrapper' md='12' xs='12'>          
-            <Chart options={options} series={series} type='donut' height={350} />
+        <Col className='revenue-report-wrapper' md='12' xs='12'>     
+        {getGenderStats() !== undefined &&
+         <Chart options={options} series={getGenderStats()} type='donut' height={350} />
+        }     
         </Col>
         <Col className='budget-wrapper' md='6' xs='12' style={{display:"none"}}>
             <p className='mb-50 item-align-left' style={{

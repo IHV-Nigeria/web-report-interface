@@ -5,10 +5,11 @@
 import Chart from 'react-apexcharts'
 import { Settings } from 'react-feather'
 
+
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle, CardBody, CardText } from 'reactstrap'
 
-const Revenue = props => {
+const Revenue = props => {  
 
   const renderStats = () => {  
     return  props?.stats?.map((item, index) => {
@@ -22,6 +23,7 @@ const Revenue = props => {
         )
       })
   }
+  
   const options = {
       chart: {
         toolbar: { show: false },
@@ -30,31 +32,31 @@ const Revenue = props => {
         offsetX: -10
       },
       stroke: {
-        curve: 'smooth',
-        dashArray: [0, 12],
-        width: [4, 3]
+        curve: 'smooth'
+       // dashArray: [0, 12],
+        //width: [4, 3]
       },
       legend: {
         show: false
       },
-      colors: ['#d0ccff', '#ebe9f1'],
+      colors: ['#d0ccff', '#f1ebe9'],
       fill: {
         type: 'gradient',
         gradient: {
           shade: 'dark',
           inverseColors: false,
-          gradientToColors: [props.primary, '#ebe9f1'],
+        //  gradientToColors: [props.primary, '#ebe9f1'],
           shadeIntensity: 1,
           type: 'horizontal',
           opacityFrom: 1,
-          opacityTo: 1,
-          stops: [0, 100, 100, 100]
+          opacityTo: 1
+        //  stops: [0, 100, 100, 100]
         }
       },
       markers: {
-        size: 0,
+        size: 10,
         hover: {
-          size: 5
+          size: 10
         }
       },
       xaxis: {
@@ -67,9 +69,9 @@ const Revenue = props => {
         axisTicks: {
           show: false
         },
-        categories: ['01', '05', '09', '13', '17', '21', '26', '31'],
+        categories: props?.categories,
         axisBorder: {
-          show: false
+          show: true
         },
         tickPlacement: 'on'
       },
@@ -81,7 +83,7 @@ const Revenue = props => {
             fontSize: '1rem'
           },
           formatter(val) {
-            return val > 999 ? `${(val / 1000).toFixed(0)}k` : val
+            return val //> 999 ? `${(val / 1000).toFixed(0)}k` : val
           }
         }
       },
@@ -97,16 +99,7 @@ const Revenue = props => {
         x: { show: false }
       }
     },
-    series = [
-      {
-        name: 'This Month',
-        data: [45000, 47000, 44800, 47500, 45500, 48000, 46500, 48600]
-      },
-      {
-        name: 'Last Month',
-        data: [46000, 48000, 45500, 46600, 44500, 46500, 45000, 47000]
-      }
-    ]
+    series = props?.lineChatSeries
 
   return props?.stats !== null ? (
     
@@ -119,7 +112,8 @@ const Revenue = props => {
         <div className='d-flex justify-content-start mb-3'>            
          {renderStats()}     
         </div>
-        <Chart options={options} series={series} type='line' height={240} />
+       {props?.lineChatSeries && <Chart options={options} series={series} type='line' height={240} />
+}
       </CardBody>
     </Card>
   ) : null

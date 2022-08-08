@@ -36,10 +36,10 @@ const Home = () => {
         </Col>
         <Row className='match-height'>
           <Col lg='9' sm='12'>
-            <Revenue primary={context.colors.primary.main} stats={stats?.txCurrStateCount}/>
+            <Revenue primary={context.colors.primary.main} stats={stats?.txCurrStateCount} lineChatSeries={stats?.lineChatSeries} categories={stats?.categories}/>
           </Col>
           <Col lg='3' sm='12'>
-            <TXCURRByAgeReport primary={context.colors.primary.main} info={context.colors.info.main} stats={stats?.txCurrStateCount}/>
+            <TXCURRByAgeReport primary={context.colors.primary.main} info={context.colors.info.main} stats={stats?.txCurrStateCount} genderStats={stats?.txCurrSexCount}/>
           </Col>
       </Row>
     </div>
