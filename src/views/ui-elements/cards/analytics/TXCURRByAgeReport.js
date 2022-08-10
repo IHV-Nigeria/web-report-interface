@@ -34,7 +34,7 @@ const RevenueReport = props => {
       show: true,
       position: 'bottom'
     },
-    labels: ['Female', 'Male'],
+    labels: ['Male', ' Female'],
 
     colors: [donutColors.series1, donutColors.series2],
     dataLabels: {
