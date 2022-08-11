@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
   CardBody,
+  CardText,
   DropdownItem,
   DropdownToggle,
   UncontrolledButtonDropdown
@@ -144,6 +145,20 @@ const RevenueReport = props => {
     })
   }
 
+  const renderChartStats = () => {
+    
+    return props?.genderStats?.map((item) => {
+     // const IconTag = Icon[item.icon]
+      return (               
+        <Col xs='6' className='border-end py-1'>
+        <CardText className='text-muted mb-0'>{item.key}</CardText>
+        <h3 className='fw-bolder mb-0'>{item.value}</h3>
+      </Col>
+         
+      )
+    })
+  }
+
   // ** Chart Series
 //console.log(series)
   const color = props.primary
@@ -184,6 +199,9 @@ const RevenueReport = props => {
                
                </div>
         </Col>
+      </Row>
+      <Row className='border-top text-center mx-0'>
+          {renderChartStats()}
       </Row>
       </CardBody>
     </Card>
