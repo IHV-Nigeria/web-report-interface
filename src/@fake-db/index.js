@@ -14,7 +14,6 @@ import './navbar/navbarSearch'
 import './pages/knowledge-base'
 import './apps/permissionsList'
 import './cards/card-analytics'
-import './cards/card-statistics'
 import './pages/account-settings'
 import './autoComplete/autoComplete'
 

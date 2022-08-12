@@ -21,7 +21,7 @@ import {
   UncontrolledButtonDropdown
 } from 'reactstrap'
 
-const RevenueReport = props => {
+const TXCURRByAgeReport = props => {
   // ** State
   //console.log(props?.genderStats)
   const donutColors = {
@@ -147,13 +147,13 @@ const RevenueReport = props => {
 
   const renderChartStats = () => {
     
-    return props?.genderStats?.map((item) => {
+    return props?.genderStats?.map((item, index) => {
      // const IconTag = Icon[item.icon]
       return (               
-        <Col xs='6' className='border-end py-1'>
-        <CardText className='text-muted mb-0'>{item.key}</CardText>
-        <h3 className='fw-bolder mb-0'>{item.value}</h3>
-      </Col>
+        <Col xs='6' className='border-end py-1' key={index}>
+          <CardText className='text-muted mb-0'>{item.key}</CardText>
+          <h3 className='fw-bolder mb-0'>{item.value}</h3>
+        </Col>
          
       )
     })
@@ -208,4 +208,4 @@ const RevenueReport = props => {
   ) : null
 }
 
-export default RevenueReport
+export default TXCURRByAgeReport

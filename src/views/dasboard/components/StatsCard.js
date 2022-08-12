@@ -21,6 +21,7 @@ const StatsCard = props =>  {
         color: 'light-primary',
         icon: <Calendar size={18} />
       }
+      console.log(data)
       const colMargin = Object.keys(props.cols)
       const margin = index === 2 ? 'sm' : colMargin[0]
       return (
@@ -28,26 +29,26 @@ const StatsCard = props =>  {
           key={index}
         
           className={classnames({
-            [`mb-2 mb-${margin}-0`]: index !== data.length - 1
+            [`mb-2 mb-${margin}-0`]: index !== props?.dashboardStats.length - 1
           })}
         >
           <div className='d-flex align-items-center'>
             <div className='my-auto stats-width '>
               <h4 className='fw-bolder mb-0 annoucement-title' >
-                <Avatar color={item.color} icon={item.icon} className='me-2' />
-                  {item.title}
+                <Avatar color={item.color} icon={data.icon} className='me-2' />
+                  {data.title}
                 </h4>
                 <h2 className='font-medium-5'>
-                 <span className='text-dark me-1000'>{item.stats}</span>
+                 <span className='text-dark me-1000'>{data.stats}</span>
                   <span className='text-success me-10 dasboarb-stats-subtitle'> 
-                  {!item.isNative ? (
+                  {!data.isNative ? (
                     <Icon.ArrowUp size={14} className='ms-25 text-success' />
                   ) : (
                     <Icon.ArrowDown size={14} className='ms-25 text-danger' />
                   )}
-                  12%  
+                  {item.percentage}%  
                   </span>
-                  <span className='fw-normal dasboarb-stats-subtitle'>{item.subtitle}</span>
+                  <span className='fw-normal dasboarb-stats-subtitle'>{data.subtitle}</span>
                 </h2>              
             </div>
           </div>

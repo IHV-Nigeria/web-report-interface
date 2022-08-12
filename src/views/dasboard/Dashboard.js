@@ -2,13 +2,13 @@ import { useContext, useState, useEffect } from 'react'
 import {Col, Row } from 'reactstrap'
 import Breadcrumbs from '@components/breadcrumbs'
 import { ThemeColors } from '@src/utility/context/ThemeColors'
-import Revenue from '@src/views/ui-elements/cards/analytics/Revenue'
-import StatsCard from '@src/views/ui-elements/cards/statistics/StatsCard'
 import NotificationCard from '@src/views/ui-elements/cards/statistics/NotificationCard'
-import TXCURRByAgeReport from '@src/views/ui-elements/cards/analytics/TXCURRByAgeReport'
-import {fetchDashboardStats} from  '../api/dashboardService'
+import StatsCard from '../dasboard/components/StatsCard' 
+import TXCurrLineChart from '../dasboard/components/TXCurrLineChart'
+import TXCURRByAgeReport from '../dasboard/components/TXCURRByAgeReport'
+import {fetchDashboardStats} from  '../../api/dashboardService'
 
-const Home = () => {
+const Dashboard = () => {
   const context = useContext(ThemeColors)
   const [stats, setStats] = useState([])
 
@@ -32,18 +32,18 @@ const Home = () => {
         </Col>
 
         <Col xl='12' md='12' xs='12'>
-          <StatsCard cols={{ xl: '3', sm: '6' }}  />
+          <StatsCard cols={{ xl: '3', sm: '6' }}   dashboardStats={stats?.dashboardStats}/>
         </Col>
         <Row className='match-height'>
           <Col lg='9' sm='12'>
-          <Revenue primary={context.colors.primary.main} stats={stats?.txCurrStateCount} lineChatSeries={stats?.lineChatSeries} categories={stats?.categories}/>
+          <TXCurrLineChart primary={context.colors.primary.main} stats={stats?.txCurrByState} lineChatSeries={stats?.lineChatSeries} categories={stats?.categories}/>
          </Col>
           <Col lg='3' sm='12'>
-            <TXCURRByAgeReport primary={context.colors.primary.main} info={context.colors.info.main} stats={stats?.txCurrStateCount} genderStats={stats?.txCurrSexCount}/>
+            <TXCURRByAgeReport primary={context.colors.primary.main} info={context.colors.info.main}  genderStats={stats?.txCurrBySex}/>
           </Col>
       </Row>
     </div>
   )
 }
 
-export default Home
+export default Dashboard

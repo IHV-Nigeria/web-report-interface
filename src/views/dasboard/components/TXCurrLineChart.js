@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official'
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle, CardBody, CardText, Alert } from 'reactstrap'
 
-const Revenue = props => {  
+const TXCurrLineChart = props => {  
 
   const colorsCodes = ["#E1F396", "#59BA89", "#01575C"]
   const textColorCodes = ["#383F1C", "#FFFFFF", "#FFFFFF"]
@@ -78,4 +78,4 @@ const Revenue = props => {
     </Card>
   ) : null
 }
-export default Revenue
+export default TXCurrLineChart
