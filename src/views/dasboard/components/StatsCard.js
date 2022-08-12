@@ -18,7 +18,7 @@ const StatsCard = props =>  {
         subtitle: item.description,
         stats: item.value,
         isNative: false,
-        color: 'light-primary',
+        color: '#526d27',
         icon: <Calendar size={18} />
       }
       console.log(data)
@@ -35,7 +35,10 @@ const StatsCard = props =>  {
           <div className='d-flex align-items-center'>
             <div className='my-auto stats-width '>
               <h4 className='fw-bolder mb-0 annoucement-title' >
-                <Avatar color={item.color} icon={data.icon} className='me-2' />
+                <Avatar color={item.color} icon={data.icon} className='me-2' style ={{
+                  color:"#fff",
+                  backgroundColor : "#526d27"
+                }} />
                   {data.title}
                 </h4>
                 <h2 className='font-medium-5'>
@@ -60,9 +63,13 @@ const StatsCard = props =>  {
   return (
     <Card className='card-statistics' style={{
       backgroundColor:'#fff'
+      
     }}>
     
-      <CardBody className='statistics-body'>
+      <CardBody className='statistics-body' style={{
+            backgroundColor: "rgb(206 255 56 / 19%)",
+            borderRradius: "10px"
+      }}>
         <Row>{renderData()}</Row>
       </CardBody>
     </Card>

@@ -56,7 +56,8 @@ const NotificationCard = ({ cols }) => {
 
   return (
     <Card className='card-statistics' style={{
-      backgroundColor:'#FCF8F8'
+      backgroundColor:'rgb(234 235 232)',
+      borderRradius: "10px"
     }}>
       <CardHeader className='custom-card-header'>
         <CardTitle tag='h4'>Notifications</CardTitle>
