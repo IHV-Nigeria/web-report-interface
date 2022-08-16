@@ -1,72 +1,26 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import apiRequest from '../../../api/useJwt'
+/* 
+const padTo2Digits = (num)  => {
+    return num.toString().padStart(2, '0')
+  } */
+/* const getDate = (date) => {
+   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+} */
 
-export const getChatData = createAsyncThunk('appAnalytic/getChatData', async({
+
+export const getChatData = createAsyncThunk('appAnalytic/getChatData', async(params = {
     states,
     lgas,
     facilities,
     ageRange,
     indicator,
-    sex
-}) => {
-    const result = await apiRequest({
-        requetType: 'GET',
-        contentType: 'application/json',
-        requestUrl: `data/indicators?states=${states}&lgas=${lgas}&facilities=${facilities}&ageRange=${ageRange}&indicator=${indicator}&sex=${sex}&searchType=NORMAL`
-    })
-    const txCURRData  = {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            align: 'left',
-            text: 'Patients Currently Receiving ART by location'
-        },
-        subtitle: {
-            align: 'left',
-            text: 'Click the columns drill down'
-        },
-        accessibility: {
-            announceNewData: {
-                enabled: true
-            }
-        },
-        xAxis: {
-            type: 'category'
-        },
-        yAxis: {
-            title: {
-                text: 'Number of patients'
-            }
-
-        },
-        legend: {
-            enabled: false
-        },
-        colors: [
-            '#536e27 ',
-            '#536e27 '
-        ],
-        plotOptions: {
-            series: {
-                borderWidth: 0,
-                dataLabels: {
-                    enabled: true,
-                    format: '{point.y}'
-                }
-            }
-        },
-
-        tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-        },
-
-        series: (result.data !== undefined) ? result.data.series : {},
-        drilldown: (result.data !== undefined) ? { series: result.data.drillDown } : {}
-    }
-    return txCURRData
+    sex,
+    startDate,
+    endDate
+}) => {   
+   return params
 })
 
 export const getStats = createAsyncThunk('appAnalytic/getStats', async({
@@ -75,14 +29,16 @@ export const getStats = createAsyncThunk('appAnalytic/getStats', async({
     facilities,
     ageRange,
     indicator,
-    sex
+    sex,
+    startDate,
+    endDate   
 }) => {
     const result = await apiRequest({
         requetType: 'GET',
         contentType: 'application/json',
-        requestUrl: `data/stats?stats=${states}&lgas=${lgas}&facilities=${facilities}&ageRange=${ageRange}&indicator=${indicator}&sex=${sex}&searchType=NORMAL`
+        requestUrl: `data/stats?states=${states}&lgas=${lgas}&facilities=${facilities}&ageRange=${ageRange}&indicator=${indicator}&sex=${sex}&searchType=NORMAL&startDate=${startDate}&endDate=${endDate}`
     })
-    return result.data
+    return result?.data
 })
 
 export const appAnalyticsSlice = createSlice({

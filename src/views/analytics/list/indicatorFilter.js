@@ -1,24 +1,26 @@
 import Select from 'react-select'
 // ** Third Party Components
+
 import { useState } from 'react'
 import { Star } from 'react-feather'
 import classnames from 'classnames'
 import { selectThemeColors } from '@utils'
 import Nouislider from 'nouislider-react'
 import {useDispatch} from 'react-redux'
+import Flatpickr from 'react-flatpickr'
 import { getChatData, getStats} from '../store'
+import '@styles/react/libs/flatpickr/flatpickr.scss'
 import '@styles/react/libs/noui-slider/noui-slider.scss'
 import { Card, CardBody, Row, Col, Input, Button, Label } from 'reactstrap'
-
 const IndicatorFilter = props => {
 
   const { sidebarOpen } = props
   const dispatch = useDispatch()
   const indicatorOptions = [
     { value: 'TX_CURR', label: 'TX_CURR', color: '#00B8D9', isFixed: true },
-    { value: 'TX_NEW', label: 'TX_NEW', color: '#00B8D9', isFixed: true },
-    { value: 'PVLS', label: 'PVLS', color: '#00B8D9', isFixed: true },
-    { value: 'HTS', label: 'HTS', color: '#00B8D9', isFixed: false }
+    { value: 'TX_NEW', label: 'TX_NEW', color: '#00B8D9', isFixed: true }
+/*     { value: 'PVLS', label: 'PVLS', color: '#00B8D9', isFixed: true },
+    { value: 'HTS', label: 'HTS', color: '#00B8D9', isFixed: false } */
   ]
   const orgUnit = JSON.parse(localStorage.getItem('orgUnit'))
 
@@ -29,17 +31,24 @@ const IndicatorFilter = props => {
 
   //selectors
   //const selectedStatesObj = []
+  const [selectedStartDate, setSelectedStartDate] = useState(new Date().toISOString().slice(0, 19).split('T')[0])
+  const [selectedEndDate, setSelectedEndDate] = useState(new Date().toISOString().slice(0, 19).split('T')[0])
+
+  const [selectedIndicator, setSelectedIndicatorj] = useState([])
   const [selectedStatesObj, setSelectedStatesObj] = useState([])
   const [filteredLgas, setFilteredLgas] = useState([])
   const [filteredFacilities, setFilteredFacilities] = useState([])
   const [selectedLgas, setSelectedLgas] = useState([])
   const [selectedFacilities, setSelectedFacilities] = useState([])
- // const selectedFacilitiesObj = []
 
   orgUnit.map((item) => {
     const stateObj = { value: item.stateName, label: item.stateName, color: '#00B8D9', isFixed: true }
     stateOptions.push(stateObj)
   })
+
+  const handleChangeIndicator = selectedOption => {
+    setSelectedIndicatorj(selectedOption.value)
+  }
 
   const handleChangeState = selectedOption => {
     lgas.length = 0
@@ -116,8 +125,10 @@ const IndicatorFilter = props => {
       lgas:(selectedLgas.length  > 0) ? selectedLgas.join(',') : "",
       facilities:(selectedFacilities.length > 0) ? selectedFacilities.join(",") : "",
       ageRange:"",
-      indicator:"TX_CURR",
-      sex:""
+      indicator:selectedIndicator,
+      sex:"",
+      startDate: selectedStartDate,
+      endDate: selectedEndDate
     }))  
 
     dispatch(getStats({ 
@@ -125,8 +136,10 @@ const IndicatorFilter = props => {
       lgas:(selectedLgas.length > 0) ? selectedLgas.join(',') : "",
       facilities:"",
       ageRange:"",
-      indicator:"TX_CURR",
-      sex:""
+      indicator:selectedIndicator,
+      sex:"",
+      startDate: selectedStartDate,
+      endDate: selectedEndDate
     }))
   }
 
@@ -147,10 +160,10 @@ const IndicatorFilter = props => {
                     <Label className='form-label'>Select Indicator</Label>
                     <Select
                       isClearable={false}
-                      theme={selectThemeColors}
-                      isMulti
+                      theme={selectThemeColors}                      
                       name='colors'
                       options={indicatorOptions}
+                      onChange={handleChangeIndicator}
                       className='react-select'
                       classNamePrefix='select'
                     />
@@ -193,6 +206,20 @@ const IndicatorFilter = props => {
                       className='react-select'
                       classNamePrefix='select'
                     />
+                  </Col>
+                  <Col className='mb-1' md='12' sm='12'>
+                    <Label className='form-label'>Start Date</Label>
+                    <Flatpickr  locale="es" className='form-control' value={selectedStartDate}  onChange={date => {
+                      const newDate = new Date(date).toISOString().slice(0, 19).split('T')[0]
+                          setSelectedStartDate(newDate)
+                    } } />
+                  </Col>
+                  <Col className='mb-1' md='12' sm='12'>
+                    <Label className='form-label'>End Date</Label>
+                    <Flatpickr  locale="es"  className='form-control' value={selectedEndDate} onChange={date => { 
+                      const newDate = new Date(date).toISOString().slice(0, 19).split('T')[0]
+                      setSelectedEndDate(newDate)
+                      }} />
                   </Col>
                   <Col className='mb-1' md='12' sm='12'>
                   <Button className='ms-2' color='primary'  md='12' sm='12' onClick={handleSubmit}>
