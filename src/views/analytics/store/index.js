@@ -41,12 +41,31 @@ export const getStats = createAsyncThunk('appAnalytic/getStats', async({
     return result?.data
 })
 
+export const getAgeRageCharts = createAsyncThunk('appAnalytic/getAgeRageCharts', async({
+    states,
+    lgas,
+    facilities,
+    ageRange,
+    indicator,
+    sex,
+    startDate,
+    endDate   
+}) => {
+    const result = await apiRequest({
+        requetType: 'GET',
+        contentType: 'application/json',
+        requestUrl: `data/get-age-rage-chart?states=${states}&lgas=${lgas}&facilities=${facilities}&ageRange=${ageRange}&indicator=${indicator}&sex=${sex}&searchType=NORMAL&startDate=${startDate}&endDate=${endDate}`
+    })
+    return result?.data
+})
+
 export const appAnalyticsSlice = createSlice({
     name: 'appAnalytics',
     initialState: {
         stats: {},
         getChatData: {},
-        getStats: []
+        getStats: [],
+        getAgeRageCharts: {}
     },
     reducers: {},
     extraReducers: builder => {
@@ -55,6 +74,8 @@ export const appAnalyticsSlice = createSlice({
                 state.getChatData =  action.payload
             }).addCase(getStats.fulfilled, (state, action) => {
                 state.getStats = action.payload
+            }).addCase(getAgeRageCharts.fulfilled, (state, action) => {
+                state.getAgeRageCharts = action.payload
             })
     }
 })

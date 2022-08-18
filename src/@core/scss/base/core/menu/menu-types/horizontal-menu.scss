@@ -406,48 +406,6 @@
             }
         }
         // App content area wrapper height
-        &.footer-static {
-            .app-content {
-                .content-area-wrapper,
-                .kanban-wrapper {
-                    @include content-area-wrapper-height( #{$content-padding},
-                    #{$navbar-height},
-                    calc(#{$footer-height}+0.2rem),
-                    0rem,
-                    #{$horizontal-menu-height},
-                    1,
-                    $horizontalLayout: true);
-                }
-            }
-        }
-        &.footer-hidden {
-            .app-content {
-                .content-area-wrapper,
-                .kanban-wrapper {
-                    @include content-area-wrapper-height( #{$content-padding},
-                    #{$navbar-height},
-                    0rem,
-                    0rem,
-                    #{$horizontal-menu-height},
-                    2,
-                    $horizontalLayout: true);
-                }
-            }
-        }
-        &.footer-fixed {
-            .app-content {
-                .content-area-wrapper,
-                .kanban-wrapper {
-                    @include content-area-wrapper-height( #{$content-padding},
-                    #{$navbar-height},
-                    #{$footer-height},
-                    0rem,
-                    #{$horizontal-menu-height},
-                    2,
-                    $horizontalLayout: true);
-                }
-            }
-        }
     }
     // navbar Hidden
     &.navbar-hidden {
