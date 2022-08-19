@@ -57,7 +57,7 @@ const Import = () => {
     const token = localStorage.getItem(`${jwtConfig.storageTokenKeyName}`)
     const body = new FormData()
     body.append('file', file)
-    return { url: 'http://localhost:9090/api/v1/zipped-file-upload', 
+    return { url: `${jwtConfig.baseUrl}/zipped-file-upload`, 
       body,  
       headers: {
         'Access-Control-Allow-Origin': '*',

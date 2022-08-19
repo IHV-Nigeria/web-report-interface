@@ -1,6 +1,6 @@
 // ** Auth Endpoints
 export default {
-    baseUrl: 'http://localhost:9090/api/v1',
+    baseUrl: process.env.REACT_APP_SERVER_URL,
 
     // ** This will be prefixed in authorization header with token
     // ? e.g. Authorization: Bearer <token>
