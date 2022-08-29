@@ -18,6 +18,7 @@ const TXCurrLineChart = props => {
             width: '120px',
             background: colorsCodes[index],
             padding: '15px',
+            marginBottom:'10px',
             borderRadius:'5px',
             boxShadow: '0 3px 10px rgb(0 0 0 / 20%)'
           }}
@@ -69,11 +70,17 @@ const TXCurrLineChart = props => {
         <CardTitle tag='h4'>TX CURR Performance Trend</CardTitle>
         <Settings size={18} className='text-muted cursor-pointer' />
       </CardHeader>
-      <CardBody>
-        <div className='d-flex justify-content-start mb-3'>            
-         {renderStats()}     
-        </div>
-       {props?.lineChatSeries && <HighchartsReact  highcharts={Highcharts}  options={options} />}
+      <CardBody>  
+        <div className='row'> 
+         
+        <div className='col-md-10'>
+            {props?.lineChatSeries && <HighchartsReact  highcharts={Highcharts}  options={options} />}
+         </div>
+         <div className='col-md-2'>
+          {renderStats()}     
+         </div>
+      
+       </div>
       </CardBody>
     </Card>
   ) : null

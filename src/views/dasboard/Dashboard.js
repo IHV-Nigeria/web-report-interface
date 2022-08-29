@@ -36,11 +36,14 @@ const Dashboard = () => {
           <StatsCard cols={{ xl: '3', sm: '6' }}   dashboardStats={stats?.dashboardStats}/>
         </Col>
         <Row className='match-height'>
-          <Col lg='9' sm='12'>
+          <Col lg='6' sm='12'>
           <TXCurrLineChart primary={context.colors.primary.main} stats={stats?.txCurrByState} lineChatSeries={stats?.lineChatSeries} categories={stats?.categories}/>
          </Col>
-          <Col lg='3' sm='12'>
-            <TXCURRByAgeReport primary={context.colors.primary.main} info={context.colors.info.main}  genderStats={stats?.txCurrBySex}/>
+          <Col lg='6' sm='12'>
+            <TXCURRByAgeReport primary={context.colors.primary.main} 
+            info={context.colors.info.main}  
+            genderStats={stats?.txCurrByGender} 
+            demographyStats={stats?.txCurrByDemography}/>
           </Col>
       </Row>
     </div>

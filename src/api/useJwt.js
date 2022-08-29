@@ -3,8 +3,21 @@ import { Link } from 'react-router-dom'
 import { fetchUserData } from './authenticationService'
 import axios from 'axios'
 
+const client = axios.create({baseURL:`${jwtConfig.baseUrl}`})
+
 export function getToken() {
     return localStorage.getItem(`${jwtConfig.storageTokenKeyName}`)
+}
+
+export const request = ({...options}) => {
+    client.defaults.headers.common.Authorization = `Bearer ${getToken()}`
+    const onSuccess = (response) => response
+    const onError = (error) => {
+
+        return error
+    }
+
+    return client(options).then(onSuccess).catch(onError)
 }
 
 export default function apiRequest({
@@ -27,7 +40,6 @@ export default function apiRequest({
     }).then((response) => {
         return response
     }).catch((err) => {
-
         if (err && err.response) {
             //setIsError(true)
             switch (err.response.status) {
@@ -35,14 +47,15 @@ export default function apiRequest({
                     fetchUserData()
                     break
                 case 500:
+                   // location.href = "/login"
                     break
                 case 400:
                     return err.response
                 default:
             }
-        } else {
-            return err.response.data.messge
-        }
+        } else if (err.response === undefined)  { 
+          //  location.href = "/login"          
+        } else {}
     })
 
 }
