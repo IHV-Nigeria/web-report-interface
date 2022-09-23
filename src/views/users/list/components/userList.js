@@ -46,11 +46,21 @@ const UserList = () => {
         () => [
             {
               name: 'User Name',
-              minWidth: '450px',
+              minWidth: '200px',
               cell: row => (
                 <div className='d-flex align-items-center'>              
                   <div className='user-info text-truncate ms-1'>
                     <span className='d-block fw-bold text-truncate'>{row.userFirstName} {row.userLastName}</span>
+                  </div>
+                </div>
+              )
+            },
+            {
+              name: 'State',
+              cell: row => (
+                <div className='d-flex align-items-center'>              
+                  <div className='user-info text-truncate ms-1'>
+                    <span className='d-block fw-bold text-truncate'>{(row.state !== null) ? row.state.stateName : ""}</span>
                   </div>
                 </div>
               )
@@ -59,7 +69,7 @@ const UserList = () => {
                 name: "Email",
                 selector: row => row.userEmail,
                 sortable: true
-            },          
+            },         
             {
                 name: "Role",
                 selector: row => row.role[0].roleName,

@@ -33,7 +33,7 @@ const UsersList = () => {
             color='danger'
             statTitle='PROCESSED'
             icon={<UserPlus size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>{stats.processing}</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.processed}</h3>}
           />
         </Col>
         <Col lg='3' sm='6'>
@@ -41,7 +41,7 @@ const UsersList = () => {
             color='success'
             statTitle='PROCESSING'
             icon={<UserCheck size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>{stats.queued}</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.processing}</h3>}
           />
         </Col>
         <Col lg='3' sm='6'>
@@ -49,7 +49,7 @@ const UsersList = () => {
             color='warning'
             statTitle='QUEUED'
             icon={<UserX size={20} />}
-            renderStats={<h3 className='fw-bolder mb-75'>{stats.processed}</h3>}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.queued}</h3>}
           />
         </Col>
         <Col lg='12' sm='6'>
