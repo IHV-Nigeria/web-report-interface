@@ -26,6 +26,11 @@ const Routes = [
     component: lazy(() => import('../../views/analytics/list'))
   }, 
   {
+    path: '/performance-dashboard',
+    component: lazy(() => import('../../views/performance-dashboard/list'))
+
+  }, 
+  {
     path: '/upload-file',
     component: lazy(() => import('../../views/file-upload/Import'))
 
@@ -45,6 +50,10 @@ const Routes = [
   {
     path: '/pbstracker',
     component: lazy(() => import('../../views/pbs-tracker/list'))
+  }, 
+  {
+    path: '/viralload-monitoring',
+    component: lazy(() => import('../../views/analytics/viralload-monitoring/list'))
   }, 
   {
     path: '/login',

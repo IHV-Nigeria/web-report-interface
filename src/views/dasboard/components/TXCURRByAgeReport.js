@@ -27,7 +27,7 @@ const renderTxcurrByAge = () => {
     return props?.demographyStats?.map((item, index) => {
       const ageGroupVal = Object.values(item)
       return (               
-        <div style={{marginBottom: '2rem !important'}} className='d-flex justify-content-between mb-1'  key={index}  >
+        <div style={{marginBottom: '1.2rem !important'}} className='d-flex justify-content-between mb-1'  key={index}  >
         <div className='d-flex align-items-center'>
           <Circle size={15} className='text-primary' />
           <span className='fw-bold ms-75'>{Object.keys(item)}</span>

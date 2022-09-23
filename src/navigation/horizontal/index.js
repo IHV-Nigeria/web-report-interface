@@ -13,7 +13,26 @@ export default [
     id: 'analytics',
     title: 'Analytics',
     icon: <Mail size={20} />,
-    navLink: '/analytics'
+    children: [
+      {
+        id: 'Treament Dashboard',
+        title: 'Treament Dashboard',
+        icon: <Mail />,
+        navLink: '/analytics'
+      },
+      {
+        id: 'Viralload Monitoring Dashboard',
+        title: 'Viralload Monitoring Dashboard',
+        icon: <Mail />,
+        navLink: '/viralload-monitoring'
+      },
+      {
+        id: 'Performance Dashboard',
+        title: 'Performance Dashboard',
+        icon: <Mail />,
+        navLink: '/performance-dashboard'
+      }
+    ]
   },
   {
     id: 'uploads',
