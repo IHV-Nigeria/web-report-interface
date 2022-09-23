@@ -16,7 +16,7 @@ import IndicatorFilter from './indicatorFilter'
 import drilldown from 'highcharts/modules/drilldown'
 import HighchartsReact from 'highcharts-react-official'
 import { User, UserPlus, UserCheck, UserX } from 'react-feather'
-import {fetchDashboardChart, getChartData, buildButerFlyChat, buildDonut } from  '../../../api/treatmentService'
+import {fetchPvlsAnalytics, buildPvlsChat, buildPvlsByAge } from  '../../../../api/viralloadService'
 import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
 drilldown(Highcharts) 
 
@@ -25,20 +25,17 @@ import '@styles/react/apps/app-users.scss'
 const UsersList = () => {
   const [sidebarOpen] = useState(false)
   const [chartSeries, setChartSeries] = useState([])
-  const [ageRageSeries, setAgeRageSeries] = useState([])
-  const [sexSeries, setSexSeries] = useState([])
+  const [pvlsAgeSex, setPvlsAgeSex] = useState([])
+//  const [sexSeries, setSexSeries] = useState([])
   const chartData = useSelector(state => state.analytics)
-
+  
   const dashboardStats = () => {
-    if (chartData.getChatData.indicator  !== undefined && chartData.getChatData.indicator  !== '') {
-        fetchDashboardChart(chartData.getChatData).then((response) => {
-          setChartSeries(getChartData(response.data, chartData.getChatData.indicator))
-          setAgeRageSeries(buildButerFlyChat(chartData.getAgeRageCharts.tx_male_female_age_groups))
-          setSexSeries(buildDonut(chartData.getAgeRageCharts.tx_sex))
+      fetchPvlsAnalytics(chartData.getChatData).then((response) => {
+        setChartSeries(buildPvlsChat("Indicators", "Number of patients", "state",  response.data.txPvls))       
+        setPvlsAgeSex(buildPvlsByAge(response.data.txPvlsByAge))
         }).catch((err) => {
           console.log(err)
         })  
-    }
   }
 
   useEffect(() => {
@@ -89,7 +86,18 @@ const UsersList = () => {
               </CardBody>
           </Card>
         </Col>}
-      
+        <Col lg='12' sm='12'>     
+          {chartData.getChatData.indicator  !== undefined  &&  
+              <Card className='card-revenue-budget'>
+              <CardHeader>
+                <CardTitle tag='h4'>{chartData.getChatData.indicator}  by State </CardTitle>
+              </CardHeader>
+              <CardBody> 
+                <HighchartsReact  highcharts={Highcharts}  options={pvlsAgeSex} />  
+              </CardBody>
+            </Card>
+          }
+        </Col> 
          
         <Col lg='12' sm='12'>     
           {chartData.getChatData.indicator  !== undefined  &&  
@@ -103,32 +111,7 @@ const UsersList = () => {
             </Card>
           }
         </Col> 
-        <Col lg='6' sm='12'>   
-        {
-          chartData.getChatData.indicator  !== undefined  && 
-            <Card className='card-revenue-budget'>
-              <CardHeader>
-                <CardTitle tag='h4'>{chartData.getChatData.indicator}  by Age Groups </CardTitle>
-              </CardHeader>
-              <CardBody>     
-                <HighchartsReact  highcharts={Highcharts}  options={ageRageSeries} />
-              </CardBody>
-            </Card>
-          }
-        </Col> 
-        <Col lg='6' sm='12'>        
-           {
-           chartData.getChatData.indicator  !== undefined  && 
-           <Card className='card-revenue-budget'>
-            <CardHeader>
-              <CardTitle tag='h4'>TX_CURR by Sex </CardTitle>
-            </CardHeader>
-            <CardBody> 
-                <HighchartsReact  highcharts={Highcharts}  options={sexSeries} />
-            </CardBody>
-            </Card>
-           }
-        </Col> 
+        
       </Row>
     </div>
   )

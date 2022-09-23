@@ -4,6 +4,7 @@ import Avatar from '@components/avatar'
 //import { useDropzone } from 'react-dropzone'
 import { X, DownloadCloud } from 'react-feather'
 //import {uploadFile} from '../../api/uploadService'
+import Breadcrumbs from '@components/breadcrumbs'
 import '@styles/react/libs/file-uploader/file-uploader.scss'
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
@@ -78,7 +79,7 @@ const Import = () => {
 
   return (
     <Fragment>
-      
+      <Breadcrumbs breadCrumbParent='IHVNCR'  breadCrumbTitle='File upload' breadCrumbActive='upload' />
       <Row className='import-component'>
         <Col sm='12'>
           <Card>
