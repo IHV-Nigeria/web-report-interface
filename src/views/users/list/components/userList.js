@@ -60,7 +60,7 @@ const UserList = () => {
               cell: row => (
                 <div className='d-flex align-items-center'>              
                   <div className='user-info text-truncate ms-1'>
-                    <span className='d-block fw-bold text-truncate'>{(row.state !== null) ? row.state.stateName : ""}</span>
+                    <span className='d-block fw-bold text-truncate'>{(row.state !== null) ? row.state.stateName : "Central"}</span>
                   </div>
                 </div>
               )

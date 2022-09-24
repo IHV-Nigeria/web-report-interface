@@ -35,7 +35,7 @@ const UploadList = (props) => {
         () => [
             {
               name: 'Uploader',
-              minWidth: '250px',
+              minWidth: '150px',
               cell: row => (
                 <div className='d-flex align-items-center'>              
                   <div className='user-info text-truncate ms-1'>
@@ -50,7 +50,7 @@ const UploadList = (props) => {
               cell: row => (
                 <div className='d-flex align-items-center'>              
                   <div className='user-info text-truncate ms-1'>
-                    <span className='d-block fw-bold text-truncate'>unknown {row.user.id}</span>
+                    <span className='d-block fw-bold text-truncate'>{(row.user.state) !== null ? row.user.state.stateName : "Central"}</span>
                   </div>
                 </div>
               )
