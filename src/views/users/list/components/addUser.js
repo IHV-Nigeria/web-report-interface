@@ -22,7 +22,12 @@ const AddUser = ({ open, handleModal}) => {
     { label: 'M&E', value: '3' }
  
   ]
-  
+  const states = []
+  const orgUnit = JSON.parse(localStorage.getItem('orgUnit'))
+  orgUnit.map((item) => {
+    const stateObj = { value: item.stateName, label: item.stateName}
+    states.push(stateObj)
+  })
   const dispatch = useDispatch()
   const [data, setData] = useState(null)
 
@@ -33,7 +38,8 @@ const AddUser = ({ open, handleModal}) => {
     firstName: '',
     lastName: '',
     email: '',
-    role: null
+    role: null,
+    state: null
   }
 
   const {
@@ -67,7 +73,8 @@ const handleSidebarClosed = () => {
           email: data.email,
           username: `${data.firstName.toLowerCase()}.${data.lastName.toLowerCase()}`,
           password: `${data.firstName.toLowerCase()}.${data.lastName.toLowerCase()}@ihvn!`,
-          role: data.role.value
+          role: data.role.value,
+          state: data.state.value
         })
         .then(res => {
           if (res.status === 400) {
@@ -176,6 +183,25 @@ const handleSidebarClosed = () => {
                   )}
                 />
               </div>  
+              <div className='mb-1'>
+                <Label className='form-label' for='role'>
+                  State <span className='text-danger'>*</span>
+                </Label>
+                <Controller
+                  name='state'
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      isClearable={false}
+                      classNamePrefix='select'
+                      options={states}
+                      theme={selectThemeColors}
+                      className={classnames('react-select', { 'is-invalid': data !== null && data.state === null })}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
               <div className='mb-1'>
                 <Label className='form-label' for='role'>
                   Role <span className='text-danger'>*</span>

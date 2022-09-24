@@ -32,8 +32,8 @@ const LoginBasic = ({}) => {
   const userRef = useRef()
 
   const [values, setValues] = useState({
-    userName: 'ihvnadmin',
-    userPassword: 'ihvnadmin@123'
+    userName: '',
+    userPassword: ''
     })
 
  const dispatch = useDispatch()
