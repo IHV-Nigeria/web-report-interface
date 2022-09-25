@@ -67,7 +67,7 @@ export const  buildBarVLChat = (
     }
 }
 
-export const buildBarChartAgeSexDualAxis = (
+export const buildThreeColumnBarChartWithDualAxis = (
     title, 
     y1_title, 
     y2_title, 
@@ -242,24 +242,22 @@ export const buildBarChartAgeSexDualAxis = (
 }
 }
 
-
-export const buildBarChartDualAxis = (title, y1_title, y2_title, xaxisCategory, parent_data, parent_data_name, child_data, child_data_name, percent_data, percent_data_name, useLine = true, xaxisTitle, height) => {
-    //filter unneeded zero data
-
-    const  idxsToDelete = []
-    parent_data = (parent_data || []).filter((n, i) => {
-        if (n > 0) {
-            return true
-        }
-        idxsToDelete.push(i)
-        return false
-    })
-
-    if (idxsToDelete.length > 0) {
-        xaxisCategory = (xaxisCategory || []).filter((n, i) => !idxsToDelete.includes(i))
-        child_data = (child_data || []).filter((n, i) => !idxsToDelete.includes(i))
-        percent_data = (percent_data || []).filter((n, i) => !idxsToDelete.includes(i))
-    }
+export const buildTwoColumnBarChartWithDualAxis = (
+    title, 
+    y1_title, 
+    y2_title, 
+    xaxisCategory, 
+    parent_data, 
+    parent_data_name,
+    child_data, 
+    child_data_name, 
+    percent_data, 
+    percent_data_name,
+    percent_data2, 
+    percent_data_name2, 
+    useLine, 
+    xaxisTitle, 
+    height)  => {
 
     const series = []
 
@@ -274,6 +272,7 @@ export const buildBarChartDualAxis = (title, y1_title, y2_title, xaxisCategory, 
 
         hasThousand = hasThousand || parent_data.some(x => Math.abs(x) >= 1000)
     }
+    console.log(hasThousand)
 
     if ((child_data || []).length > 0) {
         series.push({
@@ -282,33 +281,34 @@ export const buildBarChartDualAxis = (title, y1_title, y2_title, xaxisCategory, 
             data: child_data
         })
 
-        hasThousand = hasThousand || child_data.some(x => Math.abs(x) >= 1000)
+     //   hasThousand = hasThousand || child_data.some(x => Math.abs(x) >= 1000)
     }
-    console.log(hasThousand)
+   
 
-    const  yAxis = [
+    const yAxis = [
         { // Secondary yAxis
-        title: {
-            //text: y1_title + (hasThousand ? " (thousands)" : ""),
-            text: y1_title,
-            rotation: 270
-        },
-        labels: {
-            formatter:  () => {
-                //return hasThousand ? parseInt(this.value) / 1000 : this.value;
-               // return Highcharts.numberFormat(this.value, 0, '', ' ')
-            }
-            //format: '{value}'
-        },
-        max: Math.max.apply(Math, parent_data),
-        min: 0
-    }
+            title: {
+                //text: y1_title + (hasThousand ? " (thousands)" : ""),
+                text: y1_title,
+                rotation: 270
+            },
+            labels: {
+                formatter:  () => {
+                    // return hasThousand ? parseInt(this.value) / 1000 : this.value;
+                    //return Highcharts.numberFormat(this.value, 0, '', ' ')
+                }
+                //format: '{value}'
+            },
+            max: Math.max.apply(Math, parent_data),
+            min: 0
+        }
     ]
 
     if ((percent_data || []).length > 0) {
         const percentSeries = {
             name: percent_data_name,
-            type: 'spline', //useLine ? 'spline' : 'scatter',
+            type: 'scatter', //useLine ? 'spline' : 'scatter',
+            color: "#E46C0A",
             data: percent_data,
             yAxis: 1,
             tooltip: {
@@ -316,19 +316,6 @@ export const buildBarChartDualAxis = (title, y1_title, y2_title, xaxisCategory, 
             },
             marker: {
                 radius: 5
-            }
-        }
-
-        if (!useLine) {
-            percentSeries.lineWidth = 0
-            percentSeries.states = {
-                hover: {
-                    lineWidth: 0,
-                    lineWidthPlus: 0,
-                    marker: {
-                        radius: 5
-                    }
-                }
             }
         }
 
@@ -346,7 +333,25 @@ export const buildBarChartDualAxis = (title, y1_title, y2_title, xaxisCategory, 
             max: 100,
             min: 0
         })
+    }  
+    
+    if ((percent_data2 || []).length > 0) {
+        const percentSeries2 = {
+            name: percent_data_name2,
+            type: 'scatter', //useLine ? 'spline' : 'scatter',
+            data: percent_data2,
+            color: "#7030A0",
+            yAxis: 1,
+            tooltip: {
+                pointFormat: '<b>{point.y:.1f}%</b>'
+            },
+            marker: {
+                radius: 10
+            }
+        }
+        series.push(percentSeries2)
     }
+
 
     return {
         chart: {
@@ -368,16 +373,15 @@ export const buildBarChartDualAxis = (title, y1_title, y2_title, xaxisCategory, 
             }
         }
     ],
-        yAxis,
-        tooltip: {
-            shared: true
-        },
-        //colors: ['#615D8B', '#F88944', '#959335'],
-        colors: ['#BA6733', '#4E611C', '#3A356E'],
-        legend: {
-            enabled: true
-        },
-        exporting: { enabled: false },
-        series
-    }
+    yAxis,
+    tooltip: {
+        shared: true
+    },
+    colors,
+    legend: {
+        enabled: true
+    },
+    exporting: { enabled: false },
+    series
+}
 }

@@ -18,7 +18,7 @@ export default [
         id: 'Treament Dashboard',
         title: 'Treament Dashboard',
         icon: <Mail />,
-        navLink: '/analytics'
+        navLink: '/treatment'
       },
       {
         id: 'Viralload Monitoring Dashboard',
@@ -27,10 +27,10 @@ export default [
         navLink: '/viralload-monitoring'
       },
       {
-        id: 'Performance Dashboard',
-        title: 'Performance Dashboard',
+        id: 'TB Dashboard',
+        title: 'TB Monitoring',
         icon: <Mail />,
-        navLink: '/performance-dashboard'
+        navLink: '/tb-monitoring'
       }
     ]
   },

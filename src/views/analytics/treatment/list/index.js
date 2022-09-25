@@ -16,7 +16,7 @@ import IndicatorFilter from './indicatorFilter'
 import drilldown from 'highcharts/modules/drilldown'
 import HighchartsReact from 'highcharts-react-official'
 import { User, UserPlus, UserCheck, UserX } from 'react-feather'
-import {fetchDashboardChart, getChartData, buildButerFlyChat, buildDonut } from  '../../../api/treatmentService'
+import {fetchDashboardChart, getChartData, buildButerFlyChat, buildDonut } from  '../../../../api/treatmentService'
 import StatsHorizontal from '@components/widgets/stats/StatsHorizontal'
 drilldown(Highcharts) 
 

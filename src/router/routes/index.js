@@ -22,14 +22,14 @@ const Routes = [
     component: lazy(() => import('../../views/data-quality/list'))
   }, 
   {
-    path: '/analytics',
-    component: lazy(() => import('../../views/analytics/list'))
+    path: '/treatment',
+    component: lazy(() => import('../../views/analytics/treatment/list'))
   }, 
-  {
+/*   {
     path: '/performance-dashboard',
     component: lazy(() => import('../../views/performance-dashboard/list'))
 
-  }, 
+  },  */
   {
     path: '/upload-file',
     component: lazy(() => import('../../views/file-upload/Import'))
@@ -55,6 +55,10 @@ const Routes = [
     path: '/viralload-monitoring',
     component: lazy(() => import('../../views/analytics/viralload-monitoring/list'))
   }, 
+  {
+    path: '/tb-monitoring',
+    component: lazy(() => import('../../views/analytics/tb-monitoring/list'))
+  },
   {
     path: '/login',
     component: lazy(() => import('../../views/authentication/LoginBasic')),

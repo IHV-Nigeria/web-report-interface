@@ -1,5 +1,5 @@
 import apiRequest from './useJwt'
-import {buildBarVLChat, buildBarChartAgeSexDualAxis} from './chatUtils/barChart'
+import {buildBarVLChat, buildThreeColumnBarChartWithDualAxis} from './chatUtils/barChart'
 
 
 export const fetchPvlsAnalytics = (param) => {
@@ -135,7 +135,7 @@ export const  buildPvlsByAge = (txPvlsByAge)  => {
             no_of_patients: 283690
           }
         }
-    return  buildBarChartAgeSexDualAxis(
+    return  buildThreeColumnBarChartWithDualAxis(
         null,
         'Number of Patients',
         '% Suppression',
@@ -149,7 +149,7 @@ export const  buildPvlsByAge = (txPvlsByAge)  => {
         dt.tx_pvls_age.percentageSuppresedSeries,
         '% Suppression',
         dt.tx_pvls_age.percentageCoverageSeries,
-        '% Suppression',
+        '% Coverage',
         false,
         "Age Group")
 }

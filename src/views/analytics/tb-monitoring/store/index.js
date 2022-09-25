@@ -1,14 +1,6 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import apiRequest from '../../../api/useJwt'
-/* 
-const padTo2Digits = (num)  => {
-    return num.toString().padStart(2, '0')
-  } */
-/* const getDate = (date) => {
-   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
-} */
-
+import apiRequest from '../../../../api/useJwt'
 
 export const getChatData = createAsyncThunk('appAnalytic/getChatData', async(params = {
     states,
