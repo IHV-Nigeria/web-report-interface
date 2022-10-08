@@ -1,6 +1,6 @@
 import apiRequest from './useJwt'
 import {buildBarVLChat, buildThreeColumnBarChartWithDualAxis} from './chatUtils/barChart'
-
+import {buildLineChat} from './chatUtils/lineChart'
 
 export const fetchPvlsAnalytics = (param) => {
    const url = `data/get-pvls-analytics?states=${param.states}&lgas=${param.lgas}&facilities=${param.facilities}&ageRange=${param.ageRange}&indicator=${param.indicator}&sex=${param.sex}&searchType=NORMAL&startDate=${param.startDate}&endDate=${param.endDate}`
@@ -13,7 +13,7 @@ export const fetchPvlsAnalytics = (param) => {
   
 export const  buildPvlsChat = (title, y1_title, x_title, seriesData)  => {
     const xaxisCategory = [
-        "TX_CUR",
+        "TX_CURR",
         "Eligible for VL Load",
         "",
         "TX_PVLS D",
@@ -152,4 +152,28 @@ export const  buildPvlsByAge = (txPvlsByAge)  => {
         '% Coverage',
         false,
         "Age Group")
+}
+
+export const  buildVLQuarterChat = (vlData)  => { 
+  const undetected = []
+  const lowLevelViraemia = []
+  const categoriesData = [] 
+  vlData.map((item) => {     
+    categoriesData.push(item.name)
+    undetected.push(item.y)
+    lowLevelViraemia.push(item.z)
+  })
+
+  const seriesData = [
+    {
+      name: 'Undetected Viralload',
+      data: undetected
+    },
+    {
+      name: 'Low Level Viraemia',
+      data: lowLevelViraemia
+    }
+  ]
+
+  return buildLineChat('', categoriesData, seriesData)
 }

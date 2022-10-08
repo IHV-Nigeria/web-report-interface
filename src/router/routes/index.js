@@ -60,6 +60,10 @@ const Routes = [
     component: lazy(() => import('../../views/analytics/tb-monitoring/list'))
   },
   {
+    path: '/tx-ml',
+    component: lazy(() => import('../../views/analytics/tx_ml/list'))
+  },
+  {
     path: '/login',
     component: lazy(() => import('../../views/authentication/LoginBasic')),
     layout: 'BlankLayout',

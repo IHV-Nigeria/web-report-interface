@@ -31,6 +31,12 @@ export default [
         title: 'TB Monitoring',
         icon: <Mail />,
         navLink: '/tb-monitoring'
+      },
+      {
+        id: 'TX ML',
+        title: 'TX ML',
+        icon: <Mail />,
+        navLink: '/tx-ml'
       }
     ]
   },
