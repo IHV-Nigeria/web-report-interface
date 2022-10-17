@@ -17,7 +17,7 @@ import { Card, CardBody, CardTitle, CardText, Form, Label, Input, Button } from 
 import { AlertCircle } from 'react-feather'
 
 // ** Actions
-import { handleLogin, setOrgUnit} from '@store/authentication'
+import { handleLogin, setOrgUnit, setOrgUnitQuaters} from '@store/authentication'
 
 // ** Context
 import { AbilityContext } from '@src/utility/context/Can'
@@ -55,7 +55,8 @@ const handleSubmit = (evt) => {
       const data = { ...response.userData, accessToken: response.accessToken, refreshToken: response.refreshToken }   
      
       getOrgunit(response.accessToken).then((response) => {
-        dispatch(setOrgUnit(response.data))
+        dispatch(setOrgUnit(response.data.states))
+        dispatch(setOrgUnitQuaters(response.data.quarters))
       })   
 
      

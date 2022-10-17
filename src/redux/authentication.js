@@ -16,7 +16,8 @@ export const authSlice = createSlice({
     name: 'authentication',
     initialState: {
         userData: initialUser(),
-        orgUnit: []
+        orgUnit: [],
+        quarters: []
     },
     reducers: {
         handleLogin: (state, action) => {
@@ -39,10 +40,14 @@ export const authSlice = createSlice({
         setOrgUnit: (state, action) => {
             state.orgUnit = action.payload
             localStorage.setItem('orgUnit', JSON.stringify(action.payload))
+        },
+        setOrgUnitQuaters: (state, action) => {
+            state.quarters = action.payload
+            localStorage.setItem('quarters', JSON.stringify(action.payload))
         }
     }
 })
 
-export const { handleLogin, handleLogout, setOrgUnit, setDashboardStats } = authSlice.actions
+export const { handleLogin, handleLogout, setOrgUnit, setOrgUnitQuaters, setDashboardStats } = authSlice.actions
 
 export default authSlice.reducer

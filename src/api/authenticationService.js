@@ -80,7 +80,7 @@ export const fetchUserData = () => {
 export const getOrgunit = (accessToken) => {
     return axios({
         method: 'GET',
-        url: `${jwtConfig.baseUrl}/org-unit/states`,
+        url: `${jwtConfig.baseUrl}/org-unit/list`,
         headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
