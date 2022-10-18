@@ -8,7 +8,7 @@ import { selectThemeColors } from '@utils'
 import Nouislider from 'nouislider-react'
 import {useDispatch} from 'react-redux'
 import Flatpickr from 'react-flatpickr'
-import { getChatData} from '../store'
+import { getChatData,  getStats} from '../store'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import '@styles/react/libs/noui-slider/noui-slider.scss'
 import { Card, CardBody, Row, Col, Input, Button, Label } from 'reactstrap'
@@ -79,29 +79,8 @@ const IndicatorFilter = props => {
       startDate: '',
       endDate: ''
     }
-    dispatch(getChatData(param))  
-
-    /* dispatch(getStats({ 
-      states:(selectedStatesObj.length > 0) ? selectedStatesObj.join(',') : "",
-      lgas:(selectedLgas.length > 0) ? selectedLgas.join(',') : "",
-      facilities:"",
-      ageRange:"",
-      indicator:"",
-      sex:"",
-      startDate: "",
-      endDate: ""
-    }))
-
-    dispatch(getAgeRageCharts({ 
-      states:(selectedStatesObj.length > 0) ? selectedStatesObj.join(',') : "",
-      lgas:(selectedLgas.length > 0) ? selectedLgas.join(',') : "",
-      facilities:"",
-      ageRange:"",
-      indicator:"",
-      sex:"",
-      startDate: "",
-      endDate: ""
-    })) */
+    dispatch(getChatData(param)) 
+    dispatch(getStats(param))
   }
 
   return (

@@ -32,6 +32,7 @@ const UsersList = () => {
   
   const dashboardStats = () => {
       fetchPvlsAnalytics(chartData.getChatData).then((response) => {
+        console.log(chartData.getChatData)
         setChartSeries(buildPvlsChat("Indicators", "Number of patients", "",  response.data.txPvls))       
         setPvlsAgeSex(buildPvlsByAge(response.data.txPvlsByAge))
         setplvsByQuarter(buildVLQuarterChat(response.data.txPvlsByQuarter))       
