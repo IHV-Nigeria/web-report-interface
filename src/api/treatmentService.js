@@ -1,5 +1,5 @@
 import apiRequest from './useJwt'
-
+import {serialize} from '../api/utils/common'
 const colors = ['#01575C', '#59BA89', '#9d9b03', '#08bf7A78020f']
 
 export const fetchDashboardStats = () => {
@@ -11,8 +11,7 @@ export const fetchDashboardStats = () => {
 }
 
 export const fetchDashboardChart = (param) => {
-
-    const url = `data/indicators?states=${param.states}&lgas=${param.lgas}&facilities=${param.facilities}&ageRange=${param.ageRange}&indicator=${param.indicator}&sex=${param.sex}&searchType=NORMAL&startDate=${param.startDate}&endDate=${param.endDate}`
+    const url = `data/indicators?${serialize(param)}`
     return apiRequest({
         requetType: 'GET',
         contentType: 'application/json',

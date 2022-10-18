@@ -1,4 +1,5 @@
 import {useEffect,  React, useState } from 'react'
+import Breadcrumbs from '@components/breadcrumbs'
 import { 
   Row, 
   Col,
@@ -45,6 +46,7 @@ const UsersList = () => {
 
   return (
     <div className='app-user-list'>
+      <Breadcrumbs breadCrumbTitle='Analytics' breadCrumbParent='IHVNCR' breadCrumbActive='PVLS Reports' />
       <IndicatorFilter sidebarOpen={sidebarOpen} />
       <Row lg='7'>
         <Col lg='4' sm='6'>

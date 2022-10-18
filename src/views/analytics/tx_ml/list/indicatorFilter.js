@@ -19,22 +19,36 @@ const IndicatorFilter = props => {
 
   const orgUnit = JSON.parse(localStorage.getItem('orgUnit'))
 
+  const quarter = JSON.parse(localStorage.getItem('quarters'))
+
+
   //options
   const facilities = []
   const stateOptions = []
   const lgas = []
-
+  const quarterOptions = []
 
   const [selectedStatesObj, setSelectedStatesObj] = useState([])
   const [filteredLgas, setFilteredLgas] = useState([])
   const [filteredFacilities, setFilteredFacilities] = useState([])
   const [selectedLgas, setSelectedLgas] = useState([])
   const [selectedFacilities, setSelectedFacilities] = useState([])
+  const [selectedQuarter, setSelectedQuarter] = useState('')
+
 
   orgUnit.map((item) => {
     const stateObj = { value: item.stateName, label: item.stateName, color: '#00B8D9', isFixed: true }
     stateOptions.push(stateObj)
   })
+
+  quarter.map((item) => {
+    const  quarterObj = { value: item, label: item, color: '#00B8D9', isFixed: true }
+    quarterOptions.push(quarterObj)
+  })
+
+  const handleChangeQuarter = selectedOption => {
+    setSelectedQuarter(selectedOption)
+  }
 
   const handleChangeState = selectedOption => {
     lgas.length = 0
@@ -112,6 +126,7 @@ const IndicatorFilter = props => {
       facilities:(selectedFacilities.length > 0) ? selectedFacilities.join(",") : "",
       ageRange:"",
       indicator:"",
+      quarter:(selectedQuarter !== '') ? selectedQuarter : '',
       sex:"",
       startDate: "",
       endDate: ""
@@ -191,7 +206,20 @@ const IndicatorFilter = props => {
                       className='react-select'
                       classNamePrefix='select'
                     />
-                  </Col>                  
+                  </Col>
+                  <Col className='mb-1' md='12' sm='12'>
+                    <Label className='form-label'>Select Quarter</Label>
+                    <Select
+                      isClearable={false}
+                      theme={selectThemeColors}
+                      isMulti
+                      name='colors'
+                      onChange={handleChangeQuarter}
+                      options={quarterOptions}
+                      className='react-select'
+                      classNamePrefix='select'
+                    />
+                  </Col>                   
                   <Col className='mb-1' md='12' sm='12'>
                   <Button className='ms-2' color='primary'  md='12' sm='12' onClick={handleSubmit}>
                     <span className='align-middle ms-50'>Submit</span>

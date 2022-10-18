@@ -1,52 +1,26 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import {serialize} from '../../../../api/utils/common'
 import apiRequest from '../../../../api/useJwt'
 
-export const getChatData = createAsyncThunk('appAnalytic/getChatData', async(params = {
-    states,
-    lgas,
-    facilities,
-    ageRange,
-    indicator,
-    sex,
-    startDate,
-    endDate
-}) => {   
+export const getChatData = createAsyncThunk('appAnalytic/getChatData', async(params) => {   
    return params
 })
 
-export const getStats = createAsyncThunk('appAnalytic/getStats', async({
-    states,
-    lgas,
-    facilities,
-    ageRange,
-    indicator,
-    sex,
-    startDate,
-    endDate   
-}) => {
+export const getStats = createAsyncThunk('appAnalytic/getStats', async(params) => {
     const result = await apiRequest({
         requetType: 'GET',
         contentType: 'application/json',
-        requestUrl: `data/stats?states=${states}&lgas=${lgas}&facilities=${facilities}&ageRange=${ageRange}&indicator=${indicator}&sex=${sex}&searchType=NORMAL&startDate=${startDate}&endDate=${endDate}`
+        requestUrl: `data/stats?${serialize(params)}`
     })
     return result?.data
 })
 
-export const getAgeRageCharts = createAsyncThunk('appAnalytic/getAgeRageCharts', async({
-    states,
-    lgas,
-    facilities,
-    ageRange,
-    indicator,
-    sex,
-    startDate,
-    endDate   
-}) => {
+export const getAgeRageCharts = createAsyncThunk('appAnalytic/getAgeRageCharts', async(params) => {
     const result = await apiRequest({
         requetType: 'GET',
         contentType: 'application/json',
-        requestUrl: `data/get-age-rage-chart?states=${states}&lgas=${lgas}&facilities=${facilities}&ageRange=${ageRange}&indicator=${indicator}&sex=${sex}&searchType=NORMAL&startDate=${startDate}&endDate=${endDate}`
+        requestUrl: `data/get-age-rage-chart?${serialize(params)}`
     })
     return result?.data
 })

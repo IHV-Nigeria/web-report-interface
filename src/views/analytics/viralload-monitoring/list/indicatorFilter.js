@@ -12,110 +12,74 @@ import { getChatData} from '../store'
 import '@styles/react/libs/flatpickr/flatpickr.scss'
 import '@styles/react/libs/noui-slider/noui-slider.scss'
 import { Card, CardBody, Row, Col, Input, Button, Label } from 'reactstrap'
+import {
+  fetchLgas,
+  fetchFacilities,
+  stateOptions,
+  quarterOptions
+} from '../../../../api/utils/sharedFunctions'
 const IndicatorFilter = props => {
 
+  let lgas = []  
   const { sidebarOpen } = props
   const dispatch = useDispatch()
 
-  const orgUnit = JSON.parse(localStorage.getItem('orgUnit'))
-
-  //options
-  const facilities = []
-  const stateOptions = []
-  const lgas = []
-
-
-  const [selectedStatesObj, setSelectedStatesObj] = useState([])
-  const [filteredLgas, setFilteredLgas] = useState([])
-  const [filteredFacilities, setFilteredFacilities] = useState([])
   const [selectedLgas, setSelectedLgas] = useState([])
+  const [selectedStates, setSelectedStates] = useState([])
+
+  const [filtredLgas, setfiltredLgas] = useState([])
+  const [filteredFacilities, setfilteredFacilities] = useState([])
+
+  const [selectedQuarter, setSelectedQuarter] = useState('') 
   const [selectedFacilities, setSelectedFacilities] = useState([])
 
-  orgUnit.map((item) => {
-    const stateObj = { value: item.stateName, label: item.stateName, color: '#00B8D9', isFixed: true }
-    stateOptions.push(stateObj)
-  })
 
-  const handleChangeState = selectedOption => {
-    lgas.length = 0
-    const selectedState = []
-
-    // get state list
-    selectedOption.map((item) => {
-      selectedState.push(item.value)
-    })
-    setSelectedStatesObj(selectedState)
-    
-    // filter out lga by state
-    orgUnit.forEach((item) => {
-      const state = item
-      item.lgas.forEach((item) => {
-        const lga = {
-          stateId:state.id, 
-          stateName:state.stateName,
-          lgaId:item.id, 
-          value: item.lga, 
-          label:item.lga, 
-          facilities:item.facilities,
-          color: '#00B8D9', 
-          isFixed: true 
-        }
-        lgas.push(lga)
-      })
-    })
-    setFilteredLgas(lgas.filter(item => { return  selectedState.includes(item.stateName) }))
+  const handleChangeQuarter = selectedOption => {
+    setSelectedQuarter(selectedOption.value)
   }
 
-  const handleChangeLga = selectedOption => {
-    facilities.length = 0  
-    const options = [] 
+  const handleChangeState = selectedOption => {  
+    const states = []  
     selectedOption.map((item) => {
-      options.push(item.value)
+      states.push(item.value)
     })
-
-    filteredLgas.forEach((item) => {
-      const lga = item
-
-      item.facilities.forEach((item) => {
-        const facility = {
-          stateId:lga.stateId, 
-          stateName:lga.stateName,
-          lgaId:lga.lgaId, 
-          lga:lga.value, 
-          facilityId:item.id, 
-          value: item.facilityName, 
-          label:item.facilityName, 
-          color: '#00B8D9', 
-          isFixed: true 
-        }
-        facilities.push(facility)
-      })
-      })
-    setSelectedLgas(options)
-    setFilteredFacilities(facilities)
+    setSelectedStates(states)
+    lgas = fetchLgas(states)
+    setSelectedLgas(lgas)
+  }
+  
+  const handleChangeLga = selectedOption => {  
+    const lgas = []  
+    selectedOption.map((item) => {
+      lgas.push(item.value)
+    })
+    const facilities = fetchFacilities(selectedOption)
+    setSelectedFacilities(facilities)
+    setfiltredLgas(lgas)
   }
 
   const handleChangeFacility = selectedOption => {
-    facilities.length = 0  
     const options = [] 
     selectedOption.map((item) => {
       options.push(item.value)
     })
     setSelectedFacilities(options)
+    setfilteredFacilities(options)
   }
-
-
   const handleSubmit = () => { 
-    dispatch(getChatData({ 
-      states:  (selectedStatesObj.length > 0) ? selectedStatesObj.join(',') : "",
-      lgas:(selectedLgas.length  > 0) ? selectedLgas.join(',') : "",
-      facilities:(selectedFacilities.length > 0) ? selectedFacilities.join(",") : "",
+    const param = { 
+      states:  (selectedStates.length > 0) ? selectedStates.join(',') : "",
+      lgas:(filtredLgas.length  > 0) ? filtredLgas.join(',') : "",
+      facilities:(filteredFacilities.length > 0) ? filteredFacilities.join(",") : "",
       ageRange:"",
-      indicator:"",
+      indicator:'',
+      quarter:(selectedQuarter !== '') ? selectedQuarter : '',
       sex:"",
-      startDate: "",
-      endDate: ""
-    }))  
+      searchType:"NORMAL",
+      startDate: '',
+      endDate: ''
+    }
+    dispatch(getChatData(param))  
 
     /* dispatch(getStats({ 
       states:(selectedStatesObj.length > 0) ? selectedStatesObj.join(',') : "",
@@ -174,7 +138,7 @@ const IndicatorFilter = props => {
                       isMulti
                       onChange={handleChangeLga}
                       name='colors'
-                      options={filteredLgas}
+                      options={selectedLgas}
                       className='react-select'
                       classNamePrefix='select'
                     />
@@ -187,7 +151,19 @@ const IndicatorFilter = props => {
                       isMulti
                       name='colors'
                       onChange={handleChangeFacility}
-                      options={filteredFacilities}
+                      options={selectedFacilities}
+                      className='react-select'
+                      classNamePrefix='select'
+                    />
+                  </Col> 
+                  <Col className='mb-1' md='12' sm='12'>
+                    <Label className='form-label'>Select Quarter</Label>
+                    <Select
+                      isClearable={false}
+                      theme={selectThemeColors}
+                      name='colors'
+                      onChange={handleChangeQuarter}
+                      options={quarterOptions}
                       className='react-select'
                       classNamePrefix='select'
                     />

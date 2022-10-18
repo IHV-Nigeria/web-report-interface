@@ -1,9 +1,10 @@
 import apiRequest from './useJwt'
-import {buildBarVLChat, buildThreeColumnBarChartWithDualAxis} from './chatUtils/barChart'
+import {serialize} from '../api/utils/common'
 import {buildLineChat} from './chatUtils/lineChart'
+import {buildBarVLChat, buildThreeColumnBarChartWithDualAxis} from './chatUtils/barChart'
 
 export const fetchPvlsAnalytics = (param) => {
-   const url = `data/get-pvls-analytics?states=${param.states}&lgas=${param.lgas}&facilities=${param.facilities}&ageRange=${param.ageRange}&indicator=${param.indicator}&sex=${param.sex}&searchType=NORMAL&startDate=${param.startDate}&endDate=${param.endDate}`
+   const url = `data/get-pvls-analytics?${serialize(param)}`
    return apiRequest({
       requetType: 'GET',
       contentType: 'application/json',
