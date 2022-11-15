@@ -81,8 +81,6 @@ const IndicatorFilter = props => {
   const handleSubmit = () => { 
     if (selectedIndicator === '') {
       alert("Please select an indicator")
-    } else if (selectedQuarter === '') {
-      alert("Please select a quarter")
     } else {
       const param = { 
         states:  (selectedStates.length > 0) ? selectedStates.join(',') : "",
@@ -178,7 +176,9 @@ const IndicatorFilter = props => {
                     <Col className='mb-1' md='12' sm='12'>
                     <Label className='form-label'>End Date</Label>
                     <Flatpickr  locale="es"  className='form-control' value={selectedEndDate} onChange={date => { 
-                      const newDate = new Date(date).toISOString().slice(0, 19).split('T')[0]
+                      console.log(date)
+                      const newDate = new Date(date).toISOString().slice(0, 10)//.split('T')[0]
+                      console.log(newDate)
                       setSelectedEndDate(newDate)
                       }} />
                     </Col>

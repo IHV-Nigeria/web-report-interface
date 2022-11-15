@@ -91,7 +91,7 @@ const UsersList = () => {
           {chartData.getChatData.indicator  !== undefined  &&  
               <Card className='card-revenue-budget'>
               <CardHeader>
-                <CardTitle tag='h4'>TB screnning & positive yield by state </CardTitle>
+                <CardTitle tag='h4'>TB screening & positive yield by state </CardTitle>
               </CardHeader>
               <CardBody> 
                 <HighchartsReact  highcharts={Highcharts}  options={tbByState} />  

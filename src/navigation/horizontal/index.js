@@ -16,25 +16,25 @@ export default [
     children: [
       {
         id: 'Treament Dashboard',
-        title: 'Treament Dashboard',
+        title: 'Treament Monitoring Dashboard',
         icon: <Mail />,
         navLink: '/treatment'
       },
       {
         id: 'Viralload Monitoring Dashboard',
-        title: 'Viralload Monitoring Dashboard',
+        title: 'Viral Load Monitoring Dashboard',
         icon: <Mail />,
         navLink: '/viralload-monitoring'
       },
       {
         id: 'TB Dashboard',
-        title: 'TB Monitoring',
+        title: 'TX_TB Monitoring Dashboard',
         icon: <Mail />,
         navLink: '/tb-monitoring'
       },
       {
         id: 'TX ML',
-        title: 'TX ML',
+        title: 'TX_ML Monitoring Dashboard',
         icon: <Mail />,
         navLink: '/tx-ml'
       }
@@ -53,7 +53,7 @@ export default [
       },
       {
         id: 'viewPartnerUploads',
-        title: 'View Partner Uploads',
+        title: 'View Facility Uploads',
         icon: <Mail />,
         navLink: '/upload-tracker'
       }
