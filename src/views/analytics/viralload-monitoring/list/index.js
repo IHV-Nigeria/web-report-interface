@@ -90,19 +90,7 @@ const UsersList = () => {
               </CardBody>
           </Card>
         </Col>}
-        <Col lg='12' sm='12'>     
-          {chartData.getChatData.indicator  !== undefined  &&  
-              <Card className='card-revenue-budget'>
-              <CardHeader>
-                <CardTitle tag='h4'>Viralload Testing coverage and VL supression by Age </CardTitle>
-              </CardHeader>
-              <CardBody> 
-                <HighchartsReact  highcharts={Highcharts}  options={pvlsAgeSex} />  
-              </CardBody>
-            </Card>
-          }
-        </Col> 
-         
+
         <Col lg='12' sm='12'>     
           {chartData.getChatData.indicator  !== undefined  &&  
               <Card className='card-revenue-budget'>
@@ -120,7 +108,20 @@ const UsersList = () => {
           {chartData.getChatData.indicator  !== undefined  &&  
               <Card className='card-revenue-budget'>
               <CardHeader>
-                <CardTitle tag='h4'>Trend Low Level Viraemia and Undetected Viralload </CardTitle>
+                <CardTitle tag='h4'>Viral Load Testing coverage and VL supression by Age </CardTitle>
+              </CardHeader>
+              <CardBody> 
+                <HighchartsReact  highcharts={Highcharts}  options={pvlsAgeSex} />  
+              </CardBody>
+            </Card>
+          }
+        </Col> 
+         
+        <Col lg='12' sm='12'>     
+          {chartData.getChatData.indicator  !== undefined  &&  
+              <Card className='card-revenue-budget'>
+              <CardHeader>
+                <CardTitle tag='h4'>Trend Low Level Viraemia and Undetected Viral Load </CardTitle>
               </CardHeader>
               <CardBody> 
                 <HighchartsReact  highcharts={Highcharts}  options={plvsByQuarter} />  

@@ -54,7 +54,7 @@ const renderTxcurrByAge = () => {
         }     
         </Col>
         <Col className='budget-wrapper' md='5' xs='12' style={{padding: '1rem 2rem', textAlign: 'center'}}>
-            <p className='' style={{ textAlign:'left' }}>Age desegregation</p>
+            <p className='' style={{ textAlign:'left' }}>Age disaggregation</p>
             <div className='row'>
                   <div style={{background:"#E1F396", height:'10px', width:'20%'}}></div>   
                   <div style={{background:"#59BA89", height:'10px', width:'40%'}}></div> 

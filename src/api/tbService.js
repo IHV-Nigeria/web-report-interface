@@ -111,6 +111,7 @@ export const  buildTBByState = (txTbByState)  => {
     const state = []
     const txCurrSeries = []
     const txTbDenominatorSeries = []
+    const positiveScreened = []
     const percentageScreeningUptakeSeries = []
     const percentagePositiveYieldSeries = []
         
@@ -118,6 +119,7 @@ export const  buildTBByState = (txTbByState)  => {
         state.push(item.state)
         txCurrSeries.push(item.txCurr)
         txTbDenominatorSeries.push(item.txTbDenominator)
+        positiveScreened.push(item.positiveScreened)
         percentageScreeningUptakeSeries.push(item.percentageScreeningUptake)
         percentagePositiveYieldSeries.push(item.percentagePositiveYield)
     }) 
