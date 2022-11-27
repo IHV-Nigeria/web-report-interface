@@ -30,6 +30,7 @@ const UsersList = () => {
   
   const dashboardStats = () => {
     fetchGetTXMLAnalytics(chartData.getChatData).then((response) => {
+        console.log(response.data)
         setChartSeries(buildTxmlChart(response.data))       
         }).catch((err) => {
           console.log(err)
