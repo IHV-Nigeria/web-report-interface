@@ -11,7 +11,8 @@ import { useRouterTransition } from '@hooks/useRouterTransition'
 import LayoutWrapper from '@layouts/components/layout-wrapper'
 
 // ** Router Components
-import { BrowserRouter as AppRouter, Route, Switch, Redirect } from 'react-router-dom'
+// import { BrowserRouter as AppRouter, Route, Switch, Redirect } from 'react-router-dom'
+import { HashRouter as AppRouter, Route, Switch, Redirect } from 'react-router-dom'
 
 // ** Routes & Default Routes
 import { DefaultRoute, Routes } from './routes'
@@ -76,7 +77,7 @@ const Router = () => {
 
     if (
       (!isUserLoggedIn() && route.meta === undefined) ||
-      (!isUserLoggedIn() && route.meta && !route.meta.authRoute && !route.meta.publicRoute)
+      (!isUserLoggedIn() && route.meta === undefined && !route.meta.authRoute && !route.meta.publicRoute)
     ) {
       /**
        ** If user is not Logged in & route meta is undefined

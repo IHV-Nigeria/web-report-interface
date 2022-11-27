@@ -30,6 +30,8 @@ const IndicatorFilter = props => {
   const [filteredFacilities, setFilteredFacilities] = useState([])
   const [selectedLgas, setSelectedLgas] = useState([])
   const [selectedFacilities, setSelectedFacilities] = useState([])
+  const [selectedStartDate, setSelectedStartDate] = useState(new Date().toISOString().slice(0, 19).split('T')[0])
+  const [selectedEndDate, setSelectedEndDate] = useState(new Date().toISOString().slice(0, 19).split('T')[0])
 
   orgUnit.map((item) => {
     const stateObj = { value: item.stateName, label: item.stateName, color: '#00B8D9', isFixed: true }
@@ -113,8 +115,8 @@ const IndicatorFilter = props => {
       ageRange:"",
       indicator:"",
       sex:"",
-      startDate: "",
-      endDate: ""
+      startDate: selectedStartDate,
+      endDate: selectedEndDate
     }))  
 
     /* dispatch(getStats({ 
@@ -191,7 +193,25 @@ const IndicatorFilter = props => {
                       className='react-select'
                       classNamePrefix='select'
                     />
-                  </Col>                  
+                  </Col>
+                  <div>
+                    <Col className='mb-1' md='12' sm='12'>
+                    <Label className='form-label'>Start Date</Label>
+                    <Flatpickr  locale="es" className='form-control' value={selectedStartDate}  onChange={date => {
+                      const newDate = new Date(date).toISOString().slice(0, 19).split('T')[0]
+                          setSelectedStartDate(newDate)
+                    } } />
+                    </Col>
+                    <Col className='mb-1' md='12' sm='12'>
+                    <Label className='form-label'>End Date</Label>
+                    <Flatpickr  locale="es"  className='form-control' value={selectedEndDate} onChange={date => { 
+                      console.log(date)
+                      const newDate = new Date(date).toISOString().slice(0, 10)//.split('T')[0]
+                      console.log(newDate)
+                      setSelectedEndDate(newDate)
+                      }} />
+                    </Col>
+                  </div>                  
                   <Col className='mb-1' md='12' sm='12'>
                   <Button className='ms-2' color='primary'  md='12' sm='12' onClick={handleSubmit}>
                     <span className='align-middle ms-50'>Submit</span>
