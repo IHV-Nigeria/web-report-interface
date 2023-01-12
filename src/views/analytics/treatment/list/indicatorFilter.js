@@ -169,7 +169,9 @@ const IndicatorFilter = props => {
                     <Col className='mb-1' md='12' sm='12'>
                     <Label className='form-label'>Start Date</Label>
                     <Flatpickr  locale="es" className='form-control' value={selectedStartDate}  onChange={date => {
-                      const newDate = new Date(date).toISOString().slice(0, 19).split('T')[0]
+                      const correctDate = new Date(date)
+                      correctDate.setDate(correctDate.getDate() + 1)
+                      const newDate = new Date(correctDate).toISOString().slice(0, 10).split('T')[0]
                           setSelectedStartDate(newDate)
                     } } />
                     </Col>
@@ -177,7 +179,9 @@ const IndicatorFilter = props => {
                     <Label className='form-label'>End Date</Label>
                     <Flatpickr  locale="es"  className='form-control' value={selectedEndDate} onChange={date => { 
                       console.log(date)
-                      const newDate = new Date(date).toISOString().slice(0, 10)//.split('T')[0]
+                      const correctDate = new Date(date)
+                      correctDate.setDate(correctDate.getDate() + 1)
+                      const newDate = new Date(correctDate).toISOString().slice(0, 10).split('T')[0]
                       console.log(newDate)
                       setSelectedEndDate(newDate)
                       }} />

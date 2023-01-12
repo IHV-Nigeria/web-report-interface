@@ -24,6 +24,7 @@ import { AbilityContext } from '@src/utility/context/Can'
 
 // ** Styles
 import '@styles/react/pages/page-authentication.scss'
+// import axios from 'axios'
 
 
 const LoginBasic = ({}) => {
@@ -49,6 +50,11 @@ const LoginBasic = ({}) => {
 const handleSubmit = (evt) => {
   evt.preventDefault()
 
+  // axios({
+  //   method: 'POST',
+  //   url: `http://localhost:9090/api/v1/auth/login`,
+  //   data: values
+  // }).then(response => console.log(response.data))
 
   userLogin(values).then((response) => {
     if (response.userData) {  

@@ -21,7 +21,7 @@ export const indicatorOptions = [
 
   quarter.map((item) => {
     const  quarterObj = { value: item, label: item, color: '#00B8D9', isFixed: true }
-    quarterOptions.push(quarterObj)
+    quarterOptions.unshift(quarterObj)
   })
 
   export const handleChangeQuarter = selectedOption => {

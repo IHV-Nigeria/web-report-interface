@@ -11,6 +11,7 @@ export const userLoginRequest = (authRequest) => {
 
 export const userLogin = (authRequest) => {
     return userLoginRequest(authRequest).then((response) => {
+        console.log(response)
         const result = response.data.user
         const accessToken = response.data.jwtToken
         const refreshToken = response.data.refreshToken
@@ -42,21 +43,22 @@ export const userLogin = (authRequest) => {
 
     }).catch((err) => {
         console.log(err)
-            /*  if (err && err.response) {   
-                setIsError(true)         
-                 switch (err.response.status) {
-                   case 401:
-                     setErrMsg("Authentication Failed.Bad Credentials")
-                       break
-                   case 500:
-                     setErrMsg("Authentication Failed.Bad Credentials")
-                     break
-                   default:
-                     setErrMsg('Something Wrong!Please Try Again')
-                 }
+              if (err && err.response) {   
+                window.alert("email/password not correct")
+                // setIsError(true)         
+                //  switch (err.response.status) {
+                //    case 401:
+                //      setErrMsg("Authentication Failed.Bad Credentials")
+                //        break
+                //    case 500:
+                //      setErrMsg("Authentication Failed.Bad Credentials")
+                //      break
+                //    default:
+                //      setErrMsg('Something Wrong!Please Try Again')
+                //  }
                } else {
                  setErrMsg('Something Wrong!Please Try Again')
-               } */
+               } 
     })
 }
 
