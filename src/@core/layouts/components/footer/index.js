@@ -8,9 +8,9 @@ const Footer = () => {
         COPYRIGHT © {new Date().getFullYear()}{' '}  Institute for Human Virology 
         <span className='d-none d-sm-inline-block'>, All rights Reserved</span>
       </span>
-      <span className='float-md-end d-none d-md-block'>
+      {/* <span className='float-md-end d-none d-md-block'>
         powered by university of maryland
-      </span>
+      </span> */}
     </p>
   )
 }

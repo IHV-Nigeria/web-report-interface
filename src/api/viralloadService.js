@@ -42,7 +42,7 @@ export const  buildPvlsChat = (title, y1_title, x_title, seriesData)  => {
           data: [
               null,
               null,
-              seriesData.percentageCoverage,
+              seriesData.percentageSuppressed,
               null,
               null,
               null                
@@ -69,7 +69,7 @@ export const  buildPvlsChat = (title, y1_title, x_title, seriesData)  => {
           null,
           null,
           null,
-          seriesData.percentageSuppressed,
+          seriesData.percentageCoverage,
           null                
         ],
         color: "#7030A0",

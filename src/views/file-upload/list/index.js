@@ -20,7 +20,7 @@ const UsersList = () => {
     <div className='app-user-list'>
       <Breadcrumbs breadCrumbTitle='Uploads' breadCrumbParent='IHVNCR' breadCrumbActive='Facility Upload' />
       <Row lg='7'>
-        <Col lg='3' sm='6'>
+        <Col lg='2' sm='6'>
           <StatsHorizontal
             color='primary'
             statTitle='UPLOADED'
@@ -28,28 +28,36 @@ const UsersList = () => {
             renderStats={<h3 className='fw-bolder mb-75'>{stats.uploaded}</h3>}
           />
         </Col>
-        <Col lg='3' sm='6'>
+        <Col lg='2' sm='6'>
           <StatsHorizontal
-            color='danger'
+            color='success'
             statTitle='PROCESSED'
             icon={<UserPlus size={20} />}
             renderStats={<h3 className='fw-bolder mb-75'>{stats.processed}</h3>}
           />
         </Col>
-        <Col lg='3' sm='6'>
+        <Col lg='2' sm='6'>
           <StatsHorizontal
-            color='success'
+            color='primary'
             statTitle='PROCESSING'
             icon={<UserCheck size={20} />}
             renderStats={<h3 className='fw-bolder mb-75'>{stats.processing}</h3>}
           />
         </Col>
-        <Col lg='3' sm='6'>
+        <Col lg='2' sm='6'>
           <StatsHorizontal
             color='warning'
             statTitle='QUEUED'
             icon={<UserX size={20} />}
             renderStats={<h3 className='fw-bolder mb-75'>{stats.queued}</h3>}
+          />
+        </Col>
+        <Col lg='2' sm='6'>
+          <StatsHorizontal
+            color='danger'
+            statTitle='FAILED'
+            icon={<UserX size={20} />}
+            renderStats={<h3 className='fw-bolder mb-75'>{stats.failed}</h3>}
           />
         </Col>
         <Col lg='12' sm='6'>
