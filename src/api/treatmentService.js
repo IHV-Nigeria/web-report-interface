@@ -56,7 +56,7 @@ export const getChartData = (result) => {
                 borderWidth: 0,
                 dataLabels: {
                     enabled: true,
-                    format: '{point.y} patients'
+                    format: '{point.y}'
                 }
             }
         },
