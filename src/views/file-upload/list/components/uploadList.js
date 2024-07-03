@@ -39,8 +39,8 @@ const UploadList = (props) => {
               cell: row => (
                 <div className='d-flex align-items-center'>              
                   <div className='user-info text-truncate ms-1'>
-                    <span className='d-block fw-bold text-truncate'>{row.user.userFirstName} {row.user.userLastName}</span>
-                    <span className='d-block fw-bold text-truncate'>{row.user.userEmail}</span>
+                    <span className='d-block fw-bold text-truncate'>{row.userFirstName} {row.userLastName}</span>
+                    <span className='d-block fw-bold text-truncate'>{row.userEmail}</span>
                   </div>
                 </div>
               )
@@ -50,14 +50,15 @@ const UploadList = (props) => {
               cell: row => (
                 <div className='d-flex align-items-center'>              
                   <div className='user-info text-truncate ms-1'>
-                    <span className='d-block fw-bold text-truncate'>{(row.user.state) !== null ? row.user.state.stateName : "Central"}</span>
+                    <span className='d-block fw-bold text-truncate'>{(row.state) !== null ? row.state : "Central"}</span>
                   </div>
                 </div>
               )
             }, 
             {
               name: "Facility Name",
-              selector: row => row.facility.facilityName,
+              minWidth: '400px',
+              selector: row => row.facilityName,
               sortable: true
             },     
             {
@@ -74,6 +75,11 @@ const UploadList = (props) => {
                 name: "Status",
                 selector: row => row.status,
                 sortable: true
+            },
+            {
+              name: "No of Files",
+              selector: row => row.totalFiles,
+              sortable: true
             }
          
         ], []

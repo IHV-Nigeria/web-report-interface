@@ -67,7 +67,7 @@ const TXCurrLineChart = props => {
     
     <Card>
       <CardHeader>
-        <CardTitle tag='h4'>TX CURR Performance Trend</CardTitle>
+        <CardTitle tag='h4'>TX_CURR Performance Trend</CardTitle>
         <Settings size={18} className='text-muted cursor-pointer' />
       </CardHeader>
       <CardBody>  

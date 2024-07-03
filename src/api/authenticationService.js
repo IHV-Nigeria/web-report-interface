@@ -1,5 +1,6 @@
 import axios from 'axios'
 import jwtConfig from './jwtConfig'
+import Router from '../router/Router'
 
 export const userLoginRequest = (authRequest) => {
     return axios({
@@ -11,19 +12,15 @@ export const userLoginRequest = (authRequest) => {
 
 export const userLogin = (authRequest) => {
     return userLoginRequest(authRequest).then((response) => {
-        console.log(response)
         const result = response.data.user
         const accessToken = response.data.jwtToken
         const refreshToken = response.data.refreshToken
 
         const user = {
-            fullName: `
-                    $ { result.userFirstName }
-                    $ { result.userLastName }
-                    `,
+            fullName: `${result.userFirstName} ${result.userLastName}`,
             username: result.userName,
             email: result.userEmail,
-            role: result.role[0].roleName,
+            role: result.role,
             ability: [
 
                 {
@@ -44,37 +41,52 @@ export const userLogin = (authRequest) => {
     }).catch((err) => {
         console.log(err)
               if (err && err.response) {   
-                window.alert("email/password not correct")
-                // setIsError(true)         
-                //  switch (err.response.status) {
-                //    case 401:
-                //      setErrMsg("Authentication Failed.Bad Credentials")
-                //        break
-                //    case 500:
-                //      setErrMsg("Authentication Failed.Bad Credentials")
-                //      break
-                //    default:
-                //      setErrMsg('Something Wrong!Please Try Again')
-                //  }
+                setIsError(true)         
+                 switch (err.response.status) {
+                   case 401:
+                     setErrMsg("Authentication Failed.Bad Credentials")
+                     window.alert("email/password not correct")
+                       break
+                   case 500:
+                     setErrMsg("Authentication Failed.Bad Credentials")
+                     window.alert("Something Wrong! Please Try Again")
+                     break
+                   default:
+                     setErrMsg('Something Wrong!Please Try Again')
+                     window.alert("Something Wrong! Please Try Again")
+                     break
+                 }
                } else {
                  setErrMsg('Something Wrong!Please Try Again')
+                 window.alert("Something Wrong! Please Try Again")
                } 
     })
 }
 
 
 export const fetchUserData = () => {
+    const refreshTokenData = {
+        refreshToken: localStorage.getItem(jwtConfig.storageRefreshTokenKeyName)
+    }
+    console.log('refresh token data', refreshTokenData)
     return axios({
         method: 'POST',
-        url: `
-                    $ { jwtConfig.baseUrl }
-                    /auth/refreshtoken
-                    `
+        url: `${jwtConfig.baseUrl}/auth/refreshtoken`,
+        data: refreshTokenData
     }).then((response) => {
-        const accessToken = response.data.jwtToken
+        console.log('Success', response)
+        if (response.status === 403) {
+            <Router/>
+        }
+        const accessToken = response.data.accessToken
         const refreshToken = response.data.refreshToken
-        localStorage.setItem(config.storageTokenKeyName, accessToken)
-        localStorage.setItem(config.storageRefreshTokenKeyName, refreshToken)
+        localStorage.setItem(jwtConfig.storageTokenKeyName, accessToken)
+        localStorage.setItem(jwtConfig.storageRefreshTokenKeyName, refreshToken)
+        window.location.reload()
+    }).catch(() => {
+        localStorage.clear()
+        window.location.reload()
+        // <Router/>
     })
 }
 

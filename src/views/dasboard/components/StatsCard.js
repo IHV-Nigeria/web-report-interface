@@ -13,11 +13,12 @@ const StatsCard = props =>  {
 
   const renderData = () => {
     return props?.dashboardStats?.map((item, index) => {
+      console.log('Item stat:', item)
       const data = {
         title: item.type,
         subtitle: item.description,
         stats: item.value,
-        isNative: false,
+        isNative: item.percentage < 0,
         color: '#526d27',
         icon: <Calendar size={18} />
       }
@@ -43,14 +44,17 @@ const StatsCard = props =>  {
                 </h4>
                 <h2 className='font-medium-5'>
                  <span className='text-dark me-1000'>{data.stats}</span>
-                  <span className='text-success me-10 dasboarb-stats-subtitle'> 
                   {!data.isNative ? (
-                    <Icon.ArrowUp size={14} className='ms-25 text-success' />
+                    <span className='text-success me-10 dasboarb-stats-subtitle'>
+                      <Icon.ArrowUp size={14} className='ms-25 text-success' />
+                      {item.percentage}%  
+                    </span>
                   ) : (
-                    <Icon.ArrowDown size={14} className='ms-25 text-danger' />
+                    <span className='text-danger me-10 dasboarb-stats-subtitle'>
+                      <Icon.ArrowDown size={14} className='ms-25 text-danger' />
+                      {item.percentage}%  
+                    </span>
                   )}
-                  {item.percentage}%  
-                  </span>
                   <span className='fw-normal dasboarb-stats-subtitle'>{data.subtitle}</span>
                 </h2>              
             </div>

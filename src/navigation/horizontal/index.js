@@ -40,6 +40,37 @@ export default [
       }
     ]
   },
+  // {
+  //   id: 'reporting',
+  //   title: 'Reporting',
+  //   icon: <Mail size={20} />,
+  //   children: [
+  //     {
+  //       id: 'Treament Dashboard',
+  //       title: 'Treament Monitoring Dashboard',
+  //       icon: <Mail />,
+  //       navLink: '/treatment'
+  //     },
+  //     {
+  //       id: 'Viralload Monitoring Dashboard',
+  //       title: 'Viral Load Monitoring Dashboard',
+  //       icon: <Mail />,
+  //       navLink: '/viralload-monitoring'
+  //     },
+  //     {
+  //       id: 'TB Dashboard',
+  //       title: 'TX_TB Monitoring Dashboard',
+  //       icon: <Mail />,
+  //       navLink: '/tb-monitoring'
+  //     },
+  //     {
+  //       id: 'TX ML',
+  //       title: 'TX_ML Monitoring Dashboard',
+  //       icon: <Mail />,
+  //       navLink: '/tx-ml'
+  //     }
+  //   ]
+  // },
   {
     id: 'uploads',
     title: 'Uploads',

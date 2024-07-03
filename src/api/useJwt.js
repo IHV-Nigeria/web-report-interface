@@ -1,7 +1,8 @@
 import jwtConfig from './jwtConfig'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { fetchUserData } from './authenticationService'
 import axios from 'axios'
+import { HashRouter as AppRouter, Route, Switch, Redirect } from 'react-router-dom'
 
 const client = axios.create({baseURL:`${jwtConfig.baseUrl}`})
 
@@ -24,8 +25,10 @@ export default function apiRequest({
     requetType: requetType,
     requestUrl: requestUrl,
     contentType: contentType = 'multipart/form-data',
-    requestData: requestData = []
+    requestData: requestData = [],
+    respType: respType
 }) {
+    console.log('Making rest call')
     return axios({
         method: requetType,
         url: `${jwtConfig.baseUrl}/${requestUrl}`,
@@ -36,14 +39,21 @@ export default function apiRequest({
             Accept: 'application/json',
             Authorization: `Bearer ${getToken()}`
         },
-        data: requestData
+        data: requestData,
+        responseType: respType
     }).then((response) => {
+        if (response.status === 401) {
+            console.log('Expired token')
+            fetchUserData()
+        }
         return response
     }).catch((err) => {
+        console.log('Error', err)
         if (err && err.response) {
             //setIsError(true)
             switch (err.response.status) {
                 case 401:
+                    console.log('Expired token in catch')
                     fetchUserData()
                     break
                 case 500:

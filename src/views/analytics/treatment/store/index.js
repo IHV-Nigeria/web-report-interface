@@ -20,7 +20,7 @@ export const getAgeRageCharts = createAsyncThunk('appAnalytic/getAgeRageCharts',
     const result = await apiRequest({
         requetType: 'GET',
         contentType: 'application/json',
-        requestUrl: `data/get-age-rage-chart?states${serialize(params)}`
+        requestUrl: `data/get-age-range-chart?${serialize(params)}`
     })
     return result?.data
 })

@@ -1,7 +1,8 @@
 {
-    "name": "vuexy-react-admin-dashboard",
+    "name": "ihvn-cdr",
     "version": "8.0.0",
     "private": true,
+    "homepage": "ihvn-cdr-web",
     "dependencies": {
         "@casl/ability": "^5.2.2",
         "@casl/react": "^2.1.1",
@@ -28,6 +29,7 @@
         "chroma-js": "~2.1.0",
         "classnames": "^2.3.1",
         "cleave.js": "^1.6.0",
+        "dayjs": "^1.11.10",
         "draft-js": "^0.11.7",
         "draftjs-to-html": "^0.9.1",
         "feather-icons-react": "^0.5.0",
@@ -57,6 +59,7 @@
         "react-copy-to-clipboard": "~5.0.2",
         "react-country-flag": "^2.0.1",
         "react-data-table-component": "^7.5.2",
+        "react-date-picker": "^10.6.0",
         "react-dom": "^18.2.0",
         "react-draft-wysiwyg": "^1.14.5",
         "react-dropzone": "^11.4.2",
@@ -95,12 +98,12 @@
         "yup": "^0.32.8"
     },
     "scripts": {
-        "start": "craco start",
-        "build": "craco build",
+        "start": "SET NODE_OPTIONS=--openssl-legacy-provider && craco start ",
+        "build": "SET NODE_OPTIONS=--openssl-legacy-provider &&  craco   build",
         "test": "craco test",
         "eject": "react-scripts eject",
         "lint": "eslint src/**/*.js src/**/*.jsx",
-        "lint:fix": "eslint src/**/*.js --fix"
+        "lint:fix": "eslint src/**/*.js --fix"
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -123,6 +126,5 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
-    },
-    "homepage": "ihvn-cdr-web"
+    }
 }

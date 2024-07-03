@@ -77,7 +77,6 @@ const UsersList = () => {
           />
         </Col> 
 
-
         {chartData.getChatData.indicator  === undefined  && <Col className='kb-search-content' md='12' sm='12'>
           <Card style={{
                 display: "flex",
@@ -124,7 +123,7 @@ const UsersList = () => {
            chartData.getChatData.indicator  !== undefined  && 
            <Card className='card-revenue-budget'>
             <CardHeader>
-              <CardTitle tag='h4'>TX_CURR by Sex </CardTitle>
+              <CardTitle tag='h4'>{chartData.getChatData.indicator} by Sex </CardTitle>
             </CardHeader>
             <CardBody> 
                 <HighchartsReact  highcharts={Highcharts}  options={sexSeries} />

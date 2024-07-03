@@ -6,6 +6,7 @@ import UserDropdown from '../../navbar/UserDropdown'
 
 // ** Horizontal Menu Components
 import HorizontalNavMenuItems from './HorizontalNavMenuItems'
+import ihvn_logo from '@src/assets/images/portrait/small/ihvn_logo.jpg'
 
 // ** Reactstrap Imports
 import { NavItem, NavLink } from 'reactstrap'
@@ -41,7 +42,8 @@ const HorizontalMenu =  ({ menuData, currentActiveItem, routerProps }) => {
       }}>
       <NavItem className='d-none d-lg-block'>
           <NavLink className='nav-link-style'>
-          <img src="http://ihvnigeria.org/wp-content/uploads/2020/04/xlogod.jpg.pagespeed.ic.QWdRKCbaOh.webp" alt="Italian Trulli"
+          {/* <img src="http://ihvnigeria.org/wp-content/uploads/2020/04/xlogod.jpg.pagespeed.ic.QWdRKCbaOh.webp" alt="Italian Trulli" */}
+          <img src={ihvn_logo} alt="Italian Trulli"
           style={{ 
             width: `200px`,
             padding: '5px'

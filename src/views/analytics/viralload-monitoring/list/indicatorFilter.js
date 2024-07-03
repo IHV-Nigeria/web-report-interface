@@ -63,24 +63,29 @@ const IndicatorFilter = props => {
     selectedOption.map((item) => {
       options.push(item.value)
     })
-    setSelectedFacilities(options)
+    // setSelectedFacilities(options)
     setfilteredFacilities(options)
   }
   const handleSubmit = () => { 
-    const param = { 
-      states:  (selectedStates.length > 0) ? selectedStates.join(',') : "",
-      lgas:(filtredLgas.length  > 0) ? filtredLgas.join(',') : "",
-      facilities:(filteredFacilities.length > 0) ? filteredFacilities.join(",") : "",
-      ageRange:"",
-      indicator:'',
-      quarter:(selectedQuarter !== '') ? selectedQuarter : '',
-      sex:"",
-      searchType:"NORMAL",
-      startDate: '',
-      endDate: ''
+    if (selectedQuarter === '') {
+      alert("Please select quarter for PVLS")
+    } else {
+      const param = { 
+        states:  (selectedStates.length > 0) ? selectedStates.join(',') : "",
+        lgas:(filtredLgas.length  > 0) ? filtredLgas.join(',') : "",
+        facilities:(filteredFacilities.length > 0) ? filteredFacilities.join(",") : "",
+        ageRange:"",
+        indicator:'',
+        quarter:(selectedQuarter !== '') ? selectedQuarter : '',
+        sex:"",
+        searchType:"NORMAL",
+        startDate: '',
+        endDate: ''
+      }
+      dispatch(getChatData(param)) 
+      dispatch(getStats(param))
     }
-    dispatch(getChatData(param)) 
-    dispatch(getStats(param))
+    
   }
 
   return (

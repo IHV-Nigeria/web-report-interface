@@ -8,27 +8,7 @@ import Avatar from '@components/avatar'
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle, CardBody, CardText, Row, Col } from 'reactstrap'
 
-const NotificationCard = ({ cols }) => {
-  const data = [
-    {
-      title: 'Quarter ends in 117 days',
-      subtitle: 'Programme alerts',
-      color: 'light-primary',
-      icon: <Calendar size={24} />
-    },
-    {
-      title: 'SAPR starts in 30 days',
-      subtitle: 'Programme alerts',
-      color: 'light-info',
-      icon: <Calendar size={24} />
-    },
-    {
-      title: '200 Reporting Facilities (98%)',
-      subtitle: 'Total  facilites = 360',
-      color: 'light-danger',
-      icon: <FeatherIcon icon="close" size="24"  fill="black" />
-    }
-  ]
+const NotificationCard = ({ cols, data }) => {
 
   const renderData = () => {
     return data.map((item, index) => {

@@ -50,12 +50,6 @@ const LoginBasic = ({}) => {
 const handleSubmit = (evt) => {
   evt.preventDefault()
 
-  // axios({
-  //   method: 'POST',
-  //   url: `http://localhost:9090/api/v1/auth/login`,
-  //   data: values
-  // }).then(response => console.log(response.data))
-
   userLogin(values).then((response) => {
     if (response.userData) {  
       const data = { ...response.userData, accessToken: response.accessToken, refreshToken: response.refreshToken }   

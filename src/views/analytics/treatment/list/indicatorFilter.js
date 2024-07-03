@@ -73,7 +73,7 @@ const IndicatorFilter = props => {
     selectedOption.map((item) => {
       options.push(item.value)
     })
-    setSelectedFacilities(options)
+    // setSelectedFacilities(options)
     setfilteredFacilities(options)
   }
 
@@ -81,6 +81,8 @@ const IndicatorFilter = props => {
   const handleSubmit = () => { 
     if (selectedIndicator === '') {
       alert("Please select an indicator")
+    } else if (selectedIndicator === 'TX_CURR' && selectedQuarter === '') {
+      alert("Please select quarter for TX_CURR")
     } else {
       const param = { 
         states:  (selectedStates.length > 0) ? selectedStates.join(',') : "",
@@ -158,7 +160,7 @@ const IndicatorFilter = props => {
                         theme={selectThemeColors}
                         isMulti
                         name='colors'
-                       onChange={handleChangeFacility}
+                        onChange={handleChangeFacility}
                         options={selectedFacilities}
                         className='react-select'
                         classNamePrefix='select'
