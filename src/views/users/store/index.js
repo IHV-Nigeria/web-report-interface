@@ -24,6 +24,15 @@ export const addUser = createAsyncThunk('appUsers/addUser', async(values, {}) =>
     return data
 })
 
+export const fetchRoles = createAsyncThunk('appUsers/fetchRoles', async({ page, size }) => {
+    const resp = await apiRequest({
+        requetType: 'GET',
+        contentType: 'application/json',
+        requestUrl: `roles?page=${(page === undefined) ? 0 : page }&per_page=${ (size === undefined) ? 10 : size  }&delay=1`
+    })
+    return resp
+})
+
 export const appUsersSlice = createSlice({
     name: 'appUsers',
     initialState: {
