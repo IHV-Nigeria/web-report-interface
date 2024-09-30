@@ -77,6 +77,12 @@ const UploadList = (props) => {
                 sortable: true
             },
             {
+              name: "Status Message",
+              minWidth: '250px',
+              selector: row => row.statusMessage,
+              sortable: true
+            },
+            {
               name: "No of Files",
               selector: row => row.totalFiles,
               sortable: true
