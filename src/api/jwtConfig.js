@@ -1,7 +1,7 @@
 // ** Auth Endpoints
 export default {
     baseUrl: process.env.REACT_APP_SERVER_URL,
-
+    dqaUrl: process.env.REACT_APP_DQASERVER_URL,
     // ** This will be prefixed in authorization header with token
     // ? e.g. Authorization: Bearer <token>
     tokenType: 'Bearer',

@@ -64,6 +64,34 @@ const Routes = [
     component: lazy(() => import('../../views/analytics/tx_ml/list'))
   },
   {
+    path: '/dqa',
+    component: lazy(() => import('../../views/dqa/newDQA'))
+  },
+  {
+    path: '/dqas',
+    component: lazy(() => import('../../views/dqa/DQAs'))
+  },
+  {
+    path: '/dqa-system-questions',
+    component: lazy(() => import('../../views/dqa/systemsProcessesQuestions'))
+  },
+  {
+    path: '/new-dqa-system-questions/:dqaId',
+    component: lazy(() => import('../../views/dqa/newDQASPQuestions'))
+  },
+  {
+    path: '/dqa-upload-files/:dqaId',
+    component: lazy(() => import('../../views/dqa/newDQAFiles'))
+  },
+  {
+    path: '/new-dqa-dv-questions/:dqaId',
+    component: lazy(() => import('../../views/dqa/newDQADVQuestions'))
+  },
+  {
+    path: '/dqa-details/:dqaId',
+    component: lazy(() => import('../../views/dqa/dqaDetails'))
+  },
+  {
     path: '/login',
     component: lazy(() => import('../../views/authentication/LoginBasic')),
     layout: 'BlankLayout',

@@ -1,4 +1,4 @@
-import { Mail, Home, User, List, File } from 'react-feather'
+import { Mail, Home, User, Award, List, File, HelpCircle, PlusCircle } from 'react-feather'
 import { Icons } from 'react-toastify'
 //import { List } from 'reactstrap'
 
@@ -16,7 +16,7 @@ export default [
     children: [
       {
         id: 'Treament Dashboard',
-        title: 'Treament Monitoring Dashboard',
+        title: 'Treatment Monitoring Dashboard',
         icon: <Mail />,
         navLink: '/treatment'
       },
@@ -90,6 +90,31 @@ export default [
       }
     ]
   },  
+  {
+    id: 'dqa',
+    title: 'DQA',
+    icon: <Award size={20} />,
+    children: [
+      {
+        id: 'newDQA',
+        title: 'Start New DQA',
+        icon: <PlusCircle size={20} />,
+        navLink: '/dqa'
+      },
+      {
+        id: 'DQAs',
+        title: 'View DQAs',
+        icon: <List size={20} />,
+        navLink: '/dqas'
+      },
+      {
+        id: 'systemsProcessesQuestions',
+        title: 'Systems and Processes Questions',
+        icon: <HelpCircle />,
+        navLink: '/dqa-system-questions'
+      }
+    ]
+  },
   {
     id: 'Settings',
     title: 'Setttings',
