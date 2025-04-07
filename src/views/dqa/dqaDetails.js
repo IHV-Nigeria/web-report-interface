@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { Collapse, Button, Spinner } from "reactstrap"
 import DataTable from "react-data-table-component"
 import { useParams } from "react-router-dom"
 import jwtConfig from "../../api/jwtConfig"
+import * as powerbi from "powerbi-client"
 
 const DqaDetails = () => {
   const { dqaId } = useParams()
@@ -11,6 +12,36 @@ const DqaDetails = () => {
   const [spOpen, setSpOpen] = useState(true) // SP Questions section open by default
   const [dvOpen, setDvOpen] = useState(false)
   const [vaOpen, setVaOpen] = useState(false)
+  const [powerBIOpen, setPowerBIOpen] = useState(false) // Power BI section toggle
+
+  const [accessToken, setAccessToken] = useState(null) // Store the fetched access token
+
+  const powerBIRef = useRef(null) // Reference for Power BI container
+
+  const fetchAccessToken = async () => {
+    try {
+      const response = await fetch("http://localhost:2222/api/v1/get-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json" // Ensure the Content-Type is set
+        }
+      })
+  
+      if (!response.ok) {
+        throw new Error(`Failed to fetch access token: ${response.statusText}`)
+      }
+  
+      const result = await response.json()
+      setAccessToken(result.access_token) // Store the access token
+      console.log("Access token fetched successfully:", result.access_token)
+    } catch (error) {
+      console.error("Error fetching access token:", error)
+    }
+  }
+  
+  useEffect(() => {
+    fetchAccessToken() // Fetch the access token on component mount
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,6 +70,59 @@ const DqaDetails = () => {
 
     fetchData()
   }, [dqaId])
+
+
+  useEffect(() => {
+    if (powerBIOpen && powerBIRef.current && data && accessToken) {
+      // Configure Power BI embed dynamically based on dqaId
+      const embedConfig = {
+        type: "report",
+        id: "533f78ba-5100-43f4-b73e-375bc6ec9114", // Your Power BI Report ID
+        embedUrl: `https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114`,
+        accessToken, // Use the fetched access token
+        tokenType: powerbi.models.TokenType.Aad,
+        settings: {
+          panes: {
+            filters: { visible: false },
+            pageNavigation: { visible: true }
+          }
+        }
+      }
+  
+      // Initialize the Power BI service
+      const powerBIService = new powerbi.service.Service(
+        powerbi.factories.hpmFactory,
+        powerbi.factories.wpmpFactory,
+        powerbi.factories.routerFactory
+      )
+  
+      // Embed the report
+      const report = powerBIService.embed(powerBIRef.current, embedConfig)
+  
+      report.on("loaded", async () => {
+        const filter = {
+          $schema: "http://powerbi.com/product/schema#basic",
+          target: {
+            table: "dqa_facility",
+            column: "id"
+          },
+          operator: "In",
+          values: [dqaId] // Use dqaId to filter the report
+        }
+  
+        try {
+          await report.setFilters([filter])
+          console.log("dqaId filter applied successfully")
+        } catch (error) {
+          console.error("Error applying dqaId filter:", error)
+        }
+      })
+  
+      return () => {
+        powerBIService.reset(powerBIRef.current)
+      }
+    }
+  }, [powerBIOpen, dqaId, data, accessToken])
 
   if (loading) {
     return (
@@ -135,6 +219,18 @@ const DqaDetails = () => {
       <h1>DQA Details</h1>
       <h2>Facility Information</h2>
       <p>{data.facility.facilityName || "Facility name not available"}</p>
+
+      {/* Power BI Analytics Section */}
+      <Button color="primary" onClick={() => setPowerBIOpen(!powerBIOpen)} style={{ marginBottom: "1rem" }}>
+        {powerBIOpen ? "Hide Power BI Analytics" : "Show Power BI Analytics"}
+      </Button>
+      <Collapse isOpen={powerBIOpen}>
+        <div
+          ref={powerBIRef}
+          style={{ height: "600px", border: "1px solid #ccc", marginTop: "1rem" }}
+        ></div>
+        <iframe title="DQAPowerBI" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114&autoAuth=true&ctid=995c8049-bfb4-4df7-a971-0330afa808c9" frameborder="0" allowFullScreen="true"></iframe>
+      </Collapse>
 
       {/* SP Questions Section */}
       <Button color="primary" onClick={() => setSpOpen(!spOpen)} style={{ marginBottom: "1rem" }}>

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Table, ButtonGroup, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
-// import SPQuestionsForm from './SPQuestionsForm' // Ensure the correct import path and name
 import jwtConfig from "../../api/jwtConfig"
-// import { toast } from 'react-toastify'
-import './systemsProcesses.css'
 import { useHistory } from 'react-router-dom'
 
 const DQAs = () => {
@@ -15,7 +12,7 @@ const DQAs = () => {
 
   const toggleModal = () => setModal(!modal)
   const toggleDeleteModal = () => setDeleteModal(!deleteModal)
-  const history = useHistory()
+  const history = useHistory() // Use history for navigation
 
   const editDQA = (dqas) => {
     setSelectedDQA(dqas)
@@ -24,7 +21,6 @@ const DQAs = () => {
 
   const confirmDeleteDQA = (dqas) => {
     setDQAToDelete(dqas)
-    
     toggleDeleteModal()
   }
 
@@ -42,7 +38,7 @@ const DQAs = () => {
       })
 
       if (response.ok) {
-        toast.success("The DQA has been successfully deleted!")
+        console.log("The DQA has been successfully deleted!")
       } else {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -55,9 +51,12 @@ const DQAs = () => {
   }
 
   const newDQA = async (e) => {
-    e.preventDefault() 
-  
-    history.push('/dqa') 
+    e.preventDefault()
+    history.push('/dqa')
+  }
+
+  const goToDashboard = (dqaId) => {
+    history.push(`/dqa-details/${dqaId}`) // Navigate to the dqa-details page with the dqaId
   }
 
   useEffect(() => {
@@ -82,20 +81,20 @@ const DQAs = () => {
 
   return (
     <div>
-        <div className='button-container'>
-          <Button color="primary" onClick={newDQA}>Start New DQA</Button>
-        </div>
-        <Modal isOpen={deleteModal} toggle={toggleDeleteModal}>
-            <ModalHeader toggle={toggleDeleteModal}>Confirm Delete</ModalHeader>
-            <ModalBody>
-                Are you sure you want to delete this DQA?
-            </ModalBody>
-            <ModalFooter>
-                <Button color="danger" onClick={deleteDQA}>Delete</Button>
-                <Button color="secondary" onClick={toggleDeleteModal}>Cancel</Button>
-            </ModalFooter>
-        </Modal>
-      
+      <div className='button-container'>
+        <Button color="primary" onClick={newDQA}>Start New DQA</Button>
+      </div>
+      <Modal isOpen={deleteModal} toggle={toggleDeleteModal}>
+        <ModalHeader toggle={toggleDeleteModal}>Confirm Delete</ModalHeader>
+        <ModalBody>
+          Are you sure you want to delete this DQA?
+        </ModalBody>
+        <ModalFooter>
+          <Button color="danger" onClick={deleteDQA}>Delete</Button>
+          <Button color="secondary" onClick={toggleDeleteModal}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
+
       <h3>DQA RECORDS</h3>
       <Table striped>
         <thead>
@@ -119,7 +118,7 @@ const DQAs = () => {
               <td>
                 <ButtonGroup>
                   <Button color="primary" onClick={() => editDQA(dqa)}>Edit</Button>
-                  <Button color="info" onClick={() => editDQA(dqa)}>Dashboard</Button>
+                  <Button color="info" onClick={() => goToDashboard(dqa.id)}>Dashboard</Button> {/* Navigate to dashboard */}
                   <Button color="danger" onClick={() => confirmDeleteDQA(dqa)}>Delete</Button>
                 </ButtonGroup>
               </td>
