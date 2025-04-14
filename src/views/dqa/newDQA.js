@@ -73,6 +73,16 @@ const newDQA = () => {
     }
   }
 
+  const handlePrevious = () => {
+    const nextTab = (parseInt(activeTab) - 1).toString()
+    setActiveTab(nextTab)
+  }
+
+  const handleNext = () => {
+    const nextTab = (parseInt(activeTab) + 1).toString()
+    setActiveTab(nextTab)
+  }
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     setFormData({
@@ -194,27 +204,27 @@ const newDQA = () => {
         <TabContent activeTab={activeTab} className="mt-3">
           {/* Tab 1: Facility Information */}
           <TabPane tabId="1">
-          <Row>
-          <Col md="12">
-            <FormGroup>
-              <Label for="facilityName">Facility Name</Label>
-              <Input type="select" id="facilityName" name="facilityName" onChange={handleFacilityChange} required>
-                <option value="">Select Facility</option>
-                {facilities.map((facility, index) => (
-                  // <option key={index} value={facility.facilityName}>{`${facility.facilityName  }, ${  facility.Lga  }, ${  facility.State}`}</option>
-                  <option key={index} value={facility.facilityName}>{`${facility.facilityName  }`}</option>
+            <Row>
+                <Col md="12">
+                  <FormGroup>
+                    <Label for="facilityName">Facility Name</Label>
+                    <Input type="select" id="facilityName" name="facilityName" onChange={handleFacilityChange} required>
+                      <option value="">Select Facility</option>
+                      {facilities.map((facility, index) => (
+                        // <option key={index} value={facility.facilityName}>{`${facility.facilityName  }, ${  facility.Lga  }, ${  facility.State}`}</option>
+                        <option key={index} value={facility.facilityName}>{`${facility.facilityName  }`}</option>
 
-                ))}
-              </Input>
-            </FormGroup>
-          </Col>
-        
-              <Input type="hidden" id="datimCode" name="datimCode" value={formData.datimCode} readOnly />
-               
-              <Input type="hidden" id="orgUnit" name="orgUnit" value=""/> 
+                      ))}
+                    </Input>
+                  </FormGroup>
+                </Col>
           
-        </Row>
-        <hr style={{ backgroundColor: 'darkblue' }} />
+                <Input type="hidden" id="datimCode" name="datimCode" value={formData.datimCode} readOnly />
+                
+                <Input type="hidden" id="orgUnit" name="orgUnit" value=""/> 
+            
+            </Row>
+            <hr style={{ backgroundColor: 'darkblue' }} />
             <Row>
               <Col md="6">
                 <FormGroup>
@@ -298,8 +308,10 @@ const newDQA = () => {
                 </FormGroup>
               </Col>
             </Row>
-          </TabPane>
+            <hr style={{ backgroundColor: 'darkblue' }} />
+            <Button color="primary" onClick={handleNext} style={{ float: 'right' }}>Next</Button>
 
+          </TabPane>
           {/* Tab 2: General Assessment */}
           <TabPane tabId="2">
             <Row>
@@ -479,6 +491,11 @@ const newDQA = () => {
                 </FormGroup>
               </Col>
             </Row>
+            <hr style={{ backgroundColor: 'darkblue' }} />
+            <Button color="primary" onClick={handlePrevious} style={{ float: 'left' }}>Previous</Button>
+
+            <Button color="primary" onClick={handleNext} style={{ float: 'right' }}>Next</Button>
+
           </TabPane>
           {/* Tab 3: Structures start from FacilityMeStaff */}
           <TabPane tabId="3">
@@ -598,6 +615,11 @@ const newDQA = () => {
                 </FormGroup>
               </Col>
             </Row>
+            <hr style={{ backgroundColor: 'darkblue' }} />
+            <Button color="primary" onClick={handlePrevious} style={{ float: 'left' }}>Previous</Button>
+
+            <Button color="primary" onClick={handleNext} style={{ float: 'right' }}>Next</Button>
+
           </TabPane>
 
           <TabPane tabId='4'>
@@ -653,11 +675,13 @@ const newDQA = () => {
                 </FormGroup>
               </Col>
             </Row>
+
+
+            <hr style={{ backgroundColor: 'darkblue' }} />
+            <Button color="primary" onClick={handlePrevious} style={{ float: 'left' }}>Previous</Button>
+
+            <Button color="success" type="submit" style={{ float: 'right' }} onClick={handleSubmit}>Save DQA</Button>
           </TabPane>
-
-          <hr style={{ backgroundColor: 'darkblue' }} />
-
-          <Button color="primary" type="submit" style={{ float: 'right' }} onClick={handleSubmit}>Save DQA</Button>
         </TabContent>
       </Card>
     </Form>
