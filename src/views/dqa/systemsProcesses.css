@@ -1,28 +1,28 @@
 .button-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
 
-  input{
-    padding: 0px;
-  }
+input {
+  padding: 0px !important;
+}
 
-  .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.8);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
 
-  input,option{
-    width: auto !important;
-  }
-  
+input,
+option {
+  width: 100% !important;
+}

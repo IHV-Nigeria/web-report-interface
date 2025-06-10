@@ -82,10 +82,11 @@ const DqaDetails = () => {
       // Configure Power BI embed dynamically based on dqaId
       const embedConfig = {
         type: "report",
-        id: "533f78ba-5100-43f4-b73e-375bc6ec9114", // Your Power BI Report ID
-        embedUrl: `https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114`,
-        accessToken, // Use the fetched access token
-        tokenType: powerbi.models.TokenType.Aad,
+        id: "533f78ba-5100-43f4-b73e-375bc6ec9114",
+        embedUrl: "https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114",
+        accessToken,
+        tokenType: powerbi.models.TokenType.Embed, // Use .Embed if you are using an embed token
+        // tokenType: powerbi.models.TokenType.Aad,
         settings: {
           panes: {
             filters: { visible: false },
@@ -237,7 +238,7 @@ const DqaDetails = () => {
           ref={powerBIRef}
           style={{ height: "600px", border: "1px solid #ccc", marginTop: "1rem" }}
         ></div>
-        <iframe title="DQAPowerBI" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114&autoAuth=true&ctid=995c8049-bfb4-4df7-a971-0330afa808c9" frameborder="0" allowFullScreen></iframe>
+        <iframe title="DQAPowerBI" width="100%" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114&autoAuth=true&ctid=995c8049-bfb4-4df7-a971-0330afa808c9" frameborder="0" allowFullScreen></iframe>
       </Collapse>
 
       {/* SP Questions Section */}
