@@ -18,6 +18,10 @@ const NewDQADVQuestions = () => {
   const [questions, setQuestions] = useState([])
   const [activeTab, setActiveTab] = useState('1')
 
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedPatient, setSelectedPatient] = useState(null)
+
+
   const history = useHistory()
 
   const toggleTab = (tab) => {
@@ -25,29 +29,13 @@ const NewDQADVQuestions = () => {
       setActiveTab(tab)
     }
   }
-
-  const handlePrevious = () => {
-    const nextTab = (parseInt(activeTab) - 1).toString()
-    setActiveTab(nextTab)
-  }
-
-  const handleNext = () => {
-    const nextTab = (parseInt(activeTab) + 1).toString()
-    setActiveTab(nextTab)
-  }
-
   const [loading, setLoading] = useState(false) // State to manage loading screen
-  const [currentPage, setCurrentPage] = useState(1) // For pagination
-  const [rowsPerPage] = useState(100) // Rows per page
+  // const [currentPage, setCurrentPage] = useState(1) // For pagination
+  // const [rowsPerPage] = useState(100) // Rows per page
 
   // Fetch questions from the API
   useEffect(() => {
-    // $(document).ready(function () {
-    //   $('#variableAssessmentTable').DataTable()
-    // })
-
-    // Retrieve data from local storage
-
+    
     const storedData = localStorage.getItem('dqaData')
     if (storedData) {
       setData(JSON.parse(storedData))
@@ -69,16 +57,16 @@ const NewDQADVQuestions = () => {
         })
 
         if (!response.ok) {
-          setLoading(false) // Show loading screen
+          // setLoading(false) // Show loading screen
 
           throw new Error(`HTTP error! status: ${response.status}`)
         }
 
         const questionData = await response.json()
         setQuestions(questionData)
-        console.log('Fetched questions:', questionData)
+        // console.log('Fetched questions:', questionData)
       } catch (error) {
-        setLoading(false) // Show loading screen
+        // setLoading(false) // Show loading screen
 
         console.error('Error fetching questions:', error)
       } finally {
@@ -89,6 +77,48 @@ const NewDQADVQuestions = () => {
     fetchQuestions()
   }, []) // Empty dependency array ensures this runs only once
 
+   // Handle search for a patient
+   const handleSearch = () => {
+    if (data && data.variableAssessmentDto) {
+      const patient = Object.values(data.variableAssessmentDto).find(
+        (p) => p.patientUniqueId === searchQuery
+      )
+      if (patient) {
+        setSelectedPatient(patient)
+      } else {
+        toast.error('Patient not found')
+        setSelectedPatient(null)
+      }
+    }
+  }
+
+  // Handle updating patient data
+  const handleUpdatePatient = async () => {
+    if (!selectedPatient) {
+      toast.error('No patient selected')
+      return
+    }
+
+    try {
+      const response = await fetch(`${jwtConfig.dqaUrl}/variable-assessment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify([selectedPatient])
+      })
+
+      if (response.ok) {
+        toast.success('Patient data updated successfully')
+      } else {
+        toast.error('Failed to update patient data')
+      }
+    } catch (error) {
+      console.error('Error updating patient data:', error)
+      toast.error('A network error occurred. Please try again.')
+    }
+  }
+
   const getIndicatorValues = (indicator) => {
     // Extract the corresponding values for the indicator from the data
     return data?.dataVerificationDto?.dataVerificationQtrData[indicator] || []
@@ -98,7 +128,7 @@ const NewDQADVQuestions = () => {
     return values.map((entry, index) => {
       const { dateRange, register, dhis, nmrs, ndr } = entry
       const month = dateRange ? `${dateRange.month}/${dateRange.year}` : "Last Month"
-
+  
       return (
         <Row key={index} className="mb-3">
           <Col md={2}>
@@ -210,7 +240,7 @@ const NewDQADVQuestions = () => {
     }
 
 
-    const payloadVA = Object.entries(data.variableAssessmentDto).map(([key, patient]) => ({
+    const payloadVA = Object.entries(data.variableAssessmentDto).map(([key, patient]) => ({      
       dqaId,
       patientId: patient.patientUniqueId,
       dateOfBirth: patient.dob,
@@ -306,9 +336,6 @@ const NewDQADVQuestions = () => {
   }
 
   // Pagination logic
-  const indexOfLastRow = currentPage * rowsPerPage
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage
-  const currentRows = data?.variableAssessmentDto ? Object.entries(data.variableAssessmentDto).slice(indexOfFirstRow, indexOfLastRow) : []
 
   return (
     <div>
@@ -359,408 +386,548 @@ const NewDQADVQuestions = () => {
                 </Card>
               )
             })}
-            <Button color="primary" onClick={handleNext} style={{ float: 'right' }}>Next</Button>
           </TabPane>
           <TabPane tabId="2">
-            <div className="table-responsive" style={{ overflowX: 'auto' }}>
-              <Table id="variableAssessmentTable" bordered style={{ tableLayout: 'auto', width: '100%' }}>
-                <thead>
-                  <tr>
-                    <th>S/No</th>
-                    <th>Patient ID</th>
-                    <th>Date of Birth</th>
-                    <th>Sex</th>
-                    <th>Folder_ART Start Date</th>
-                    <th>RADET_ART Start Date</th>
-                    <th>XML_ART Start Date</th>
-                    <th>NDR_ART Start Date</th>
-                    <th>Folder_Last Drug Pickup Date</th>
-                    <th>RADET_Last Drug Pickup Date</th>
-                    <th>XML_Last Drug Pickup Date</th>
-                    <th>NDR_Last Drug Pickup Date</th>
-                    <th>Folder_Days of ARV Refill</th>
-                    <th>RADET_Days of ARV Refill</th>
-                    <th>XML_Days of ARV Refill</th>
-                    <th>NDR_Days of ARV Refill</th>
-                    <th>Folder_Current Regimen</th>
-                    <th>RADET_Current Regimen</th>
-                    <th>XML_Current Regimen</th>
-                    <th>NDR_Current Regimen</th>
-                    <th>Folder_Current Viral Load</th>
-                    <th>RADET_Current Viral Load</th>
-                    <th>XML_Current Viral Load</th>
-                    <th>NDR_Current Viral Load</th>
-                    <th>Folder_Viral Load Sample Collection Date</th>
-                    <th>RADET_Viral Load Sample Collection Date</th>
-                    <th>XML_Viral Load Sample Collection Date</th>
-                    <th>NDR_Viral Load Sample Collection Date</th>
-                    <th>Folder_Current ART Status</th>
-                    <th>RADET_Current ART Status</th>
-                    <th>XML_Current ART Status</th>
-                    <th>NDR_Current ART Status</th>
-                    <th>Folder_Pregnancy Status</th>
-                    <th>RADET_Pregnancy Status</th>
-                    <th>XML_Pregnancy Status</th>
-                    <th>NDR_Pregnancy Status</th>
-                    <th>Folder_Pregnancy Status Date</th>
-                    <th>RADET_Pregnancy Status Date</th>
-                    <th>XML_Pregnancy Status Date</th>
-                    <th>NDR_Pregnancy Status Date</th>
-                    <th>Folder_TB Screen</th>
-                    <th>RADET_TB Screen</th>
-                    <th>XML_TB Screen</th>
-                    <th>NDR_TB Screen</th>
-                    <th>Folder_TB Screen Date</th>
-                    <th>RADET_TB Screen Date</th>
-                    <th>XML_TB Screen Date</th>
-                    <th>NDR_TB Screen Date</th>
-                    <th>Comments/Reason or Discrepancy</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* {data &&
-                    Object.entries(data.variableAssessmentDto).map(([key, patient], index) => ( */}
-                  {currentRows.map(([key, patient], index) => (
-                    <tr key={key}>
-                      <td>{index + 1 + indexOfFirstRow}</td>
+
+            <div className="search-container mb-4">
+              <Input
+                type="text"
+                placeholder="Search by Patient ID"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Button color="primary" onClick={handleSearch}>
+                Search
+              </Button>
+            </div>
+
+            {selectedPatient ? (
+              <div className="patient-details">
+                <Table bordered>
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    {/* ================= PATIENT DETAILS ================= */}
+                    <tr>
+                      <td colSpan="2"><strong>Patient Details</strong></td>
+                    </tr>
+
+                    <tr>
+                      <td>DQA ID</td>
                       <td>
                         <Input
                           type="text"
-                          value={patient.patientUniqueId || ""}
-                          onChange={(e) => {
-                            const updatedData = { ...data }
-                            updatedData.variableAssessmentDto[key].patientUniqueId = e.target.value
-                            setData(updatedData)
-                          }}
-
+                          value={selectedPatient.dqaId || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  dqaId: e.target.value })}
                         />
                       </td>
+                    </tr>
+
+                    <tr>
+                      <td>Patient ID</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.patientUniqueId || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  patientUniqueId: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Date of Birth</td>
                       <td>
                         <Input
                           type="date"
-                          value={patient.dob || ""}
-                          onChange={(e) => {
-                            const updatedData = { ...data }
-                            updatedData.variableAssessmentDto[key].dob = e.target.value
-                            setData(updatedData)
-                          }}
+                          value={selectedPatient.dob || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  dob: e.target.value })}
                         />
-
                       </td>
+                    </tr>
+
+                    <tr>
+                      <td>Sex</td>
                       <td>
                         <Input
                           type="select"
-                          value={patient.sex || ""}
-                          onChange={(e) => {
-                            const updatedData = { ...data }
-                            updatedData.variableAssessmentDto[key].sex = e.target.value
-                            setData(updatedData)
-                          }}
-                          style={{ width: '100px' }}
+                          value={selectedPatient.sex || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  sex: e.target.value })}
                         >
                           <option value="">Select</option>
                           <option value="M">Male</option>
                           <option value="F">Female</option>
                         </Input>
                       </td>
-                      <td>
-                        <Input type="date" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.radetVariableAssessment?.artStartDate || ""}
-                        />
-
-                        {/* <CustomDatePicker
-                              value={patient.radetVariableAssessment?.artStartDate}
-                              onChange={(date) => {
-                                const updatedData = { ...data }
-                                updatedData.variableAssessmentDto[key].radetVariableAssessment.artStartDate = date
-                                setData(updatedData)
-                              }}
-                            /> */}
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.xmlVariableAssessment?.artStartDate || ""}
-                        />
-
-                        {/* <CustomDatePicker
-                              value={patient.xmlVariableAssessment?.artStartDate}
-                              onChange={(date) => {
-                                const updatedData = { ...data }
-                                updatedData.variableAssessmentDto[key].xmlVariableAssessment.artStartDate = date
-                                setData(updatedData)
-                              }}
-                            /> */}
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.ndrVariableAssessment?.artStartDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input type="date" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.radetVariableAssessment?.lastPickupDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.xmlVariableAssessment?.lastPickupDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.ndrVariableAssessment?.lastPickupDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          value={patient.comments || ""} // Bind the comments field
-                          onChange={(e) => {
-                            const updatedData = { ...data }
-                            updatedData.variableAssessmentDto[key].comments = e.target.value // Update the comments field
-                            setData(updatedData)
-                          }}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="number"
-                          defaultValue={patient.radetVariableAssessment?.daysArvRefill || 0}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="number"
-                          defaultValue={patient.xmlVariableAssessment?.daysArvRefill || 0}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="number"
-                          defaultValue={patient.ndrVariableAssessment?.daysArvRefill || 0}
-                        />
-                      </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.radetVariableAssessment?.currentRegimen || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.xmlVariableAssessment?.currentRegimen || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.ndrVariableAssessment?.currentRegimen || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.radetVariableAssessment?.currentViralLoad || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.xmlVariableAssessment?.currentViralLoad || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.ndrVariableAssessment?.currentViralLoad || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={
-                            patient.radetVariableAssessment?.sampleCollectionDate || ""
-                          }
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={
-                            patient.xmlVariableAssessment?.sampleCollectionDate || ""
-                          }
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={
-                            patient.ndrVariableAssessment?.sampleCollectionDate || ""
-                          }
-                        />
-                      </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.radetVariableAssessment?.currentArtStatus || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.xmlVariableAssessment?.currentArtStatus || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.ndrVariableAssessment?.currentArtStatus || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.radetVariableAssessment?.pregnacyStatus || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.xmlVariableAssessment?.pregnacyStatus || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.ndrVariableAssessment?.pregnacyStatus || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input type="date" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={
-                            patient.radetVariableAssessment?.pregnacyStatusDate || ""
-                          }
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={
-                            patient.xmlVariableAssessment?.pregnacyStatusDate || ""
-                          }
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={
-                            patient.ndrVariableAssessment?.pregnacyStatusDate || ""
-                          }
-                        />
-                      </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.radetVariableAssessment?.tbScreen || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.xmlVariableAssessment?.tbScreen || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          defaultValue={patient.ndrVariableAssessment?.tbScreen || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.radetVariableAssessment?.tbScreenDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.xmlVariableAssessment?.tbScreenDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.ndrVariableAssessment?.tbScreenDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input type="date" defaultValue="" />
-                      </td>
-
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </div>
-            {/* Pagination controls */}
-            <div className="pagination-controls">
-              <Button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((prev) => prev - 1)}
-              >
-                Previous
-              </Button>
-              <Button
-                disabled={indexOfLastRow >= Object.entries(data?.variableAssessmentDto || {}).length}
-                onClick={() => setCurrentPage((prev) => prev + 1)} style={{ marginLeft: '50px' }}
-              >
-                Next
-              </Button>
-              <Button color="info" onClick={handlePrevious} style={{ float: 'right' }}>Go Back</Button>
-            </div>
-            <Button type="submit" color="primary" style={{ float: 'right', marginTop: '10px' }}>Submit</Button>
+
+                    {/* ================= ART START DATES ================= */}
+                    <tr>
+                      <td colSpan="2"><strong>ART Start Dates</strong></td>
+                    </tr>
+
+                    <tr>
+                      <td>Folder ART Start Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.folderArtStartDate || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  folderArtStartDate: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Radet ART Start Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.radetVariableAssessment.radetArtStartDate || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  radetArtStartDate: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>XML ART Start Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.xmlVariableAssessment.xmlArtStartDate || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  xmlArtStartDate: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>NDR ART Start Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.ndrVariableAssessment.ndrArtStartDate || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  ndrArtStartDate: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    {/* ================= DRUG PICKUPS ================= */}
+                    <tr>
+                      <td colSpan="2"><strong>Last Drug Pickup Dates</strong></td>
+                    </tr>
+
+                    <tr>
+                      <td>Folder Last Drug Pickup Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.folderLastDrugPickupDate || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  folderLastDrugPickupDate: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Radet Last Drug Pickup Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.radetLastDrugPickupDate || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  radetLastDrugPickupDate: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>XML Last Drug Pickup Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.xmlLastDrugPickupDate || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  xmlLastDrugPickupDate: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>NDR Last Drug Pickup Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.ndrLastDrugPickupDate || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  ndrLastDrugPickupDate: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    {/* ================= ARV REFILL DAYS ================= */}
+                    <tr>
+                      <td colSpan="2"><strong>Days of ARV Refill</strong></td>
+                    </tr>
+
+                    <tr>
+                      <td>Folder Days of ARV Refill</td>
+                      <td>
+                        <Input
+                          type="number"
+                          value={selectedPatient.folderDaysOfArvRefill || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  folderDaysOfArvRefill: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Radet Days of ARV Refill</td>
+                      <td>
+                        <Input
+                          type="number"
+                          value={selectedPatient.radetDaysOfArvRefill || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  radetDaysOfArvRefill: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>XML Days of ARV Refill</td>
+                      <td>
+                        <Input
+                          type="number"
+                          value={selectedPatient.xmlDaysOfArvRefill || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  xmlDaysOfArvRefill: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>NDR Days of ARV Refill</td>
+                      <td>
+                        <Input
+                          type="number"
+                          value={selectedPatient.ndrDaysOfArvRefill || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  ndrDaysOfArvRefill: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    {/* ================= CURRENT REGIMEN ================= */}
+                    <tr>
+                      <td colSpan="2"><strong>Current Regimen</strong></td>
+                    </tr>
+
+                    <tr>
+                      <td>Folder Current Regimen</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.folderCurrentRegimen || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  folderCurrentRegimen: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Radet Current Regimen</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.radetCurrentRegimen || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  radetCurrentRegimen: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>XML Current Regimen</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.xmlCurrentRegimen || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  xmlCurrentRegimen: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>NDR Current Regimen</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.ndrCurrentRegimen || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  ndrCurrentRegimen: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    {/* ================= VIRAL LOADS ================= */}
+                    <tr>
+                      <td colSpan="2"><strong>Viral Load Results</strong></td>
+                    </tr>
+
+                    <tr>
+                      <td>Radet Current Viral Load</td>
+                      <td>
+                        <Input
+                          type="number"
+                          value={selectedPatient.radetCurrentViralLoad || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  radetCurrentViralLoad: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>XML Current Viral Load</td>
+                      <td>
+                        <Input
+                          type="number"
+                          value={selectedPatient.xmlCurrentViralLoad || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  xmlCurrentViralLoad: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>NDR Current Viral Load</td>
+                      <td>
+                        <Input
+                          type="number"
+                          value={selectedPatient.ndrCurrentViralLoad || ''}
+                          onChange={(e) => setSelectedPatient({ ...selectedPatient,  ndrCurrentViralLoad: e.target.value })}
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Folder Pregnancy Status</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.folderPregnancyStatus || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, folderPregnancyStatus: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Radet Pregnancy Status</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.radetPregnancyStatus || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, radetPregnancyStatus: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>XML Pregnancy Status</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.xmlPregnancyStatus || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, xmlPregnancyStatus: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>NDR Pregnancy Status</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.ndrPregnancyStatus || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, ndrPregnancyStatus: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Folder Pregnancy Status Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.folderPregnancyStatusDate || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, folderPregnancyStatusDate: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Radet Pregnancy Status Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.radetPregnancyStatusDate || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, radetPregnancyStatusDate: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>XML Pregnancy Status Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.xmlPregnancyStatusDate || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, xmlPregnancyStatusDate: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>NDR Pregnancy Status Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.ndrPregnancyStatusDate || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, ndrPregnancyStatusDate: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    {/* ================= TB SCREENING ================= */}
+                    <tr>
+                      <td colSpan="2"><strong>TB Screening</strong></td>
+                    </tr>
+
+                    <tr>
+                      <td>Folder TB Screen</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.folderTbScreen || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, folderTbScreen: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Radet TB Screen</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.radetTbScreen || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, radetTbScreen: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>XML TB Screen</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.xmlTbScreen || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, xmlTbScreen: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>NDR TB Screen</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.ndrTbScreen || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, ndrTbScreen: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Folder TB Screen Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.folderTbScreenDate || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, folderTbScreenDate: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Radet TB Screen Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.radetTbScreenDate || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, radetTbScreenDate: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>XML TB Screen Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.xmlTbScreenDate || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, xmlTbScreenDate: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>NDR TB Screen Date</td>
+                      <td>
+                        <Input
+                          type="date"
+                          value={selectedPatient.ndrTbScreenDate || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, ndrTbScreenDate: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+                    {/* ================= OTHER ================= */}
+                    <tr>
+                      <td colSpan="2"><strong>Other</strong></td>
+                    </tr>
+
+                    <tr>
+                      <td>Comments</td>
+                      <td>
+                        <Input
+                          type="text"
+                          value={selectedPatient.comments || ''}
+                          onChange={(e) => setSelectedPatient({...selectedPatient, comments: e.target.value})
+                          }
+                        />
+                      </td>
+                    </tr>
+
+
+                  </tbody>
+                </Table>
+                <Button color="success" onClick={handleUpdatePatient}>
+                  Update Patient
+                </Button>
+              </div>
+            ) : (
+              <p>No patient selected</p>
+            )}
+
+            
           </TabPane>
         </TabContent>
-
+        <Button type="submit" color="primary">Submit</Button>
       </Form>
     </div>
   )

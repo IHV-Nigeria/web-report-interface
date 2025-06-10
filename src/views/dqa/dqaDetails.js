@@ -26,11 +26,11 @@ const DqaDetails = () => {
           "Content-Type": "application/json" // Ensure the Content-Type is set
         }
       })
-  
+
       if (!response.ok) {
         throw new Error(`Failed to fetch access token: ${response.statusText}`)
       }
-  
+
       const result = await response.json()
       setAccessToken(result.access_token) // Store the access token
       console.log("Access token fetched successfully:", result.access_token)
@@ -38,7 +38,7 @@ const DqaDetails = () => {
       console.error("Error fetching access token:", error)
     }
   }
-  
+
   useEffect(() => {
     fetchAccessToken() // Fetch the access token on component mount
   }, [])
@@ -61,6 +61,11 @@ const DqaDetails = () => {
             variableAssessment: result.facility.variableAssessment || []
           }
         })
+
+        console.log("DQA details fetched successfully:", result.facility.questionsAnswers)
+        console.log("Variable Assessments:", result.facility.variableAssessment)
+
+
       } catch (error) {
         console.error("Error fetching DQA details:", error)
       } finally {
@@ -88,17 +93,17 @@ const DqaDetails = () => {
           }
         }
       }
-  
+
       // Initialize the Power BI service
       const powerBIService = new powerbi.service.Service(
         powerbi.factories.hpmFactory,
         powerbi.factories.wpmpFactory,
         powerbi.factories.routerFactory
       )
-  
+
       // Embed the report
       const report = powerBIService.embed(powerBIRef.current, embedConfig)
-  
+
       report.on("loaded", async () => {
         const filter = {
           $schema: "http://powerbi.com/product/schema#basic",
@@ -109,7 +114,7 @@ const DqaDetails = () => {
           operator: "In",
           values: [dqaId] // Use dqaId to filter the report
         }
-  
+
         try {
           await report.setFilters([filter])
           console.log("dqaId filter applied successfully")
@@ -117,7 +122,7 @@ const DqaDetails = () => {
           console.error("Error applying dqaId filter:", error)
         }
       })
-  
+
       return () => {
         powerBIService.reset(powerBIRef.current)
       }
@@ -142,11 +147,14 @@ const DqaDetails = () => {
   }
 
   // Separate questionsAnswers into SP and DV groups
+  // console.log("Questions and Answers:", data.facility.questionsAnswers)
   const spQuestions = data.facility.questionsAnswers.filter(
-    (qa) => qa.dqaQuestions.group === "SP"
+    (qa) => qa.dqaQuestions?.group === "SP"
   )
+
+
   const dvQuestions = data.facility.questionsAnswers.filter(
-    (qa) => qa.dqaQuestions.group === "DV"
+    (qa) => qa.dqaQuestions?.group === "DV"
   )
 
   // Columns for DataTables
@@ -229,7 +237,7 @@ const DqaDetails = () => {
           ref={powerBIRef}
           style={{ height: "600px", border: "1px solid #ccc", marginTop: "1rem" }}
         ></div>
-        <iframe title="DQAPowerBI" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114&autoAuth=true&ctid=995c8049-bfb4-4df7-a971-0330afa808c9" frameborder="0" allowFullScreen="true"></iframe>
+        <iframe title="DQAPowerBI" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114&autoAuth=true&ctid=995c8049-bfb4-4df7-a971-0330afa808c9" frameborder="0" allowFullScreen></iframe>
       </Collapse>
 
       {/* SP Questions Section */}

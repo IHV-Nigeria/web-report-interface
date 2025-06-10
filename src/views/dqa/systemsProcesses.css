@@ -21,3 +21,8 @@
     justify-content: center;
     z-index: 9999;
   }
+
+  input,option{
+    width: auto !important;
+  }
+  
