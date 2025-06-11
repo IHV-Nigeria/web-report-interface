@@ -64,7 +64,9 @@ const newDQA = () => {
     pmtctHtsRegister: '',
     maternalCohortRegister: '',
     htsRegister: '',
-    artRegister: ''
+    artRegister: '',
+    score: '',
+    status: ''
   })
 
   const lgaOptions = {
@@ -108,14 +110,6 @@ const newDQA = () => {
     const nextTab = (parseInt(activeTab) + 1).toString()
     setActiveTab(nextTab)
   }
-
-  // const handleChange = (e) => {
-  //   const { name, value, type, checked } = e.target
-  //   setFormData({
-  //     ...formData,
-  //     [name]: type === 'checkbox' ? checked : value
-  //   })
-  // }
 
   const handleChange = async (e) => {
     const { name, value, type, checked } = e.target
@@ -198,32 +192,6 @@ const newDQA = () => {
     }
   }
 
-  // useEffect(() => {
-  //   const fetchFacilities = async () => {
-  //     const token = localStorage.getItem(`${jwtConfig.storageTokenKeyName}`)
-  //     console.log('Token:', token) // Log the token to check if it's being retrieved correctly
-  //     try {
-  //       const response = await fetch(`${jwtConfig.baseUrl}/facility/facilities/`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`
-  //         }
-  //       })
-  //       if (response.ok) {
-  //         const data = await response.json()
-  //         setFacilities(data)
-  //         // log the fetched data values
-  //         console.log(data)
-  //         // console.log('Facilities fetched successfully:', data)
-  //       } else {
-  //         console.error('Failed to fetch facilities')
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching facilities:', error)
-  //     }
-  //   }
-
-  //   fetchFacilities()
-  // }, [data])
 
   return (
     <Form>
@@ -318,7 +286,7 @@ const newDQA = () => {
 
               <Input type="hidden" id="datimCode" name="datimCode" value={formData.datimCode} readOnly />
 
-              <Input type="hidden" id="orgUnit" name="orgUnit" value="" />
+              <Input type="hidden" id="orgUnit" name="orgUnit" value="" onChange={handleChange} />
 
             </Row>
             <hr style={{ backgroundColor: 'darkblue' }} />

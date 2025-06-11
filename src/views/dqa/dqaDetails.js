@@ -33,7 +33,6 @@ const DqaDetails = () => {
 
       const result = await response.json()
       setAccessToken(result.access_token) // Store the access token
-      console.log("Access token fetched successfully:", result.access_token)
     } catch (error) {
       console.error("Error fetching access token:", error)
     }
@@ -62,8 +61,7 @@ const DqaDetails = () => {
           }
         })
 
-        console.log("DQA details fetched successfully:", result.facility.questionsAnswers)
-        console.log("Variable Assessments:", result.facility.variableAssessment)
+        // console.log("Facivility:", result.facility)
 
 
       } catch (error) {
@@ -166,7 +164,7 @@ const DqaDetails = () => {
 
   const dvColumns = [
     { name: "Category", selector: (row) => row.dqaQuestions?.category || "-", sortable: true },
-    { name: "Question", selector: (row) => row.dqaQuestions?.question || "-", sortable: true },
+    { name: "Question", selector: (row) => row.dqaQuestions?.question || "-", sortable: true, wrap: true, grow: 2 },
     { name: "Answer", selector: (row) => row.answer || "-", sortable: true },
     { name: "Answer Type", selector: (row) => row.answerType || "-", sortable: true },
     { name: "Month", selector: (row) => row.month || "-", sortable: true },
@@ -223,22 +221,40 @@ const DqaDetails = () => {
     { name: "Comments", selector: (row) => row.comments || "N/A", sortable: true }
   ]
 
+  const stateCodes = {
+    1: "FCT",
+    2: "Katsina",
+    3: "Nasarawa",
+    4: "Rivers"
+  }
+
   return (
     <div>
       <h1>DQA Details</h1>
-      <h2>Facility Information</h2>
-      <p>{data.facility.facilityName || "Facility name not available"}</p>
-
+      <h4>Facility Information</h4>
+      <hr style={{ backgroundColor: 'darkblue' }} />
+      <h2>
+        {data.facility.facilityName || "Facility name not available"}, {data.facility.lga || ""}, {data.facility.state ? stateCodes[data.facility.state] || " " : "State not available"}
+        {" - "}
+        <span style={{ fontWeight: "bold", color: "#007bff" }}>
+          Status: {data.facility.status}
+        </span>
+        {" "}
+        <span style={{ fontWeight: "bold", color: "#28a745" }}>
+          Score: {data.facility.score}
+        </span>
+      </h2>
+      <hr style={{ backgroundColor: 'darkblue' }} />
       {/* Power BI Analytics Section */}
       <Button color="primary" onClick={() => setPowerBIOpen(!powerBIOpen)} style={{ marginBottom: "1rem" }}>
         {powerBIOpen ? "Hide Power BI Analytics" : "Show Power BI Analytics"}
       </Button>
       <Collapse isOpen={powerBIOpen}>
-        <div
+        {/* <div
           ref={powerBIRef}
           style={{ height: "600px", border: "1px solid #ccc", marginTop: "1rem" }}
-        ></div>
-        <iframe title="DQAPowerBI" width="100%" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114&autoAuth=true&ctid=995c8049-bfb4-4df7-a971-0330afa808c9" frameborder="0" allowFullScreen></iframe>
+        ></div> */}
+        <iframe title="DQAPowerBI" width="100%" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114&autoAuth=true&ctid=995c8049-bfb4-4df7-a971-0330afa808c9" frameBorder="0" allowFullScreen></iframe>
       </Collapse>
 
       {/* SP Questions Section */}
@@ -251,6 +267,7 @@ const DqaDetails = () => {
           columns={spColumns}
           data={spQuestions}
           pagination
+          paginationPerPage={50} // <-- Add this line
           responsive
           highlightOnHover
         />
@@ -266,6 +283,7 @@ const DqaDetails = () => {
           columns={dvColumns}
           data={dvQuestions}
           pagination
+          paginationPerPage={50} // <-- Add this line
           responsive
           highlightOnHover
         />
@@ -281,6 +299,7 @@ const DqaDetails = () => {
           columns={vaColumns}
           data={data.facility.variableAssessment}
           pagination
+          paginationPerPage={50} // <-- Add this line
           responsive
           highlightOnHover
         />

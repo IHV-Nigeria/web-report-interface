@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 
 import './systemsProcesses.css'
 
-const NewDQADVQuestions = () => {
+const newDQADVQuestions = () => {
   const { dqaId } = useParams()
   const [data, setData] = useState(null)
   const [questions, setQuestions] = useState([])
@@ -140,7 +140,7 @@ const NewDQADVQuestions = () => {
             dqaId,
             questionId: question.id,
             answer: register,
-            period: month,
+            month,
             answerType: 'register'
           })
         }
@@ -149,7 +149,7 @@ const NewDQADVQuestions = () => {
             dqaId,
             questionId: question.id,
             answer: dhis,
-            period: month,
+            month,
             answerType: 'dhis'
           })
         }
@@ -158,7 +158,7 @@ const NewDQADVQuestions = () => {
             dqaId,
             questionId: question.id,
             answer: nmrs,
-            period: month,
+            month,
             answerType: 'nmrs'
           })
         }
@@ -167,7 +167,7 @@ const NewDQADVQuestions = () => {
             dqaId,
             questionId: question.id,
             answer: ndr,
-            period: month,
+            month,
             answerType: 'ndr'
           })
         }
@@ -766,4 +766,4 @@ const NewDQADVQuestions = () => {
   )
 }
 
-export default NewDQADVQuestions
+export default newDQADVQuestions

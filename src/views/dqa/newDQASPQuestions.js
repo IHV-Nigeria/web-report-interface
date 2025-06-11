@@ -9,7 +9,7 @@ const newDQASPQuestions = () => {
   const [questions, setQuestions] = useState([])
   const [answers, setAnswers] = useState({})
   const history = useHistory() // Initialize history
-  
+
 
   useEffect(() => {
     // const token = localStorage.getItem(`${jwtConfig.storageTokenKeyName}`)
@@ -45,16 +45,16 @@ const newDQASPQuestions = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     // const token = localStorage.getItem(`${jwtConfig.storageTokenKeyName}`)
-  
+
     const payload = Object.keys(answers).map(questionId => ({
       dqaId,
       questionId,
       answer: answers[questionId].answer,
       reviewersComment: answers[questionId].reviewersComment
     }))
-  
+
     console.log(JSON.stringify(payload))
-  
+
     try {
       const response = await fetch(`${jwtConfig.dqaUrl}/questions-answers`, {
         method: 'POST',
@@ -64,7 +64,7 @@ const newDQASPQuestions = () => {
         },
         body: JSON.stringify(payload)
       })
-  
+
       if (response.ok) {
         const text = await response.text()
         try {
@@ -73,7 +73,7 @@ const newDQASPQuestions = () => {
           alert('Form submitted successfully!')
           // Handle success (e.g., navigate to another page or reset the form)
 
-          
+
         } catch (jsonError) {
           console.error('Failed to parse JSON response:', jsonError)
           alert('Form submitted successfully, but failed to parse server response.')
@@ -103,7 +103,7 @@ const newDQASPQuestions = () => {
     <div>
       <h1>DQA System Processes Questions</h1>
       <Form onSubmit={handleSubmit}>
-      <Input type="hidden" name="dqaId" value={dqaId} />
+        <Input type="hidden" name="dqaId" value={dqaId} />
         {Object.keys(categorizedQuestions).map(category => (
           <Card key={category} className="mb-3">
             <CardBody>
@@ -121,6 +121,7 @@ const newDQASPQuestions = () => {
                           id={`answer-${question.id}`}
                           value={answers[question.id]?.answer || ''}
                           onChange={(e) => handleChange(e, question.id)}
+                          style={{ minWidth: 200, width: "100%" }}
                         >
                           <option value="">Select an answer</option>
                           <option value="Yes-completely">Yes-completely</option>
@@ -139,6 +140,7 @@ const newDQASPQuestions = () => {
                           id={`reviewersComment-${question.id}`}
                           value={answers[question.id]?.reviewersComment || ''}
                           onChange={(e) => handleChange(e, question.id)}
+                          style={{ minWidth: 200, width: "100%" }}
                         />
                       </FormGroup>
                     </Col>
@@ -148,7 +150,11 @@ const newDQASPQuestions = () => {
             </CardBody>
           </Card>
         ))}
-        <Button type="submit" color="primary">Submit</Button>
+        <Card className="mb-3">
+          <CardBody>
+            <Button type="submit" color="success" style={{ float: 'right' }}>Save and Continue</Button>
+          </CardBody>
+        </Card>
       </Form>
     </div>
   )

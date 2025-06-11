@@ -6,17 +6,18 @@ import { useHistory } from 'react-router-dom'
 const DQAs = () => {
   const [dqas, setDQAs] = useState([])
   const [refreshTable, setRefreshTable] = useState(false)
-  const [modal, setModal] = useState(false)
+  // const [modal, setModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [dqaToDelete, setDQAToDelete] = useState(null)
 
-  const toggleModal = () => setModal(!modal)
+  // const toggleModal = () => setModal(!modal)
   const toggleDeleteModal = () => setDeleteModal(!deleteModal)
   const history = useHistory() // Use history for navigation
 
   const editDQA = (dqas) => {
-    setSelectedDQA(dqas)
-    toggleModal()
+    // setSelectedDQA(dqas)
+    // toggleModal()
+    history.push(`/edit-dqa/${dqas.id}`)
   }
 
   const confirmDeleteDQA = (dqas) => {
@@ -102,8 +103,8 @@ const DQAs = () => {
             <th>#</th>
             <th>DQA Period</th>
             <th>Facility</th>
-            <th>Status</th>
             <th>Score</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -111,10 +112,10 @@ const DQAs = () => {
           {dqas.map((dqa, index) => (
             <tr key={dqa.id}>
               <th scope="row">{index + 1}</th>
-              <td>{dqa.facilityMe}</td>
-              <td>{dqa.facilityEsm}</td>
-              <td>{dqa.facilityBackstop}</td>
-              <td>{dqa.dqaFrequency}</td>
+              <td>{dqa.fromMonth}, {dqa.fromYear} to {dqa.toMonth}, {dqa.toYear} </td>
+              <td>{dqa.facilityName}</td>
+              <td>{dqa.score}</td>
+              <td>{dqa.status}</td>
               <td>
                 <ButtonGroup>
                   <Button color="primary" onClick={() => editDQA(dqa)}>Edit</Button>
