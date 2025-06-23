@@ -290,7 +290,8 @@ const newDQADVQuestions = () => {
         // const result = text ? JSON.parse(text) : {} // Handle empty response
         console.log("Submitted variable assessment:", result)
         toast.success("Form submitted successfully!")
-        history.push(`/dqa-details/${dqaId}`)
+        history.push(`/save-dqa-comments/${dqaId}`)
+        // history.push(`/dqa-details/${dqaId}`)
       } else {
         // const text = await response.text()
         // const error = text ? JSON.parse(text) : {} // Handle empty error response

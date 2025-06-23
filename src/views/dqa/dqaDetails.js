@@ -233,7 +233,7 @@ const DqaDetails = () => {
       <h1>DQA Details</h1>
       <h4>Facility Information</h4>
       <hr style={{ backgroundColor: 'darkblue' }} />
-      <h2>
+      <h3>
         {data.facility.facilityName || "Facility name not available"}, {data.facility.lga || ""}, {data.facility.state ? stateCodes[data.facility.state] || " " : "State not available"}
         {" - "}
         <span style={{ fontWeight: "bold", color: "#007bff" }}>
@@ -243,8 +243,16 @@ const DqaDetails = () => {
         <span style={{ fontWeight: "bold", color: "#28a745" }}>
           Score: {data.facility.score}
         </span>
-      </h2>
+      </h3>
       <hr style={{ backgroundColor: 'darkblue' }} />
+      <p>
+        <strong>Interviewer's Feedback/Action Points:</strong> <br />
+        <span
+          dangerouslySetInnerHTML={{
+            __html: data.facility.comments || "N/A"
+          }}
+        />
+      </p>
       {/* Power BI Analytics Section */}
       <Button color="primary" onClick={() => setPowerBIOpen(!powerBIOpen)} style={{ marginBottom: "1rem" }}>
         {powerBIOpen ? "Hide Power BI Analytics" : "Show Power BI Analytics"}

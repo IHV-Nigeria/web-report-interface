@@ -104,6 +104,10 @@ const Routes = [
     component: lazy(() => import('../../views/dqa/editDQA'))
   },
   {
+    path: '/save-dqa-comments/:dqaId',
+    component: lazy(() => import('../../views/dqa/dqaComments'))
+  },
+  {
     path: '/login',
     component: lazy(() => import('../../views/authentication/LoginBasic')),
     layout: 'BlankLayout',

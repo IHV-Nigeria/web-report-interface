@@ -257,7 +257,8 @@ const EditDQADVQuestions2 = () => {
             })
 
             toast.success("Form updated successfully!")
-            history.push(`/dqa-details/${dqaId}`)
+            history.push(`/save-dqa-comments/${dqaId}`)
+            // history.push(`/dqa-details/${dqaId?}`)
         } catch (error) {
             toast.error("Failed to update the form. Please try again.")
         } finally {

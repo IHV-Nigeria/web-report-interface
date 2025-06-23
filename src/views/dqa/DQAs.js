@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Table, ButtonGroup, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import jwtConfig from "../../api/jwtConfig"
 import { useHistory } from 'react-router-dom'
+import '@fortawesome/fontawesome-free/css/all.min.css'
 
 const DQAs = () => {
   const [dqas, setDQAs] = useState([])
@@ -56,6 +57,13 @@ const DQAs = () => {
     history.push('/dqa')
   }
 
+  const goToVA = (dqaId) => {
+    history.push(`/edit-dqa-dv-questions/${dqaId}`) // Navigate to the dqa-details page with the dqaId
+  }
+
+  const goToFeedback = (dqaId) => {
+    history.push(`/save-dqa-comments/${dqaId}`) // Navigate to the dqa-details page with the dqaId
+  }
   const goToDashboard = (dqaId) => {
     history.push(`/dqa-details/${dqaId}`) // Navigate to the dqa-details page with the dqaId
   }
@@ -82,7 +90,7 @@ const DQAs = () => {
 
   return (
     <div>
-      <div className='button-container'>
+      <div className='button-container' style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button color="primary" onClick={newDQA}>Start New DQA</Button>
       </div>
       <Modal isOpen={deleteModal} toggle={toggleDeleteModal}>
@@ -118,16 +126,18 @@ const DQAs = () => {
               <td>{dqa.status}</td>
               <td>
                 <ButtonGroup>
-                  <Button color="primary" onClick={() => editDQA(dqa)}>Edit</Button>
-                  <Button color="info" onClick={() => goToDashboard(dqa.id)}>Dashboard</Button> {/* Navigate to dashboard */}
-                  <Button color="danger" onClick={() => confirmDeleteDQA(dqa)}>Delete</Button>
+                  <Button color="primary" style={{ borderColor: 'white', marginRight: '3px' }} size="sm" onClick={() => goToDashboard(dqa.id)} title="Dashboard"><i className="fas fa-dashboard"></i></Button>
+                  <Button color="primary" style={{ borderColor: 'white', marginRight: '3px' }} size="sm" onClick={() => editDQA(dqa)} title="Edit"><i className="fas fa-edit"></i></Button>
+                  <Button color="primary" style={{ borderColor: 'white', marginRight: '3px' }} size="sm" onClick={() => goToVA(dqa.id)}>Variable Assemments</Button>
+                  <Button color="primary" style={{ borderColor: 'white', marginRight: '3px' }} size="sm" onClick={() => goToFeedback(dqa.id)} title="Feedback"><i className="fas fa-comment-dots"></i></Button>
+                  <Button color="primary" size="sm" onClick={() => confirmDeleteDQA(dqa)} title="Delete"><i className="fas fa-remove"></i></Button>
                 </ButtonGroup>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
-    </div>
+    </div >
   )
 }
 
