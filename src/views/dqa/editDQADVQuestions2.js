@@ -16,6 +16,11 @@ const EditDQADVQuestions2 = () => {
     const [loading, setLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
     const [rowsPerPage] = useState(100)
+    const [filters, setFilters] = useState({})
+
+    const handleFilterChange = (field, value) => {
+        setFilters(prev => ({ ...prev, [field]: value }))
+    }
 
     // Fetch data and questions on mount
     useEffect(() => {
@@ -113,11 +118,24 @@ const EditDQADVQuestions2 = () => {
     console.log("Facility after changes:", facility)
 
     // Pagination for Variable Assessment
+    // const vaArr = Array.isArray(facility?.variableAssessment) ? facility.variableAssessment : Object.values(facility?.variableAssessment || {})
+    // const indexOfLastRow = currentPage * rowsPerPage
+    // const indexOfFirstRow = indexOfLastRow - rowsPerPage
+    // const currentRows = vaArr.slice(indexOfFirstRow, indexOfLastRow)
+
     const vaArr = Array.isArray(facility?.variableAssessment) ? facility.variableAssessment : Object.values(facility?.variableAssessment || {})
+
+    // Filter rows based on filters
+    const filteredRows = vaArr.filter(patient => Object.entries(filters).every(([field, filterValue]) => {
+        if (!filterValue) return true
+        const val = patient[field] ? String(patient[field]).toLowerCase() : ""
+        return val.includes(filterValue.toLowerCase())
+    })
+    )
+
     const indexOfLastRow = currentPage * rowsPerPage
     const indexOfFirstRow = indexOfLastRow - rowsPerPage
-    const currentRows = vaArr.slice(indexOfFirstRow, indexOfLastRow)
-
+    const currentRows = filteredRows.slice(indexOfFirstRow, indexOfLastRow)
     // Submit handler
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -410,6 +428,21 @@ const EditDQADVQuestions2 = () => {
                                         <th>NDR_TB Screen Date</th>
                                         <th>Comments/Reason or Discrepancy</th>
                                     </tr>
+                                    <tr>
+                                        <th>
+                                        </th>
+                                        <th>
+                                            <Input
+                                                bsSize="sm"
+                                                placeholder="Search Patient ID"
+                                                value={filters.patientId || ""}
+                                                onChange={e => handleFilterChange("patientId", e.target.value)}
+                                            />
+                                        </th>
+
+                                        <th colSpan="47">
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     {currentRows.map((patient, idx) => (
@@ -429,6 +462,7 @@ const EditDQADVQuestions2 = () => {
                                                     type="text"
                                                     value={patient.dateOfBirth || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "dateOfBirth", e.target.value)}
+                                                    style={{ minWidth: 100, width: "100%" }}
                                                     readOnly
                                                 />
                                             </td>
@@ -437,14 +471,15 @@ const EditDQADVQuestions2 = () => {
                                                     type="text"
                                                     value={patient.sex || ""} onChange={e => handleVAChange(indexOfFirstRow + idx, "sex", e.target.value)}
                                                     readOnly
-                                                    style={{ minWidth: 40, width: 40 }}
+                                                    style={{ minWidth: 40, width: "50%" }}
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="date"
                                                     value={patient.folderArtStartDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "folderArtStartDate", e.target.value)}
+                                                    style={{ minWidth: 110, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -453,6 +488,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.radetArtStartDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "radetArtStartDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 110, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -461,6 +497,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.xmlArtStartDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "xmlArtStartDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 110, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -469,9 +506,10 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.ndrArtStartDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "ndrArtStartDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 110, width: "100%" }}
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="date"
                                                     value={patient.folderLastDrugPickupDate || ""}
@@ -484,6 +522,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.radetLastDrugPickupDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "radetLastDrugPickupDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 110, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -492,6 +531,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.xmlLastDrugPickupDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "xmlLastDrugPickupDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 110, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -500,9 +540,10 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.ndrLastDrugPickupDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "ndrLastDrugPickupDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 110, width: "100%" }}
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="number"
                                                     value={patient.folderDaysOfArvRefill || ""}
@@ -533,11 +574,12 @@ const EditDQADVQuestions2 = () => {
                                                     readOnly
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="text"
                                                     value={patient.folderCurrentRegimen || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "folderCurrentRegimen", e.target.value)}
+                                                    style={{ minWidth: 160, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -546,6 +588,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.radetCurrentRegimen || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "radetCurrentRegimen", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 160, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -554,6 +597,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.xmlCurrentRegimen || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "xmlCurrentRegimen", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 160, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -562,9 +606,10 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.ndrCurrentRegimen || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "ndrCurrentRegimen", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 160, width: "100%" }}
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="text"
                                                     value={patient.folderCurrentViralLoad || ""}
@@ -595,11 +640,12 @@ const EditDQADVQuestions2 = () => {
                                                     readOnly
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="date"
                                                     value={patient.folderViralLoadSampleCollectionDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "folderViralLoadSampleCollectionDate", e.target.value)}
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -608,6 +654,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.radetViralLoadSampleCollectionDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "radetViralLoadSampleCollectionDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -616,6 +663,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.xmlViralLoadSampleCollectionDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "xmlViralLoadSampleCollectionDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -624,13 +672,15 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.ndrViralLoadSampleCollectionDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "ndrViralLoadSampleCollectionDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="text"
                                                     value={patient.folderCurrentArtStatus || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "folderCurrentArtStatus", e.target.value)}
+                                                    style={{ minWidth: 60, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -639,6 +689,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.radetCurrentArtStatus || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "radetCurrentArtStatus", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 60, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -647,6 +698,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.xmlCurrentArtStatus || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "xmlCurrentArtStatus", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 60, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -655,13 +707,15 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.ndrCurrentArtStatus || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "ndrCurrentArtStatus", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 60, width: "100%" }}
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="text"
                                                     value={patient.folderPregnancyStatus || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "folderPregnancyStatus", e.target.value)}
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -670,6 +724,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.radetPregnancyStatus || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "radetPregnancyStatus", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -678,6 +733,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.xmlPregnancyStatus || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "xmlPregnancyStatus", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -686,13 +742,15 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.ndrPregnancyStatus || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "ndrPregnancyStatus", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="date"
                                                     value={patient.folderPregnancyStatusDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "folderPregnancyStatusDate", e.target.value)}
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -701,6 +759,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.radetPregnancyStatusDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "radetPregnancyStatusDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -709,6 +768,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.xmlPregnancyStatusDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "xmlPregnancyStatusDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -717,13 +777,15 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.ndrPregnancyStatusDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "ndrPregnancyStatusDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="text"
                                                     value={patient.folderTbScreen || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "folderTbScreen", e.target.value)}
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -732,6 +794,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.radetTbScreen || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "radetTbScreen", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -740,6 +803,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.xmlTbScreen || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "xmlTbScreen", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -748,13 +812,15 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.ndrTbScreen || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "ndrTbScreen", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="date"
                                                     value={patient.folderTbScreenDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "folderTbScreenDate", e.target.value)}
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -763,6 +829,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.radetTbScreenDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "radetTbScreenDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -771,6 +838,7 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.xmlTbScreenDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "xmlTbScreenDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
                                             <td>
@@ -779,13 +847,15 @@ const EditDQADVQuestions2 = () => {
                                                     value={patient.ndrTbScreenDate || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "ndrTbScreenDate", e.target.value)}
                                                     readOnly
+                                                    style={{ minWidth: 130, width: "100%" }}
                                                 />
                                             </td>
-                                            <td>
+                                            <td style={{ backgroundColor: "#d4edda" }}>
                                                 <Input
                                                     type="text"
                                                     value={patient.comments || ""}
                                                     onChange={e => handleVAChange(indexOfFirstRow + idx, "comments", e.target.value)}
+                                                    style={{ minWidth: 200, width: "100%" }}
                                                 />
                                             </td>
                                         </tr>

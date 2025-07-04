@@ -28,7 +28,7 @@ const DQAs = () => {
 
   const deleteDQA = async () => {
     const token = localStorage.getItem(`${jwtConfig.storageTokenKeyName}`)
-    const url = `${jwtConfig.baseUrl}/dqa/${dqaToDelete.id}`
+    const url = `${jwtConfig.dqaUrl}/delete-dqa-facility/${dqaToDelete.id}`
 
     try {
       const response = await fetch(url, {

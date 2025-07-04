@@ -17,6 +17,7 @@ const newDQADVQuestions = () => {
   const [data, setData] = useState(null)
   const [questions, setQuestions] = useState([])
   const [activeTab, setActiveTab] = useState('1')
+  const [filters, setFilters] = useState({})
 
   const history = useHistory()
 
@@ -36,6 +37,9 @@ const newDQADVQuestions = () => {
     setActiveTab(nextTab)
   }
 
+  const handleFilterChange = (field, value) => {
+    setFilters(prev => ({ ...prev, [field]: value }))
+  }
   const [loading, setLoading] = useState(false) // State to manage loading screen
   const [currentPage, setCurrentPage] = useState(1) // For pagination
   const [rowsPerPage] = useState(100) // Rows per page
@@ -211,55 +215,56 @@ const newDQADVQuestions = () => {
 
 
     const payloadVA = Object.entries(data.variableAssessmentDto).map(([key, patient]) => ({
+      // console log the key      
       dqaId,
-      patientId: patient.patientUniqueId,
+      patientId: patient.patientUniqueId || key,
       dateOfBirth: patient.dob,
       sex: patient.sex,
-      folderArtStartDate: "",
+      folderArtStartDate: patient.folderArtStartDate || "",
       radetArtStartDate: patient.radetVariableAssessment?.artStartDate || "",
       xmlArtStartDate: patient.xmlVariableAssessment?.artStartDate || "",
       ndrArtStartDate: patient.ndrVariableAssessment?.artStartDate || "",
-      folderLastDrugPickupDate: "",
+      folderLastDrugPickupDate: patient.folderLastDrugPickupDate || "",
       radetLastDrugPickupDate: patient.radetVariableAssessment?.lastPickupDate || "",
       xmlLastDrugPickupDate: patient.xmlVariableAssessment?.lastPickupDate || "",
       ndrLastDrugPickupDate: patient.ndrVariableAssessment?.lastPickupDate || "",
-      folderDaysOfArvRefill: null,
-      radetDaysOfArvRefill: patient.radetVariableAssessment?.daysArvRefill || null,
-      xmlDaysOfArvRefill: patient.xmlVariableAssessment?.daysArvRefill || null,
-      ndrDaysOfArvRefill: patient.ndrVariableAssessment?.daysArvRefill || null,
-      folderCurrentRegimen: "",
+      folderDaysOfArvRefill: patient.folderDaysOfArvRefill ?? null,
+      radetDaysOfArvRefill: patient.radetVariableAssessment?.daysArvRefill ?? null,
+      xmlDaysOfArvRefill: patient.xmlVariableAssessment?.daysArvRefill ?? null,
+      ndrDaysOfArvRefill: patient.ndrVariableAssessment?.daysArvRefill ?? null,
+      folderCurrentRegimen: patient.folderCurrentRegimen || "",
       radetCurrentRegimen: patient.radetVariableAssessment?.currentRegimen || "",
       xmlCurrentRegimen: patient.xmlVariableAssessment?.currentRegimen || "",
       ndrCurrentRegimen: patient.ndrVariableAssessment?.currentRegimen || "",
-      radetCurrentViralLoad: patient.radetVariableAssessment?.currentViralLoad || null,
-      xmlCurrentViralLoad: patient.xmlVariableAssessment?.currentViralLoad || null,
-      ndrCurrentViralLoad: patient.ndrVariableAssessment?.currentViralLoad || null,
-      folderViralLoadSampleCollectionDate: "",
+      folderCurrentViralLoad: patient.folderCurrentViralLoad || "",
+      radetCurrentViralLoad: patient.radetVariableAssessment?.currentViralLoad ?? null,
+      xmlCurrentViralLoad: patient.xmlVariableAssessment?.currentViralLoad ?? null,
+      ndrCurrentViralLoad: patient.ndrVariableAssessment?.currentViralLoad ?? null,
+      folderViralLoadSampleCollectionDate: patient.folderViralLoadSampleCollectionDate || "",
       radetViralLoadSampleCollectionDate: patient.radetVariableAssessment?.sampleCollectionDate || "",
       xmlViralLoadSampleCollectionDate: patient.xmlVariableAssessment?.sampleCollectionDate || "",
       ndrViralLoadSampleCollectionDate: patient.ndrVariableAssessment?.sampleCollectionDate || "",
-      folderCurrentArtStatus: "",
+      folderCurrentArtStatus: patient.folderCurrentArtStatus || "",
       radetCurrentArtStatus: patient.radetVariableAssessment?.currentArtStatus || "",
       xmlCurrentArtStatus: patient.xmlVariableAssessment?.currentArtStatus || "",
       ndrCurrentArtStatus: patient.ndrVariableAssessment?.currentArtStatus || "",
-      folderPregnancyStatus: "",
+      folderPregnancyStatus: patient.folderPregnancyStatus || "",
       radetPregnancyStatus: patient.radetVariableAssessment?.pregnacyStatus || "",
       xmlPregnancyStatus: patient.xmlVariableAssessment?.pregnacyStatus || "",
       ndrPregnancyStatus: patient.ndrVariableAssessment?.pregnacyStatus || "",
-      folderPregnancyStatusDate: "",
+      folderPregnancyStatusDate: patient.folderPregnancyStatusDate || "",
       radetPregnancyStatusDate: patient.radetVariableAssessment?.pregnacyStatusDate || "",
       xmlPregnancyStatusDate: patient.xmlVariableAssessment?.pregnacyStatusDate || "",
       ndrPregnancyStatusDate: patient.ndrVariableAssessment?.pregnacyStatusDate || "",
-      folderTbScreen: "",
+      folderTbScreen: patient.folderTbScreen || "",
       radetTbScreen: patient.radetVariableAssessment?.tbScreen || "",
       xmlTbScreen: patient.xmlVariableAssessment?.tbScreen || "",
       ndrTbScreen: patient.ndrVariableAssessment?.tbScreen || "",
-      folderTbScreenDate: "",
+      folderTbScreenDate: patient.folderTbScreenDate || "",
       radetTbScreenDate: patient.radetVariableAssessment?.tbScreenDate || "",
       xmlTbScreenDate: patient.xmlVariableAssessment?.tbScreenDate || "",
       ndrTbScreenDate: patient.ndrVariableAssessment?.tbScreenDate || "",
-      comments: patient.comments || key // Add comments field if it exists
-
+      comments: patient.comments || ""
     }))
 
     console.log("PayloadVA:", JSON.stringify(payloadVA, null, 2))
@@ -309,7 +314,18 @@ const newDQADVQuestions = () => {
   // Pagination logic
   const indexOfLastRow = currentPage * rowsPerPage
   const indexOfFirstRow = indexOfLastRow - rowsPerPage
-  const currentRows = data?.variableAssessmentDto ? Object.entries(data.variableAssessmentDto).slice(indexOfFirstRow, indexOfLastRow) : []
+  const allRows = data?.variableAssessmentDto ? Object.entries(data.variableAssessmentDto) : []
+  
+  const filteredRows = allRows.filter(([key, patient]) => {
+    console.log("Filtering patient:", key)
+    return Object.entries(filters).every(([field, filterValue]) => {
+      if (!filterValue) return true
+      const val = patient[field] ? String(patient[field]).toLowerCase() : ""
+      return val.includes(filterValue.toLowerCase())
+    })
+  })
+
+  const currentRows = filteredRows.slice(indexOfFirstRow, indexOfLastRow)
 
   return (
     <div>
@@ -417,6 +433,21 @@ const newDQADVQuestions = () => {
                     <th>NDR_TB Screen Date</th>
                     <th>Comments/Reason or Discrepancy</th>
                   </tr>
+                  <tr>
+                    <th>
+                    </th>
+                    <th>
+                      <Input
+                        bsSize="sm"
+                        placeholder="Search Patient ID"
+                        value={filters.patientUniqueId || ""}
+                        onChange={e => handleFilterChange("patientUniqueId", e.target.value)}
+                      />
+                    </th>
+
+                    <th colSpan="47">
+                    </th>
+                  </tr>
                 </thead>
                 <tbody>
                   {/* {data &&
@@ -433,18 +464,22 @@ const newDQADVQuestions = () => {
                             updatedData.variableAssessmentDto[key].patientUniqueId = e.target.value
                             setData(updatedData)
                           }}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
 
                         />
                       </td>
                       <td>
                         <Input
-                          type="date"
+                          type="text"
                           value={patient.dob || ""}
                           onChange={(e) => {
                             const updatedData = { ...data }
                             updatedData.variableAssessmentDto[key].dob = e.target.value
                             setData(updatedData)
                           }}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
                         />
 
                       </td>
@@ -457,146 +492,196 @@ const newDQADVQuestions = () => {
                             updatedData.variableAssessmentDto[key].sex = e.target.value
                             setData(updatedData)
                           }}
-                          style={{ width: '100px' }}
+                          style={{ minWidth: 100, width: '100%' }}
+                          readOnly
                         >
                           <option value="">Select</option>
                           <option value="M">Male</option>
                           <option value="F">Female</option>
                         </Input>
                       </td>
-                      <td>
-                        <Input type="date" defaultValue="" />
-                      </td>
-                      <td>
+                      <td style={{ backgroundColor: "#d4edda" }}>
                         <Input
                           type="date"
-                          defaultValue={patient.radetVariableAssessment?.artStartDate || ""}
-                        />
-
-                        {/* <CustomDatePicker
-                              value={patient.radetVariableAssessment?.artStartDate}
-                              onChange={(date) => {
-                                const updatedData = { ...data }
-                                updatedData.variableAssessmentDto[key].radetVariableAssessment.artStartDate = date
-                                setData(updatedData)
-                              }}
-                            /> */}
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.xmlVariableAssessment?.artStartDate || ""}
-                        />
-
-                        {/* <CustomDatePicker
-                              value={patient.xmlVariableAssessment?.artStartDate}
-                              onChange={(date) => {
-                                const updatedData = { ...data }
-                                updatedData.variableAssessmentDto[key].xmlVariableAssessment.artStartDate = date
-                                setData(updatedData)
-                              }}
-                            /> */}
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.ndrVariableAssessment?.artStartDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input type="date" defaultValue="" />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.radetVariableAssessment?.lastPickupDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.xmlVariableAssessment?.lastPickupDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="date"
-                          defaultValue={patient.ndrVariableAssessment?.lastPickupDate || ""}
-                        />
-                      </td>
-                      <td>
-                        <Input
-                          type="text"
-                          value={patient.comments || ""} // Bind the comments field
-                          onChange={(e) => {
+                          value={patient.folderArtStartDate || ""}
+                          onChange={e => {
                             const updatedData = { ...data }
-                            updatedData.variableAssessmentDto[key].comments = e.target.value // Update the comments field
+                            updatedData.variableAssessmentDto[key].folderArtStartDate = e.target.value
                             setData(updatedData)
                           }}
                         />
                       </td>
                       <td>
                         <Input
+                          type="date"
+                          defaultValue={patient.radetVariableAssessment?.artStartDate || ""}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
+                        />
+                      </td>
+                      <td>
+                        <Input
+                          type="date"
+                          defaultValue={patient.xmlVariableAssessment?.artStartDate || ""}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
+                        />
+                      </td>
+                      <td>
+                        <Input
+                          type="date"
+                          defaultValue={patient.ndrVariableAssessment?.artStartDate || ""}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
+                        />
+                      </td>
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="date"
+                          value={patient.folderLastDrugPickupDate || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].folderLastDrugPickupDate = e.target.value
+                            setData(updatedData)
+                          }}
+                        />
+                      </td>
+                      <td>
+                        <Input
+                          type="date"
+                          defaultValue={patient.radetVariableAssessment?.lastPickupDate || ""}
+                          readOnly
+                        />
+                      </td>
+                      <td>
+                        <Input
+                          type="date"
+                          defaultValue={patient.xmlVariableAssessment?.lastPickupDate || ""}
+                          readOnly
+                        />
+                      </td>
+                      <td>
+                        <Input
+                          type="date"
+                          defaultValue={patient.ndrVariableAssessment?.lastPickupDate || ""}
+                          readOnly
+                        />
+                      </td>
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="number"
+                          value={patient.folderDaysOfArvRefill || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].folderDaysOfArvRefill = e.target.value
+                            setData(updatedData)
+                          }}
+                          style={{ minWidth: 100, width: '100%' }}
+                        />
+                      </td>
+                      <td>
+                        <Input
                           type="number"
                           defaultValue={patient.radetVariableAssessment?.daysArvRefill || 0}
+                          style={{ minWidth: 100, width: '100%' }}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="number"
                           defaultValue={patient.xmlVariableAssessment?.daysArvRefill || 0}
+                          style={{ minWidth: 100, width: '100%' }}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="number"
                           defaultValue={patient.ndrVariableAssessment?.daysArvRefill || 0}
+                          style={{ minWidth: 100, width: '100%' }}
+                          readOnly
                         />
                       </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="text"
+                          value={patient.folderCurrentRegimen || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].folderCurrentRegimen = e.target.value
+                            setData(updatedData)
+                          }}
+                          style={{ minWidth: 130, width: '100%' }}
+                        />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.radetVariableAssessment?.currentRegimen || ""}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.xmlVariableAssessment?.currentRegimen || ""}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.ndrVariableAssessment?.currentRegimen || ""}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
                         />
                       </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="text"
+                          value={patient.folderCurrentViralLoad || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].folderCurrentViralLoad = e.target.value
+                            setData(updatedData)
+                          }}
+                          style={{ minWidth: 130, width: '100%' }}
+                        />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.radetVariableAssessment?.currentViralLoad || ""}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.xmlVariableAssessment?.currentViralLoad || ""}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.ndrVariableAssessment?.currentViralLoad || ""}
+                          readOnly
                         />
                       </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="date"
+                          value={patient.folderViralLoadSampleCollectionDate || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].folderViralLoadSampleCollectionDate = e.target.value
+                            setData(updatedData)
+                          }}
+                        />
                       </td>
                       <td>
                         <Input
@@ -604,6 +689,7 @@ const newDQADVQuestions = () => {
                           defaultValue={
                             patient.radetVariableAssessment?.sampleCollectionDate || ""
                           }
+                          readOnly
                         />
                       </td>
                       <td>
@@ -612,6 +698,7 @@ const newDQADVQuestions = () => {
                           defaultValue={
                             patient.xmlVariableAssessment?.sampleCollectionDate || ""
                           }
+                          readOnly
                         />
                       </td>
                       <td>
@@ -620,52 +707,85 @@ const newDQADVQuestions = () => {
                           defaultValue={
                             patient.ndrVariableAssessment?.sampleCollectionDate || ""
                           }
+                          readOnly
                         />
                       </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="text"
+                          value={patient.folderCurrentArtStatus || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].folderCurrentArtStatus = e.target.value
+                            setData(updatedData)
+                          }}
+                          style={{ minWidth: 130, width: '100%' }}
+                        />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.radetVariableAssessment?.currentArtStatus || ""}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.xmlVariableAssessment?.currentArtStatus || ""}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.ndrVariableAssessment?.currentArtStatus || ""}
+                          readOnly
                         />
                       </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="text"
+                          value={patient.folderPregnancyStatus || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].folderPregnancyStatus = e.target.value
+                            setData(updatedData)
+                          }}
+                          style={{ minWidth: 130, width: '100%' }}
+                        />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.radetVariableAssessment?.pregnacyStatus || ""}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.xmlVariableAssessment?.pregnacyStatus || ""}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.ndrVariableAssessment?.pregnacyStatus || ""}
+                          readOnly
                         />
                       </td>
-                      <td>
-                        <Input type="date" defaultValue="" />
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="date"
+                          value={patient.folderPregnancyStatusDate || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].folderPregnancyStatusDate = e.target.value
+                            setData(updatedData)
+                          }}
+                        />
                       </td>
                       <td>
                         <Input
@@ -673,6 +793,7 @@ const newDQADVQuestions = () => {
                           defaultValue={
                             patient.radetVariableAssessment?.pregnacyStatusDate || ""
                           }
+                          readOnly
                         />
                       </td>
                       <td>
@@ -681,6 +802,7 @@ const newDQADVQuestions = () => {
                           defaultValue={
                             patient.xmlVariableAssessment?.pregnacyStatusDate || ""
                           }
+                          readOnly
                         />
                       </td>
                       <td>
@@ -689,54 +811,89 @@ const newDQADVQuestions = () => {
                           defaultValue={
                             patient.ndrVariableAssessment?.pregnacyStatusDate || ""
                           }
+                          readOnly
                         />
                       </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="text"
+                          value={patient.folderTbScreen || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].folderTbScreen = e.target.value
+                            setData(updatedData)
+                          }}
+                          style={{ minWidth: 130, width: '100%' }}
+                        />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.radetVariableAssessment?.tbScreen || ""}
+                          style={{ minWidth: 200, width: '100%' }}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.xmlVariableAssessment?.tbScreen || ""}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="text"
                           defaultValue={patient.ndrVariableAssessment?.tbScreen || ""}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
                         />
                       </td>
-                      <td>
-                        <Input type="text" defaultValue="" />
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="date"
+                          value={patient.folderTbScreenDate || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].folderTbScreenDate = e.target.value
+                            setData(updatedData)
+                          }}
+                        />
                       </td>
                       <td>
                         <Input
                           type="date"
                           defaultValue={patient.radetVariableAssessment?.tbScreenDate || ""}
+                          style={{ minWidth: 130, width: '100%' }}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="date"
                           defaultValue={patient.xmlVariableAssessment?.tbScreenDate || ""}
+                          readOnly
                         />
                       </td>
                       <td>
                         <Input
                           type="date"
                           defaultValue={patient.ndrVariableAssessment?.tbScreenDate || ""}
+                          readOnly
                         />
                       </td>
-                      <td>
-                        <Input type="date" defaultValue="" />
+                      <td style={{ backgroundColor: "#d4edda" }}>
+                        <Input
+                          type="text"
+                          value={patient.comments || ""}
+                          onChange={e => {
+                            const updatedData = { ...data }
+                            updatedData.variableAssessmentDto[key].comments = e.target.value
+                            setData(updatedData)
+                          }}
+                        />
                       </td>
-
                     </tr>
                   ))}
                 </tbody>
