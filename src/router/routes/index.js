@@ -15,30 +15,30 @@ const Routes = [
   {
     path: '/artlinelist',
     component: lazy(() => import('../../views/linelisting/list'))
-  }, 
-  
+  },
+
   {
     path: '/data-quality',
     component: lazy(() => import('../../views/data-quality/list'))
-  }, 
+  },
   {
     path: '/treatment',
     component: lazy(() => import('../../views/analytics/treatment/list'))
-  }, 
-/*   {
-    path: '/performance-dashboard',
-    component: lazy(() => import('../../views/performance-dashboard/list'))
-
-  },  */
+  },
+  /*   {
+      path: '/performance-dashboard',
+      component: lazy(() => import('../../views/performance-dashboard/list'))
+  
+    },  */
   {
     path: '/upload-file',
     component: lazy(() => import('../../views/file-upload/Import'))
 
-  }, 
+  },
   {
     path: '/upload-tracker',
     component: lazy(() => import('../../views/file-upload/list'))
-  }, 
+  },
   {
     path: '/users',
     component: lazy(() => import('../../views/users/list'))
@@ -50,11 +50,11 @@ const Routes = [
   {
     path: '/pbstracker',
     component: lazy(() => import('../../views/pbs-tracker/list'))
-  }, 
+  },
   {
     path: '/viralload-monitoring',
     component: lazy(() => import('../../views/analytics/viralload-monitoring/list'))
-  }, 
+  },
   {
     path: '/tb-monitoring',
     component: lazy(() => import('../../views/analytics/tb-monitoring/list'))
@@ -80,6 +80,10 @@ const Routes = [
     component: lazy(() => import('../../views/dqa/newDQASPQuestions'))
   },
   {
+    path: '/edit-dqa-system-questions/:dqaId',
+    component: lazy(() => import('../../views/dqa/editDQASPQuestions'))
+  },
+  {
     path: '/dqa-upload-files/:dqaId',
     component: lazy(() => import('../../views/dqa/newDQAFiles'))
   },
@@ -88,8 +92,20 @@ const Routes = [
     component: lazy(() => import('../../views/dqa/newDQADVQuestions'))
   },
   {
+    path: '/edit-dqa-dv-questions/:dqaId',
+    component: lazy(() => import('../../views/dqa/editDQADVQuestions2'))
+  },
+  {
     path: '/dqa-details/:dqaId',
     component: lazy(() => import('../../views/dqa/dqaDetails'))
+  },
+  {
+    path: '/edit-dqa/:dqaId',
+    component: lazy(() => import('../../views/dqa/editDQA'))
+  },
+  {
+    path: '/save-dqa-comments/:dqaId',
+    component: lazy(() => import('../../views/dqa/dqaComments'))
   },
   {
     path: '/login',
@@ -102,7 +118,7 @@ const Routes = [
   {
     path: '/error',
     component: lazy(() => import('../../views/Error')),
-      layout: 'BlankLayout'
+    layout: 'BlankLayout'
   }
 ]
 

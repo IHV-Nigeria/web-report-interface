@@ -5,6 +5,10 @@ import { useParams } from "react-router-dom"
 import jwtConfig from "../../api/jwtConfig"
 import * as powerbi from "powerbi-client"
 
+// Add these imports:
+import jsPDF from "jspdf"
+import html2canvas from "html2canvas"
+
 const DqaDetails = () => {
   const { dqaId } = useParams()
   const [data, setData] = useState(null)
@@ -18,6 +22,83 @@ const DqaDetails = () => {
 
   const powerBIRef = useRef(null) // Reference for Power BI container
 
+  // Use a pool of light pastel colors
+  const pastelColors = [
+    "#ffe4e1", // light pink
+    "#e0ffff", // light cyan
+    "#fffacd", // lemon chiffon
+    "#e6e6fa", // lavender
+    "#f0fff0", // honeydew
+    "#f5f5dc", // beige
+    "#f0f8ff", // alice blue
+    "#fafad2", // light goldenrod yellow
+    "#e0ffe0", // light green
+    "#f9e6ff" // light purple
+  ]
+
+  // Ref for the printable section
+  const printableRef = useRef(null)
+
+  // Print handler
+  const handlePrint = () => {
+    if (printableRef.current) {
+      const printContents = printableRef.current.innerHTML
+      const win = window.open('', '', 'height=900,width=1200')
+      win.document.write('<html><head><title>DQA Details</title>')
+      win.document.write('<style>body{font-family:Arial;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ccc;padding:4px;} .printable{margin:0;}</style>')
+      win.document.write('</head><body>')
+      win.document.write(printContents)
+      win.document.write('</body></html>')
+      win.document.close()
+      win.focus()
+      setTimeout(() => {
+        win.print()
+        win.close()
+      }, 500)
+    }
+  }
+
+  // Download as PDF handler
+  const handleDownloadPDF = async () => {
+    if (printableRef.current) {
+      // Hide PowerBI iframe before capturing
+      const iframe = printableRef.current.querySelector('iframe')
+      let prevDisplay
+      if (iframe) {
+        prevDisplay = iframe.style.display
+        iframe.style.display = 'none'
+      }
+
+      // Wait a tick for the DOM to update
+      await new Promise(res => setTimeout(res, 100))
+
+      const element = printableRef.current
+      const canvas = await html2canvas(element, { scale: 2 })
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      const pdfWidth = pdf.internal.pageSize.getWidth()
+      const pdfHeight = pdf.internal.pageSize.getHeight()
+
+      // Calculate image size with margin (e.g., 10mm)
+      const margin = 10
+      const imgProps = pdf.getImageProperties(imgData)
+      let imgWidth = pdfWidth - (margin * 2)
+      let imgHeight = (imgProps.height * imgWidth) / imgProps.width
+      if (imgHeight > pdfHeight - (margin * 2)) {
+        imgHeight = pdfHeight - (margin * 2)
+        imgWidth = (imgProps.width * imgHeight) / imgProps.height
+      }
+
+      pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight)
+      pdf.save('dqa-details.pdf')
+
+      // Restore iframe display
+      if (iframe) {
+        iframe.style.display = prevDisplay || ''
+      }
+    }
+  }
+
   const fetchAccessToken = async () => {
     try {
       const response = await fetch("http://localhost:2222/api/v1/get-token", {
@@ -26,19 +107,18 @@ const DqaDetails = () => {
           "Content-Type": "application/json" // Ensure the Content-Type is set
         }
       })
-  
+
       if (!response.ok) {
         throw new Error(`Failed to fetch access token: ${response.statusText}`)
       }
-  
+
       const result = await response.json()
       setAccessToken(result.access_token) // Store the access token
-      console.log("Access token fetched successfully:", result.access_token)
     } catch (error) {
       console.error("Error fetching access token:", error)
     }
   }
-  
+
   useEffect(() => {
     fetchAccessToken() // Fetch the access token on component mount
   }, [])
@@ -61,6 +141,10 @@ const DqaDetails = () => {
             variableAssessment: result.facility.variableAssessment || []
           }
         })
+
+        // console.log("Facivility:", result.facility)
+
+
       } catch (error) {
         console.error("Error fetching DQA details:", error)
       } finally {
@@ -71,16 +155,16 @@ const DqaDetails = () => {
     fetchData()
   }, [dqaId])
 
-
   useEffect(() => {
     if (powerBIOpen && powerBIRef.current && data && accessToken) {
       // Configure Power BI embed dynamically based on dqaId
       const embedConfig = {
         type: "report",
-        id: "533f78ba-5100-43f4-b73e-375bc6ec9114", // Your Power BI Report ID
-        embedUrl: `https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114`,
-        accessToken, // Use the fetched access token
-        tokenType: powerbi.models.TokenType.Aad,
+        id: "533f78ba-5100-43f4-b73e-375bc6ec9114",
+        embedUrl: "https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114",
+        accessToken,
+        tokenType: powerbi.models.TokenType.Embed, // Use .Embed if you are using an embed token
+        // tokenType: powerbi.models.TokenType.Aad,
         settings: {
           panes: {
             filters: { visible: false },
@@ -88,17 +172,17 @@ const DqaDetails = () => {
           }
         }
       }
-  
+
       // Initialize the Power BI service
       const powerBIService = new powerbi.service.Service(
         powerbi.factories.hpmFactory,
         powerbi.factories.wpmpFactory,
         powerbi.factories.routerFactory
       )
-  
+
       // Embed the report
       const report = powerBIService.embed(powerBIRef.current, embedConfig)
-  
+
       report.on("loaded", async () => {
         const filter = {
           $schema: "http://powerbi.com/product/schema#basic",
@@ -109,7 +193,7 @@ const DqaDetails = () => {
           operator: "In",
           values: [dqaId] // Use dqaId to filter the report
         }
-  
+
         try {
           await report.setFilters([filter])
           console.log("dqaId filter applied successfully")
@@ -117,7 +201,7 @@ const DqaDetails = () => {
           console.error("Error applying dqaId filter:", error)
         }
       })
-  
+
       return () => {
         powerBIService.reset(powerBIRef.current)
       }
@@ -142,26 +226,31 @@ const DqaDetails = () => {
   }
 
   // Separate questionsAnswers into SP and DV groups
+  // console.log("Questions and Answers:", data.facility.questionsAnswers)
   const spQuestions = data.facility.questionsAnswers.filter(
-    (qa) => qa.dqaQuestions.group === "SP"
+    (qa) => qa.dqaQuestions?.group === "SP"
   )
+
+
   const dvQuestions = data.facility.questionsAnswers.filter(
-    (qa) => qa.dqaQuestions.group === "DV"
+    (qa) => qa.dqaQuestions?.group === "DV"
   )
 
   // Columns for DataTables
   const spColumns = [
     { name: "Question", selector: (row) => row.dqaQuestions?.question || "-", sortable: true },
-    { name: "Answer", selector: (row) => row.answer || "-", sortable: true }
+    { name: "Answer", selector: (row) => row.answer || "-", sortable: true },
+    { name: "Reviewer's Comment", selector: (row) => row.reviewersComment || "-", sortable: true }
+
   ]
 
   const dvColumns = [
-    { name: "Category", selector: (row) => row.dqaQuestions?.category || "-", sortable: true },
-    { name: "Question", selector: (row) => row.dqaQuestions?.question || "-", sortable: true },
+    // { name: "Category", selector: (row) => row.dqaQuestions?.category || "-", sortable: true },
+    { name: "Question", selector: (row) => row.dqaQuestions?.question || "-", sortable: true, wrap: true, grow: 2 },
     { name: "Answer", selector: (row) => row.answer || "-", sortable: true },
-    { name: "Answer Type", selector: (row) => row.answerType || "-", sortable: true },
-    { name: "Month", selector: (row) => row.month || "-", sortable: true },
-    { name: "Reviewer's Comment", selector: (row) => row.reviewersComment || "-", sortable: true }
+    { name: "Answer Type", selector: (row) => (row.answerType ? row.answerType.toUpperCase() : "-"), sortable: true },
+    { name: "Month", selector: (row) => row.month || "-", sortable: true }
+    // { name: "Reviewer's Comment", selector: (row) => row.reviewersComment || "-", sortable: true }
   ]
 
   const vaColumns = [
@@ -214,23 +303,92 @@ const DqaDetails = () => {
     { name: "Comments", selector: (row) => row.comments || "N/A", sortable: true }
   ]
 
+  const vaCommentsColumns = [
+    { name: "PEPFAR ID", selector: (row) => row.patientId || "N/A", sortable: true },
+    { name: "Comments", selector: (row) => row.comments || "N/A", sortable: true }
+  ]
+
+  const stateCodes = {
+    1: "FCT",
+    2: "Katsina",
+    3: "Nasarawa",
+    4: "Rivers"
+  }
+
+  // Map each unique question to a color
+  const questionColorMap = {}
+  let colorIndex = 0
+  dvQuestions.forEach(q => {
+    const questionText = q.dqaQuestions?.question
+    if (questionText && !questionColorMap[questionText]) {
+      questionColorMap[questionText] = pastelColors[colorIndex % pastelColors.length]
+      colorIndex++
+    }
+  })
+
   return (
     <div>
-      <h1>DQA Details</h1>
-      <h2>Facility Information</h2>
-      <p>{data.facility.facilityName || "Facility name not available"}</p>
+      {/* Print and Download Buttons */}
+      <div style={{ marginBottom: "1rem" }}>
+        <Button color="secondary" onClick={handlePrint} style={{ marginRight: "1rem" }}>
+          Print
+        </Button>
+        <Button color="info" onClick={handleDownloadPDF}>
+          Download as PDF
+        </Button>
+      </div>
+      <div className="printable" ref={printableRef}>
+        <h1>DQA Details</h1>
+        <h4>Facility Information</h4>
+        <hr style={{ backgroundColor: 'darkblue' }} />
+        <h3>
+          {data.facility.facilityName || "Facility name not available"}, {data.facility.lga || ""}, {data.facility.state ? stateCodes[data.facility.state] || " " : "State not available"}
+          {" - "}
+          <span style={{ fontWeight: "bold", color: "#007bff" }}>
+            Status: {data.facility.status}
+          </span>
+          {" "}
+          <span style={{ fontWeight: "bold", color: "#28a745" }}>
+            Score: {data.facility.score}
+          </span>
+        </h3>
+        <hr style={{ backgroundColor: 'darkblue' }} />
 
-      {/* Power BI Analytics Section */}
-      <Button color="primary" onClick={() => setPowerBIOpen(!powerBIOpen)} style={{ marginBottom: "1rem" }}>
-        {powerBIOpen ? "Hide Power BI Analytics" : "Show Power BI Analytics"}
-      </Button>
-      <Collapse isOpen={powerBIOpen}>
-        <div
-          ref={powerBIRef}
-          style={{ height: "600px", border: "1px solid #ccc", marginTop: "1rem" }}
-        ></div>
-        <iframe title="DQAPowerBI" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114&autoAuth=true&ctid=995c8049-bfb4-4df7-a971-0330afa808c9" frameborder="0" allowFullScreen="true"></iframe>
-      </Collapse>
+        {/* Power BI Analytics Section */}
+        <Button color="primary" onClick={() => setPowerBIOpen(!powerBIOpen)} style={{ marginBottom: "1rem" }}>
+          {powerBIOpen ? "Hide Power BI Analytics" : "Show Power BI Analytics"}
+        </Button>
+        <Collapse isOpen={powerBIOpen}>
+          {/* <div
+            ref={powerBIRef}
+            style={{ height: "600px", border: "1px solid #ccc", marginTop: "1rem" }}
+          ></div> */}
+          <iframe title="DQAPowerBI" width="100%" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=533f78ba-5100-43f4-b73e-375bc6ec9114&autoAuth=true&ctid=995c8049-bfb4-4df7-a971-0330afa808c9" frameBorder="0" allowFullScreen></iframe>
+        </Collapse>
+
+        <p>
+          <strong>Interviewer's Feedback/Action Points:</strong> <br />
+          <span
+            dangerouslySetInnerHTML={{
+              __html: data.facility.comments || "N/A"
+            }}
+          />
+        </p>
+
+        <div style={{ marginTop: "2rem" }}>
+          <h5>Variable Assessments With Comments</h5>
+          <DataTable
+            title="Variable Assessments (With Comments)"
+            columns={vaCommentsColumns}
+            data={data.facility.variableAssessment.filter(row => row.comments && String(row.comments).trim() !== "")}
+            pagination
+            paginationPerPage={50}
+            responsive
+            highlightOnHover
+            noDataComponent="No records with comments."
+          />
+        </div>
+      </div>
 
       {/* SP Questions Section */}
       <Button color="primary" onClick={() => setSpOpen(!spOpen)} style={{ marginBottom: "1rem" }}>
@@ -242,6 +400,7 @@ const DqaDetails = () => {
           columns={spColumns}
           data={spQuestions}
           pagination
+          paginationPerPage={50} // <-- Add this line
           responsive
           highlightOnHover
         />
@@ -257,8 +416,17 @@ const DqaDetails = () => {
           columns={dvColumns}
           data={dvQuestions}
           pagination
+          paginationPerPage={50} // <-- Add this line
           responsive
           highlightOnHover
+          conditionalRowStyles={[
+            {
+              when: row => !!row.dqaQuestions?.question,
+              style: row => ({
+                backgroundColor: questionColorMap[row.dqaQuestions?.question] || "inherit"
+              })
+            }
+          ]}
         />
       </Collapse>
 
@@ -272,6 +440,7 @@ const DqaDetails = () => {
           columns={vaColumns}
           data={data.facility.variableAssessment}
           pagination
+          paginationPerPage={100} // <-- Add this line
           responsive
           highlightOnHover
         />

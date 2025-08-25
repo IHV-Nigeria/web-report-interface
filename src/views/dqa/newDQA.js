@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { Form, FormGroup, Label, Input, Button, Row, Col, Card, Nav, NavItem, NavLink, TabContent, TabPane, CardTitle } from "reactstrap"
 import classnames from 'classnames'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom"
 import jwtConfig from "../../api/jwtConfig"
 import { toast } from "react-toastify"
 import './systemsProcesses.css'
-import { data } from "jquery"
+// import { data } from "jquery"
 
 const newDQA = () => {
   const [activeTab, setActiveTab] = useState('1')
@@ -64,8 +64,36 @@ const newDQA = () => {
     pmtctHtsRegister: '',
     maternalCohortRegister: '',
     htsRegister: '',
-    artRegister: ''
+    artRegister: '',
+    score: '',
+    status: ''
   })
+
+  const lgaOptions = {
+    1: [ // FCT
+      "Abaji", "Bwari", "Gwagwalada", "Kuje", "Kwali", "Municipal"
+    ],
+    2: [ // Katsina
+      "Bakori", "Batagarawa", "Batsari", "Baure", "Bindawa", "Charanchi", "Dandume", "Danja", "Dan Musa", "Daura", "Dutsi", "Dutsin-Ma", "Faskari", "Funtua", "Ingawa", "Jibia", "Kafur", "Kaita", "Kankara", "Kankia", "Katsina", "Kurfi", "Kusada", "Mai'Adua", "Malumfashi", "Mani", "Mashi", "Matazu", "Musawa", "Rimi", "Sabuwa", "Safana", "Sandamu", "Zango"
+    ],
+    3: [ // Nasarawa
+      "Akwanga", "Awe", "Doma", "Karu", "Keana", "Keffi", "Kokona", "Lafia", "Nasarawa", "Nasarawa Egon", "Obi", "Toto", "Wamba"
+    ],
+    4: [ // Rivers
+      "Abua/Odual", "Ahoada East", "Ahoada West", "Akuku Toru", "Andoni", "Asari-Toru", "Bonny", "Degema", "Eleme", "Emohua", "Etche", "Gokana", "Ikwerre", "Khana", "Obio/Akpor", "Ogba/Egbema/Ndoni", "Ogu/Bolo", "Okrika", "Omuma", "Opobo/Nkoro", "Oyigbo", "Port Harcourt", "Tai"
+    ]
+  }
+
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear()
+    const startYear = currentYear - 5
+    const endYear = currentYear
+    const years = []
+    for (let year = startYear; year <= endYear; year++) {
+      years.push(year)
+    }
+    return years
+  }
 
   const toggleTab = (tab) => {
     if (activeTab !== tab) {
@@ -83,12 +111,42 @@ const newDQA = () => {
     setActiveTab(nextTab)
   }
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value, type, checked } = e.target
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? checked : value
     })
+
+    // If the state field changes, fetch facilities for that state
+    if (name === "state") {
+      if (value) {
+        const token = localStorage.getItem(`${jwtConfig.storageTokenKeyName}`)
+        try {
+          const response = await fetch(`${jwtConfig.baseUrl}/facility/facilities/${value}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+          if (response.ok) {
+            const data = await response.json()
+            setFacilities(data)
+          } else {
+            setFacilities([])
+          }
+        } catch (error) {
+          setFacilities([])
+        }
+      } else {
+        setFacilities([])
+      }
+      // Also reset facilityName and datimCode when state changes
+      setFormData((prev) => ({
+        ...prev,
+        facilityName: '',
+        datimCode: ''
+      }))
+    }
   }
 
   const handleFacilityChange = (e) => {
@@ -105,7 +163,7 @@ const newDQA = () => {
     console.log(JSON.stringify(formData))
 
     const token = localStorage.getItem(`${jwtConfig.storageTokenKeyName}`)
-    
+
     try {
       const response = await fetch(`${jwtConfig.dqaUrl}/save-new-facility-dqa`, {
         method: 'POST',
@@ -134,38 +192,12 @@ const newDQA = () => {
     }
   }
 
-  useEffect(() => {
-    const fetchFacilities = async () => {
-      const token = localStorage.getItem(`${jwtConfig.storageTokenKeyName}`)
-      console.log('Token:', token) // Log the token to check if it's being retrieved correctly
-      try {
-        const response = await fetch(`${jwtConfig.baseUrl}/facility/facilities`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        if (response.ok) {
-          const data = await response.json()
-          setFacilities(data)
-          // log the fetched data values
-          console.log(data)
-          // console.log('Facilities fetched successfully:', data)
-        } else {
-          console.error('Failed to fetch facilities')
-        }
-      } catch (error) {
-        console.error('Error fetching facilities:', error)
-      }
-    }
-
-    fetchFacilities()
-  }, [data])
 
   return (
     <Form>
       <Card style={{ padding: '20px' }}>
         <CardTitle tag="h3" style={{ textAlign: 'center' }}>New DQA Form</CardTitle>
-       
+
         {/* Existing Tabs and Form Fields */}
         <Nav tabs>
           <NavItem>
@@ -205,27 +237,6 @@ const newDQA = () => {
           {/* Tab 1: Facility Information */}
           <TabPane tabId="1">
             <Row>
-                <Col md="12">
-                  <FormGroup>
-                    <Label for="facilityName">Facility Name</Label>
-                    <Input type="select" id="facilityName" name="facilityName" onChange={handleFacilityChange} required>
-                      <option value="">Select Facility</option>
-                      {facilities.map((facility, index) => (
-                        // <option key={index} value={facility.facilityName}>{`${facility.facilityName  }, ${  facility.Lga  }, ${  facility.State}`}</option>
-                        <option key={index} value={facility.facilityName}>{`${facility.facilityName  }`}</option>
-
-                      ))}
-                    </Input>
-                  </FormGroup>
-                </Col>
-          
-                <Input type="hidden" id="datimCode" name="datimCode" value={formData.datimCode} readOnly />
-                
-                <Input type="hidden" id="orgUnit" name="orgUnit" value=""/> 
-            
-            </Row>
-            <hr style={{ backgroundColor: 'darkblue' }} />
-            <Row>
               <Col md="6">
                 <FormGroup>
                   <Label for="state">State</Label>
@@ -241,12 +252,47 @@ const newDQA = () => {
               <Col md="6">
                 <FormGroup>
                   <Label for="lga">LGA</Label>
-                  <Input type="text" id="lga" name="lga" onChange={handleChange} placeholder="LGA" />
+                  <Input
+                    type="select"
+                    id="lga"
+                    name="lga"
+                    value={formData.lga}
+                    onChange={handleChange}
+                    disabled={!formData.state}
+                  >
+                    <option value="">Select LGA</option>
+                    {formData.state && lgaOptions[formData.state]?.map((lga, idx) => (
+                      <option key={idx} value={lga}>{lga}</option>
+                    ))}
+                  </Input>
                 </FormGroup>
               </Col>
             </Row>
+            <hr style={{ backgroundColor: 'darkblue' }} />
+            <Row>
+              <Col md="12">
+                <FormGroup>
+                  <Label for="facilityName">Facility Name</Label>
+                  <Input type="select" id="facilityName" name="facilityName" onChange={handleFacilityChange} required>
+                    <option value="">Select Facility</option>
+                    {facilities.map((facility, index) => (
+                      // <option key={index} value={facility.facilityName}>{`${facility.facilityName  }, ${  facility.Lga  }, ${  facility.State}`}</option>
+                      <option key={index} value={facility.facilityName}>{`${facility.facilityName}`}</option>
 
-            <Row>            
+                    ))}
+                  </Input>
+                </FormGroup>
+              </Col>
+
+              <Input type="hidden" id="datimCode" name="datimCode" value={formData.datimCode} readOnly />
+
+              <Input type="hidden" id="orgUnit" name="orgUnit" value="" onChange={handleChange} />
+
+            </Row>
+            <hr style={{ backgroundColor: 'darkblue' }} />
+
+
+            <Row>
               <Col md="3">
                 <FormGroup>
                   <Label for="fromMonth">From Month</Label>
@@ -274,7 +320,21 @@ const newDQA = () => {
               <Col md="3">
                 <FormGroup>
                   <Label for="fromYear">From Year</Label>
-                  <Input type="number" id="fromYear" name="fromYear" value={formData.fromYear} onChange={handleChange} placeholder="From Year" required />
+                  <Input
+                    type="select"
+                    id="fromYear"
+                    name="fromYear"
+                    value={formData.fromYear}
+                    onChange={handleChange}
+                    required
+                  >
+                    {generateYearOptions().map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </Input>
+                  {/* <Input type="number" id="fromYear" name="fromYear" value={formData.fromYear} onChange={handleChange} placeholder="From Year" required /> */}
                 </FormGroup>
               </Col>
               <Col md="3">
@@ -304,7 +364,21 @@ const newDQA = () => {
               <Col md="3">
                 <FormGroup>
                   <Label for="toYear">To Year</Label>
-                  <Input type="number" id="toYear" name="toYear" value={formData.toYear} onChange={handleChange} placeholder="To Year" required />
+                  <Input
+                    type="select"
+                    id="toYear"
+                    name="toYear"
+                    value={formData.toYear}
+                    onChange={handleChange}
+                    required
+                  >
+                    {generateYearOptions().map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </Input>
+                  {/* <Input type="number" id="toYear" name="toYear" value={formData.toYear} onChange={handleChange} placeholder="To Year" required /> */}
                 </FormGroup>
               </Col>
             </Row>
